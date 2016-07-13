@@ -47,8 +47,10 @@ int main(int argc, char const *argv[])
 	Poco::Net::HTTPSStreamFactory::registerFactory();
 
 	Poco::Net::initializeSSL();
-	Poco::Net::SSLManager::InvalidCertificateHandlerPtr ptrHandler(new Poco::Net::AcceptCertificateHandler(false));
-	Poco::Net::Context::Ptr ptrContext(new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
+	Poco::Net::SSLManager::InvalidCertificateHandlerPtr ptrHandler(
+		new Poco::Net::AcceptCertificateHandler(false));
+	Poco::Net::Context::Ptr ptrContext(
+		new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
 	Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, ptrContext);
 
 	const auto url = directoryurl;

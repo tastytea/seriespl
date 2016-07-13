@@ -1,7 +1,7 @@
 # Install
 ## Dependencies
 * Linux (May work on other OS, not tested)
-* recent clang or gcc (must support -std=c++11)
+* Newer than ancient clang or gcc (must support -std=c++11)
 * [poco](http://pocoproject.org/)
 
 ## Compile
@@ -9,3 +9,6 @@
 
 # Usage
 Not ready for use yet
+
+# Bugs
+[Bugtracker](https://github.com/tastytea/seriespl/issues) on GitHub or via [E-Mail](mailto:bugs Ⓐ tastytea.de)
