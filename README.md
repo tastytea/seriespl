@@ -1,8 +1,11 @@
+**seriespl** will fetch stream-URLs from bs.to. These URLs can then be further processed by e.g. youtube-dl.
+
 # Install
 ## Dependencies
-* Linux (May work on other OS, not tested)
-* Newer than ancient clang or gcc (must support -std=c++11)
-* [poco](http://pocoproject.org/)
+ * Linux (May work on other OS, not tested)
+ * Newer than ancient clang or gcc (must support -std=c++11)
+ * [poco](http://pocoproject.org/)
+ * [make](https://www.gnu.org/software/make/make.html)
 
 ## Compile
     make
