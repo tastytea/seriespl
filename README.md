@@ -1,4 +1,4 @@
-**seriespl** will fetch stream-URLs from bs.to. These URLs can then be further processed by e.g. youtube-dl.
+**seriespl** fetches stream-URLs from bs.to. These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
 
 # Install
 ## Dependencies
@@ -11,7 +11,16 @@
     make
 
 # Usage
-Not ready for use yet
+The only working streaming provider is streamcloud at the moment. The only output format is raw.
+
+Download all episodes of South Park Season 1:
+    seriespl http://bs.to/serie/South-Park/1 | youtube-dl -a -
+
+Watch all episodes of South Park Season 1:
+    seriespl http://bs.to/serie/South-Park/1 | mpv --playlist=-
+
+# Legal aspects
+Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
 
 # Bugs
 [Bugtracker](https://github.com/tastytea/seriespl/issues) on GitHub or via [E-Mail](mailto:bugs Ⓐ tastytea.de)

@@ -23,6 +23,18 @@
 #include <string>
 #include <regex>
 #include <iterator>
+#include <vector>
+
+//TODO: cleanup, prettify
+//TODO: Error handling & reporting
+
+const std::string version = "0.1";
+enum Services
+{ // Services who provide links to entire seasons
+BurningSeries
+};
+Services service;
+
 
 std::string getpage(const std::string &url)
 {
@@ -42,15 +54,30 @@ std::string getpage(const std::string &url)
 	return content;
 }
 
+std::string getlink(const std::string &url)
+{ // Takes URL of episode-page, returns URL of stream-page
+	std::string content = getpage(url);
+
+	if (service == BurningSeries)
+	{
+		std::regex reStreamPage("<a href=\"(http://streamcloud.*)\" target=");
+		std::smatch match;
+		
+		if (std::regex_search(content, match, reStreamPage))
+		{
+			return match[1].str();
+		}
+	}
+
+	return "";
+}
+
 int main(int argc, char const *argv[])
 { // TODO: options for season(s), playlist format, streaming provider
-	std::string directoryurl = "";
-	enum Services
-	{
-		BurningSeries
-	};
-	Services service;
-
+	std::string directoryurl = "";	// URL for the overview-page of a series,
+									// e.g. https://bs.to/serie/Die-Simpsons/1
+	std::vector<std::string> streamprovider = { "Streamcloud"};	// List of streaming providers,
+																// name must match hyperlinks
 	if (argc < 2)
 	{
 		std::cerr << "usage: " << argv[0] << " URL" << std::endl;
@@ -78,16 +105,30 @@ int main(int argc, char const *argv[])
 
 	if (service == BurningSeries)
 	{
-		std::regex reEpisodePage("<a href=\"serie/.*/[0-9]+/.*\">");
-		std::sregex_iterator it(content.begin(), content.end(), reEpisodePage);
-		std::sregex_iterator it_end;
+		std::vector<std::string>::iterator it;
+		std::string provider_re = "(";
 
-		while (it != it_end)
-		{
+		for (it = streamprovider.begin(); it != streamprovider.end(); ++it)
+		{ // Build regular expression for all supported streaming providers
+			if (it != streamprovider.begin())
+			{
+				provider_re += "|";
+			}
+			provider_re += *it;
+		}
+		provider_re += ")";
+
+		// FIXME: This will result in multiple links per episode if streamprovider > 1
+		std::regex reEpisodePage("href=\"serie/.*/[0-9]+/.*/" + provider_re + "-[0-9]\">");
+		std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
+		std::sregex_iterator it_re_end;
+
+		while (it_re != it_re_end)
+		{ // TODO: redo with std::smatch for lesser obscurity
 			std::string episodelink = "https://bs.to/" +	// Remove HTML, add domain
-				it->str().substr(9, it->str().length() - 9 - 2);
-			std::cout << episodelink << std::endl;
-			++it;
+				it_re->str().substr(6, it_re->str().length() - 6 - 2);
+			std::cout << getlink(episodelink) << std::endl;
+			++it_re;
 		}
 	}
 
