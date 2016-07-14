@@ -1,6 +1,6 @@
 /******************************************************************************
  * "THE HUG-WARE LICENSE":                                                    *
- * tastytea <tastytea@tastytea.de> wrote these files. As long as you retain   *
+ * tastytea <tastytea@tastytea.de> wrote this file. As long as you retain     *
  * this notice you can do whatever you want with this stuff. If we meet       *
  * some day, and you think this stuff is worth it, you can give me a hug.     *
  ******************************************************************************/
@@ -31,10 +31,9 @@
 const std::string version = "0.1";
 enum Services
 { // Services who provide links to entire seasons
-BurningSeries
+	BurningSeries
 };
 Services service;
-
 
 std::string getpage(const std::string &url)
 {
@@ -54,18 +53,55 @@ std::string getpage(const std::string &url)
 	return content;
 }
 
-std::string getlink(const std::string &url)
+std::string getlink(const std::string &url, const std::string &provider)
 { // Takes URL of episode-page, returns URL of stream-page
 	std::string content = getpage(url);
 
 	if (service == BurningSeries)
 	{
-		std::regex reStreamPage("<a href=\"(http://streamcloud.*)\" target=");
-		std::smatch match;
-		
-		if (std::regex_search(content, match, reStreamPage))
+		if (provider == "Streamcloud")
 		{
-			return match[1].str();
+			std::regex reStreamPage("<a href=\"(https?://streamcloud\\.eu/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				if (match[1].str().find("https") != std::string::npos)
+				{
+					return match[1].str();
+				}
+				else
+				{
+					return "https" + match[1].str().substr(4, std::string::npos);
+				}
+			}
+		}
+		else if (provider == "Vivo")
+		{
+			std::regex reStreamPage("<a href=\"(https?://vivo\\.sx/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				if (match[1].str().find("https") != std::string::npos)
+				{
+					return match[1].str();
+				}
+				else
+				{
+					return "https" + match[1].str().substr(4, std::string::npos);
+				}
+			}
+		}
+		else if (provider == "PowerWatch")
+		{
+			std::regex reStreamPage("<a href=\"(https?://powerwatch\\.pw/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				return match[1].str();
+			}
 		}
 	}
 
@@ -73,11 +109,15 @@ std::string getlink(const std::string &url)
 }
 
 int main(int argc, char const *argv[])
-{ // TODO: options for season(s), playlist format, streaming provider
+{ // TODO: options for season(s), playlist format, preferred streaming providers, episode range
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
-	std::vector<std::string> streamprovider = { "Streamcloud"};	// List of streaming providers,
-																// name must match hyperlinks
+	std::vector<std::string> streamprovider =
+	{
+		"Streamcloud",	// List of streaming providers,
+		"Vivo",			// name must match hyperlinks
+		"PowerWatch"
+	};
 	if (argc < 2)
 	{
 		std::cerr << "usage: " << argv[0] << " URL" << std::endl;
@@ -111,23 +151,26 @@ int main(int argc, char const *argv[])
 		for (it = streamprovider.begin(); it != streamprovider.end(); ++it)
 		{ // Build regular expression for all supported streaming providers
 			if (it != streamprovider.begin())
-			{
+			{ // Add | unless it is the first match
 				provider_re += "|";
 			}
 			provider_re += *it;
 		}
 		provider_re += ")";
 
-		// FIXME: This will result in multiple links per episode if streamprovider > 1
-		std::regex reEpisodePage("href=\"serie/.*/[0-9]+/.*/" + provider_re + "-[0-9]\">");
+		std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" + provider_re + ")-[0-9])\">");
 		std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 		std::sregex_iterator it_re_end;
 
 		while (it_re != it_re_end)
-		{ // TODO: redo with std::smatch for lesser obscurity
-			std::string episodelink = "https://bs.to/" +	// Remove HTML, add domain
-				it_re->str().substr(6, it_re->str().length() - 6 - 2);
-			std::cout << getlink(episodelink) << std::endl;
+		{
+			static short episode;
+			if (std::stoi((*it_re)[2]) != episode)
+			{ // 1 == link, 2 == episode, 3 == provider
+				std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
+				std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
+				episode = std::stoi((*it_re)[2]);
+			}
 			++it_re;
 		}
 	}

@@ -1,18 +1,24 @@
-**seriespl** fetches stream-URLs from bs.to. These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
+**seriespl** extracts stream-URLs for entire seasons of tv series from bs.to (Burning-Series). These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
 
 # Install
 ## Dependencies
  * Linux (May work on other OS, not tested)
  * Newer than ancient clang or gcc (must support -std=c++11)
+ * make
  * [poco](http://pocoproject.org/)
- * [make](https://www.gnu.org/software/make/make.html)
 
 ## Compile
     make
 
 # Usage
-The only working streaming provider is streamcloud at the moment. The only output format is raw.
+Working streaming providers:
+ * Streamcloud
+ * Vivo
+ * Powerwatch (no ssl)
 
+The only output format is raw at the moment.
+
+## Examples
 Download all episodes of South Park Season 1:
 
     seriespl https://bs.to/serie/South-Park/1 | youtube-dl -a -
