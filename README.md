@@ -5,6 +5,7 @@
  * Linux (May work on other OS, not tested)
  * Newer than ancient clang or gcc (must support -std=c++11)
  * make
+ * getopt
  * [poco](http://pocoproject.org/)
 
 ## Compile
@@ -14,9 +15,18 @@
 Working streaming providers:
  * Streamcloud
  * Vivo
- * Powerwatch (no ssl)
+ * PowerWatch (no ssl)
+ * CloudTime (no ssl)
 
 The only output format is raw at the moment.
+
+## Overview
+    usage: seriespl [-h] [-s]|[-p stream providers] URL
+    
+      -h                   Show this help
+      -p stream providers  Comma delimited list. Available:
+                           Streamcloud,Vivo,PowerWatch,CloudTime
+      -s                   Use only stream providers with SSL support
 
 ## Examples
 Download all episodes of South Park Season 1:

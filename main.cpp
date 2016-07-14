@@ -24,11 +24,14 @@
 #include <regex>
 #include <iterator>
 #include <vector>
+#include <sstream>
+#include <unistd.h>
+#include <getopt.h>
 
 //TODO: cleanup, prettify
 //TODO: Error handling & reporting
 
-const std::string version = "0.1";
+const std::string version = "0.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -103,29 +106,78 @@ std::string getlink(const std::string &url, const std::string &provider)
 				return match[1].str();
 			}
 		}
+		else if (provider == "CloudTime")
+		{
+			std::regex reStreamPage("<a href=\"(https?://www.cloudtime\\.to/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				return match[1].str();
+			}
+		}
 	}
 
 	return "";
 }
 
 int main(int argc, char const *argv[])
-{ // TODO: options for season(s), playlist format, preferred streaming providers, episode range
+{ // TODO: options for season(s), playlist format, episode range
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
 	std::vector<std::string> streamprovider =
 	{
 		"Streamcloud",	// List of streaming providers,
 		"Vivo",			// name must match hyperlinks
-		"PowerWatch"
+		"PowerWatch",
+		"CloudTime"
 	};
-	if (argc < 2)
+	int opt;
+	std::string usage = std::string("usage: ") + argv[0] + " [-h] [-s]|[-p stream providers] URL";
+	
+	while ((opt = getopt(argc, (char **)argv, "hp:s")) != -1)
 	{
-		std::cerr << "usage: " << argv[0] << " URL" << std::endl;
+		std::istringstream ss;
+		std::string item;
+		switch (opt)
+		{
+			case 'h':
+				std::cout << usage << std::endl << std::endl;
+				std::cout <<
+					"  -h                   Show this help" << std::endl;
+				std::cout <<
+					"  -p stream providers  Comma delimited list. Available:" << std::endl;
+				std::cout <<
+					"                       Streamcloud,Vivo,PowerWatch,CloudTime" << std::endl;
+				std::cout <<
+					"  -s                   Use only stream providers with SSL support" << std::endl;
+				return 0;
+				break;
+			case 'p':
+				ss.str(optarg);
+				streamprovider.clear();
+				while (std::getline(ss, item, ','))
+				{
+					streamprovider.push_back(item);
+				}
+				break;
+			case 's':
+				streamprovider = { "Streamcloud", "Vivo" };
+				break;
+			default:
+				std::cerr << usage << std::endl;
+				return 1;
+				break;
+		}
+	}
+	if (optind >= argc)
+	{
+		std::cerr << usage << std::endl;
 		return 1;
 	}
 	else
 	{ // Set URL of tv series
-		directoryurl = argv[1];
+		directoryurl = argv[optind];
 	}
 
 	service = BurningSeries;
