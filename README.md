@@ -21,12 +21,12 @@ Working streaming providers:
 The only output format is raw at the moment.
 
 ## Overview
-    usage: seriespl [-h] [-s]|[-p stream providers] URL
+    usage: seriespl [-h] [-i]|[-p stream providers] URL
     
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,PowerWatch,CloudTime
-      -s                   Use only stream providers with SSL support
+      -i                   Use stream providers without SSL support too
 
 ## Examples
 Download all episodes of South Park Season 1:

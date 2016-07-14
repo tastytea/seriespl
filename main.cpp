@@ -118,6 +118,7 @@ std::string getlink(const std::string &url, const std::string &provider)
 		}
 	}
 
+	std::cerr << "Error extracting stream" << std::endl;
 	return "";
 }
 
@@ -128,14 +129,12 @@ int main(int argc, char const *argv[])
 	std::vector<std::string> streamprovider =
 	{
 		"Streamcloud",	// List of streaming providers,
-		"Vivo",			// name must match hyperlinks
-		"PowerWatch",
-		"CloudTime"
+		"Vivo"			// name must match hyperlinks
 	};
 	int opt;
-	std::string usage = std::string("usage: ") + argv[0] + " [-h] [-s]|[-p stream providers] URL";
+	std::string usage = std::string("usage: ") + argv[0] + " [-h] [-i]|[-p stream providers] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:s")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:si")) != -1)
 	{
 		std::istringstream ss;
 		std::string item;
@@ -150,7 +149,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"                       Streamcloud,Vivo,PowerWatch,CloudTime" << std::endl;
 				std::cout <<
-					"  -s                   Use only stream providers with SSL support" << std::endl;
+					"  -i                   Use stream providers without SSL support too" << std::endl;
 				return 0;
 				break;
 			case 'p':
@@ -161,9 +160,19 @@ int main(int argc, char const *argv[])
 					streamprovider.push_back(item);
 				}
 				break;
-			case 's':
-				streamprovider = { "Streamcloud", "Vivo" };
+			case 'i':
+					streamprovider =
+					{
+						"Streamcloud",
+						"Vivo",
+						"PowerWatch",
+						"CloudTime"
+					};
 				break;
+			case 's':
+				std::cerr << "-s is deprecated. The new default is to only use " <<
+					"stream providers with SSL support." << std::endl;
+					break;
 			default:
 				std::cerr << usage << std::endl;
 				return 1;
