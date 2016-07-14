@@ -14,10 +14,12 @@
 The only working streaming provider is streamcloud at the moment. The only output format is raw.
 
 Download all episodes of South Park Season 1:
-    seriespl http://bs.to/serie/South-Park/1 | youtube-dl -a -
+
+    seriespl https://bs.to/serie/South-Park/1 | youtube-dl -a -
 
 Watch all episodes of South Park Season 1:
-    seriespl http://bs.to/serie/South-Park/1 | mpv --playlist=-
+
+    seriespl https://bs.to/serie/South-Park/1 | mpv --playlist=-
 
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
