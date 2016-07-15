@@ -8,6 +8,13 @@
  * getopt
  * [poco](http://pocoproject.org/)
 
+## Get sourcecode
+### Current release
+[Download the current release](https://github.com/tastytea/seriespl/releases).
+
+### Development version
+    git clone https://github.com/tastytea/seriespl.git
+
 ## Compile
     make
 
