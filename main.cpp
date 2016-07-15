@@ -27,11 +27,12 @@
 #include <sstream>
 #include <unistd.h>
 #include <getopt.h>
+#include<limits>
 
-//TODO: cleanup, prettify
-//TODO: Error handling & reporting
+//TODO: Better error handling & reporting
+//TODO: Other Services
 
-const std::string version = "0.2";
+const std::string version = "0.3";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -123,24 +124,27 @@ std::string getlink(const std::string &url, const std::string &provider)
 }
 
 int main(int argc, char const *argv[])
-{ // TODO: options for season(s), playlist format, episode range
+{ // TODO: options for season(s), playlist format
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
 	std::vector<std::string> streamprovider =
 	{
-		"Streamcloud",	// List of streaming providers,
+		"Streamcloud",	// List of active streaming providers,
 		"Vivo"			// name must match hyperlinks
 	};
+	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	int opt;
-	std::string usage = std::string("usage: ") + argv[0] + " [-h] [-i]|[-p stream providers] URL";
+	std::string usage = std::string("usage: ") + argv[0] +
+		" [-h] [-i]|[-p stream providers] [-e episode range] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:si")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:sie:")) != -1)
 	{
 		std::istringstream ss;
 		std::string item;
+		std::string episodes;
 		switch (opt)
 		{
-			case 'h':
+			case 'h':	// Help
 				std::cout << usage << std::endl << std::endl;
 				std::cout <<
 					"  -h                   Show this help" << std::endl;
@@ -150,17 +154,19 @@ int main(int argc, char const *argv[])
 					"                       Streamcloud,Vivo,PowerWatch,CloudTime" << std::endl;
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
+				std::cout <<
+					"  -e                   Episode range, e.g. 2-5" << std::endl;
 				return 0;
 				break;
-			case 'p':
-				ss.str(optarg);
+			case 'p':	// Provider
 				streamprovider.clear();
+				ss.str(optarg);
 				while (std::getline(ss, item, ','))
 				{
 					streamprovider.push_back(item);
 				}
 				break;
-			case 'i':
+			case 'i':	// Insecure
 					streamprovider =
 					{
 						"Streamcloud",
@@ -169,10 +175,23 @@ int main(int argc, char const *argv[])
 						"CloudTime"
 					};
 				break;
-			case 's':
+			case 's':	// Secure
 				std::cerr << "-s is deprecated. The new default is to only use " <<
 					"stream providers with SSL support." << std::endl;
 					break;
+			case 'e':	// Episodes
+				episodes = optarg;
+				if (episodes.find('-') != std::string::npos)
+				{
+					startEpisode = std::stoi( episodes.substr(0, episodes.find('-')) );
+					endEpisode = std::stoi( episodes.substr(episodes.find('-') + 1) );
+				}
+				else
+				{
+					std::cerr << "Error: Can not decipher episode range, " <<
+						"defaulting to all." << std::endl;
+				}
+				break;
 			default:
 				std::cerr << usage << std::endl;
 				return 1;
@@ -189,7 +208,16 @@ int main(int argc, char const *argv[])
 		directoryurl = argv[optind];
 	}
 
-	service = BurningSeries;
+	if (directoryurl.find("bs.to") != std::string::npos)
+	{
+		service = BurningSeries;
+	}
+	else
+	{
+		std::cerr << "Could not determine which website you specified, " <<
+			"defaulting to Burning-Series." << std::endl;
+		service = BurningSeries;
+	}
 
 	Poco::Net::HTTPStreamFactory::registerFactory();
 	Poco::Net::HTTPSStreamFactory::registerFactory();
@@ -224,10 +252,12 @@ int main(int argc, char const *argv[])
 		std::sregex_iterator it_re_end;
 
 		while (it_re != it_re_end)
-		{
+		{ // 1 == link, 2 == episode, 3 == provider
 			static short episode;
-			if (std::stoi((*it_re)[2]) != episode)
-			{ // 1 == link, 2 == episode, 3 == provider
+			if (std::stoi((*it_re)[2]) >= startEpisode &&
+				std::stoi((*it_re)[2]) <= endEpisode &&
+				std::stoi((*it_re)[2]) != episode)
+			{
 				std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
 				std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
 				episode = std::stoi((*it_re)[2]);

@@ -21,21 +21,21 @@ Working streaming providers:
 The only output format is raw at the moment.
 
 ## Overview
-    usage: seriespl [-h] [-i]|[-p stream providers] URL
-    
+    usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] URL
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,PowerWatch,CloudTime
       -i                   Use stream providers without SSL support too
+      -e                   Episode range, e.g. 2-5
 
 ## Examples
 Download all episodes of South Park Season 1:
 
     seriespl https://bs.to/serie/South-Park/1 | youtube-dl -a -
 
-Watch all episodes of South Park Season 1:
+Watch all episodes starting from 6 of South Park Season 1:
 
-    seriespl https://bs.to/serie/South-Park/1 | mpv --playlist=-
+    seriespl -e 6-999 https://bs.to/serie/South-Park/1 | mpv --playlist=-
 
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
