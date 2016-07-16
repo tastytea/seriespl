@@ -33,7 +33,7 @@ The only output format is raw at the moment.
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,PowerWatch,CloudTime
       -i                   Use stream providers without SSL support too
-      -e                   Episode range, e.g. 2-5
+      -e                   Episode range, e.g. 2-5 or 7 or 9-
 
 ## Examples
 Download all episodes of South Park Season 1:
@@ -42,7 +42,7 @@ Download all episodes of South Park Season 1:
 
 Watch all episodes starting from 6 of South Park Season 1:
 
-    seriespl -e 6-999 https://bs.to/serie/South-Park/1 | mpv --playlist=-
+    seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
 
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.

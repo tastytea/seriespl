@@ -142,6 +142,7 @@ int main(int argc, char const *argv[])
 		std::istringstream ss;
 		std::string item;
 		std::string episodes;
+		size_t pos;
 		switch (opt)
 		{
 			case 'h':	// Help
@@ -155,7 +156,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
-					"  -e                   Episode range, e.g. 2-5" << std::endl;
+					"  -e                   Episode range, e.g. 2-5 or 7 or 9-" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
@@ -181,15 +182,37 @@ int main(int argc, char const *argv[])
 					break;
 			case 'e':	// Episodes
 				episodes = optarg;
-				if (episodes.find('-') != std::string::npos)
+				pos = episodes.find('-');
+				if (pos != std::string::npos)
 				{
-					startEpisode = std::stoi( episodes.substr(0, episodes.find('-')) );
-					endEpisode = std::stoi( episodes.substr(episodes.find('-') + 1) );
+					try
+					{
+						startEpisode = std::stoi( episodes.substr(0, pos) );
+						if (episodes.length() > pos + 1)
+						{ // If episodes = 5-, output all episodes, beginning with 5
+							endEpisode = std::stoi( episodes.substr(pos + 1) );
+						}
+					}
+					catch (std::exception &e)
+					{ // There is a '-' but no numbers around it
+						std::cerr << "Error: Can not decipher episode range, " <<
+							"defaulting to all." << std::endl;
+						sleep(2);
+					}
 				}
 				else
 				{
-					std::cerr << "Error: Can not decipher episode range, " <<
-						"defaulting to all." << std::endl;
+					try
+					{ // Is episodes a single number?
+						startEpisode = std::stoi(episodes);
+						endEpisode = std::stoi(episodes);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "Error: Can not decipher episode range, " <<
+							"defaulting to all." << std::endl;
+						sleep(2);
+					}
 				}
 				break;
 			default:
@@ -214,8 +237,9 @@ int main(int argc, char const *argv[])
 	}
 	else
 	{
-		std::cerr << "Could not determine which website you specified, " <<
+		std::cerr << "Error: Could not determine which website you specified, " <<
 			"defaulting to Burning-Series." << std::endl;
+		sleep(2);
 		service = BurningSeries;
 	}
 
