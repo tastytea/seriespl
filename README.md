@@ -22,8 +22,11 @@
 Working streaming providers:
  * Streamcloud
  * Vivo
+ * Shared
+ * YouTube
  * PowerWatch (no ssl)
  * CloudTime (no ssl)
+ * AuroraVid (no ssl)
 
 The only output format is raw (aka simple M3U) at the moment.
 
@@ -56,7 +59,7 @@ Please inform yourself if using this program is legal under your jurisdiction. I
  * ~~Season selection~~
  * Extended M3U playlist support
  * PLS playlist support
- * Support for all streaming providers available on bs.to and compatible with youtube-dl
+ * ~~Support for all streaming providers available on bs.to and compatible with youtube-dl~~
 
 ## After 1.0
  * Support for more Websites

@@ -27,7 +27,7 @@
 #include <sstream>
 #include <unistd.h>
 #include <getopt.h>
-#include<limits>
+#include <limits>
 
 //TODO: Better error handling & reporting
 //TODO: Other Services
@@ -117,6 +117,50 @@ std::string getlink(const std::string &url, const std::string &provider)
 				return match[1].str();
 			}
 		}
+		else if (provider == "AuroraVid")
+		{
+			std::regex reStreamPage("<a href=\"(https?://auroravid\\.to/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				return match[1].str();
+			}
+		}
+		else if (provider == "Shared")
+		{
+			std::regex reStreamPage("<a href=\"(https?://shared\\.sx/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				if (match[1].str().find("https") != std::string::npos)
+				{
+					return match[1].str();
+				}
+				else
+				{
+					return "https" + match[1].str().substr(4, std::string::npos);
+				}
+			}
+		}
+		else if (provider == "YouTube")
+		{
+			std::regex reStreamPage("<a href=\"(https?://www\\.youtube\\.com/.*)\" target=");
+			std::smatch match;
+			
+			if (std::regex_search(content, match, reStreamPage))
+			{
+				if (match[1].str().find("https") != std::string::npos)
+				{
+					return match[1].str();
+				}
+				else
+				{
+					return "https" + match[1].str().substr(4, std::string::npos);
+				}
+			}
+		}
 	}
 
 	std::cerr << "Error extracting stream" << std::endl;
@@ -130,10 +174,12 @@ int main(int argc, char const *argv[])
 	std::vector<std::string> streamprovider =
 	{
 		"Streamcloud",	// List of active streaming providers,
-		"Vivo"			// name must match hyperlinks
+		"Vivo",			// name must match hyperlinks
+		"Shared",
+		"YouTube"
 	};
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
-	unsigned short startSeason = 0, endSeason = 0;
+	 short startSeason = -1, endSeason = -1;
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] URL";
@@ -153,7 +199,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -p stream providers  Comma delimited list. Available:" << std::endl;
 				std::cout <<
-					"                       Streamcloud,Vivo,PowerWatch,CloudTime" << std::endl;
+					"                       Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid" << std::endl;
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
@@ -175,8 +221,11 @@ int main(int argc, char const *argv[])
 					{
 						"Streamcloud",
 						"Vivo",
+						"Shared",
+						"YouTube",
 						"PowerWatch",
-						"CloudTime"
+						"CloudTime",
+						"AuroraVid"
 					};
 				break;
 			case 'e':	// Episodes
@@ -228,8 +277,8 @@ int main(int argc, char const *argv[])
 					{ // There is a '-' but no numbers around it
 						std::cerr << "Error: Can not decipher season range, " <<
 							"defaulting to selected." << std::endl;
-						startSeason = 0;
-						endSeason = 0;
+						startSeason = -1;
+						endSeason = -1;
 						sleep(2);
 					}
 				}
@@ -303,9 +352,9 @@ int main(int argc, char const *argv[])
 		}
 		provider_re += ")";
 
-		for (unsigned short season = startSeason; season <= endSeason; ++season)
+		for (short season = startSeason; season <= endSeason; ++season)
 		{
-			if (season != 0)
+			if (season != -1)
 			{ // A season range was selected
 				//FIXME: If season is higher than available seasons, season 1 is returned
 				std::regex reSeries("(https://bs.to/serie/[^/]*/).*");
