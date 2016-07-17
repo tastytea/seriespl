@@ -32,7 +32,7 @@
 //TODO: Better error handling & reporting
 //TODO: Other Services
 
-const std::string version = "0.3";
+const std::string version = "0.4";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -133,15 +133,16 @@ int main(int argc, char const *argv[])
 		"Vivo"			// name must match hyperlinks
 	};
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
+	unsigned short startSeason = 0, endSeason = 0;
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-i]|[-p stream providers] [-e episode range] URL";
+		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:sie:")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:")) != -1)
 	{
 		std::istringstream ss;
 		std::string item;
-		std::string episodes;
+		std::string episodes, seasons;
 		size_t pos;
 		switch (opt)
 		{
@@ -157,6 +158,8 @@ int main(int argc, char const *argv[])
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
 					"  -e                   Episode range, e.g. 2-5 or 7 or 9-" << std::endl;
+				std::cout <<
+					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
@@ -176,10 +179,6 @@ int main(int argc, char const *argv[])
 						"CloudTime"
 					};
 				break;
-			case 's':	// Secure
-				std::cerr << "-s is deprecated. The new default is to only use " <<
-					"stream providers with SSL support." << std::endl;
-					break;
 			case 'e':	// Episodes
 				episodes = optarg;
 				pos = episodes.find('-');
@@ -211,6 +210,40 @@ int main(int argc, char const *argv[])
 					{
 						std::cerr << "Error: Can not decipher episode range, " <<
 							"defaulting to all." << std::endl;
+						sleep(2);
+					}
+				}
+				break;
+			case 's':	// Seasons
+				seasons = optarg;
+				pos = seasons.find('-');
+				if (pos != std::string::npos)
+				{
+					try
+					{
+						startSeason = std::stoi( seasons.substr(0, pos) );
+						endSeason = std::stoi( seasons.substr(pos + 1) );
+					}
+					catch (std::exception &e)
+					{ // There is a '-' but no numbers around it
+						std::cerr << "Error: Can not decipher season range, " <<
+							"defaulting to selected." << std::endl;
+						startSeason = 0;
+						endSeason = 0;
+						sleep(2);
+					}
+				}
+				else
+				{
+					try
+					{ // Is seasons a single number?
+						startSeason = std::stoi(seasons);
+						endSeason = std::stoi(seasons);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "Error: Can not decipher season range, " <<
+							"defaulting to selected." << std::endl;
 						sleep(2);
 					}
 				}
@@ -253,8 +286,7 @@ int main(int argc, char const *argv[])
 		new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
 	Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, ptrContext);
 
-	const auto url = directoryurl;
-	const auto content = getpage(url);
+	std::string content;
 
 	if (service == BurningSeries)
 	{
@@ -271,22 +303,47 @@ int main(int argc, char const *argv[])
 		}
 		provider_re += ")";
 
-		std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" + provider_re + ")-[0-9])\">");
-		std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
-		std::sregex_iterator it_re_end;
-
-		while (it_re != it_re_end)
-		{ // 1 == link, 2 == episode, 3 == provider
-			static short episode;
-			if (std::stoi((*it_re)[2]) >= startEpisode &&
-				std::stoi((*it_re)[2]) <= endEpisode &&
-				std::stoi((*it_re)[2]) != episode)
-			{
-				std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
-				std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
-				episode = std::stoi((*it_re)[2]);
+		for (unsigned short season = startSeason; season <= endSeason; ++season)
+		{
+			if (season != 0)
+			{ // A season range was selected
+				//FIXME: If season is higher than available seasons, season 1 is returned
+				std::regex reSeries("(https://bs.to/serie/[^/]*/).*");
+				std::smatch match;
+			
+				// Generate URL for each season
+				if (std::regex_search(directoryurl, match, reSeries))
+				{
+					directoryurl = match[1].str() + std::to_string(season);
+				}
+				else
+				{
+					directoryurl = directoryurl + "/" + std::to_string(season);
+				}
+				content = getpage(directoryurl);
 			}
-			++it_re;
+			else
+			{ // If no season range was selected, use supplied URL
+				content = getpage(directoryurl);
+			}
+
+			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" + provider_re + ")-[0-9])\">");
+			std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
+			std::sregex_iterator it_re_end;
+
+			while (it_re != it_re_end)
+			{ // 1 == link, 2 == episode, 3 == provider
+				static short episode;
+				if (std::stoi((*it_re)[2]) >= startEpisode &&
+					std::stoi((*it_re)[2]) <= endEpisode &&
+					std::stoi((*it_re)[2]) != episode)
+				{
+					std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
+					std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
+					episode = std::stoi((*it_re)[2]);
+				}
+				++it_re;
+			}
 		}
 	}
 
