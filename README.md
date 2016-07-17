@@ -25,7 +25,7 @@ Working streaming providers:
  * PowerWatch (no ssl)
  * CloudTime (no ssl)
 
-The only output format is raw at the moment.
+The only output format is raw (aka simple M3U) at the moment.
 
 ## Overview
     usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] URL
@@ -47,5 +47,17 @@ Watch all episodes starting from 6 of South Park Season 1:
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
 
-# Bugs
+
+# Todo
+## Until 1.0
+ * Better error handling & reporting
+ * Season selection
+ * Extended M3U playlist support
+ * PLS playlist support
+ * Support for all streaming providers available on bs.to and compatible with youtube-dl
+
+## After 1.0
+ * Support for more Websites
+
+# Bugs & feature requests
 [Bugtracker](https://github.com/tastytea/seriespl/issues) on GitHub or via [E-Mail](mailto:bugs Ⓐ tastytea.de)
