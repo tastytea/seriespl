@@ -342,11 +342,24 @@ int main(int argc, char const *argv[])
 
 			while (it_re != it_re_end)
 			{ // 1 == link, 2 == episode, 3 == provider
-				static short episode;
+				static short episode = 0;
+				if (episode == 0 && startEpisode > 0)
+				{ // Set episode to the right starting value if episode range is specified
+					episode = startEpisode - 1;
+				}
 				if (std::stoi((*it_re)[2]) >= startEpisode &&
 					std::stoi((*it_re)[2]) <= endEpisode &&
 					std::stoi((*it_re)[2]) != episode)
 				{
+					if ( stoi((*it_re)[2]) > (episode + 1) )
+					{ // If current episode is > last episode + 1, we are missing an episode
+						std::cerr << "Error: Could not get URL for episode " << (episode + 1);
+						if ((episode + 2) != stoi((*it_re)[2]))
+						{ // If more than 1 episode is missing
+							std::cerr << "-" << (stoi((*it_re)[2]) - 1);
+						}
+						std::cerr << "." << std::endl;
+					}
 					std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
 					std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
 					episode = std::stoi((*it_re)[2]);
