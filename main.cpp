@@ -32,7 +32,7 @@
 //TODO: Better error handling & reporting
 //TODO: Other Services
 
-const std::string version = "0.4";
+const std::string version = "0.5";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -58,113 +58,73 @@ std::string getpage(const std::string &url)
 }
 
 std::string getlink(const std::string &url, const std::string &provider)
-{ // Takes URL of episode-page, returns URL of stream-page
+{ // Takes URL of episode-page, returns URL of stream-page or "" on error
 	std::string content = getpage(url);
+	std::string streamurl = "";
 
 	if (service == BurningSeries)
 	{
+		std::regex reStreamPage;
+		std::smatch match;
+
 		if (provider == "Streamcloud")
 		{
-			std::regex reStreamPage("<a href=\"(https?://streamcloud\\.eu/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				if (match[1].str().find("https") != std::string::npos)
-				{
-					return match[1].str();
-				}
-				else
-				{
-					return "https" + match[1].str().substr(4, std::string::npos);
-				}
-			}
+			reStreamPage.assign("<a href=\"(https?://streamcloud\\.eu/.*)\" target=");
 		}
 		else if (provider == "Vivo")
 		{
-			std::regex reStreamPage("<a href=\"(https?://vivo\\.sx/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				if (match[1].str().find("https") != std::string::npos)
-				{
-					return match[1].str();
-				}
-				else
-				{
-					return "https" + match[1].str().substr(4, std::string::npos);
-				}
-			}
+			reStreamPage.assign("<a href=\"(https?://vivo\\.sx/.*)\" target=");
 		}
 		else if (provider == "PowerWatch")
 		{
-			std::regex reStreamPage("<a href=\"(https?://powerwatch\\.pw/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				return match[1].str();
-			}
+			reStreamPage.assign("<a href=\"(https?://powerwatch\\.pw/.*)\" target=");
 		}
 		else if (provider == "CloudTime")
 		{
-			std::regex reStreamPage("<a href=\"(https?://www.cloudtime\\.to/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				return match[1].str();
-			}
+			reStreamPage.assign("<a href=\"(https?://www.cloudtime\\.to/.*)\" target=");
 		}
 		else if (provider == "AuroraVid")
 		{
-			std::regex reStreamPage("<a href=\"(https?://auroravid\\.to/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				return match[1].str();
-			}
+			reStreamPage.assign("<a href=\"(https?://auroravid\\.to/.*)\" target=");
 		}
 		else if (provider == "Shared")
 		{
-			std::regex reStreamPage("<a href=\"(https?://shared\\.sx/.*)\" target=");
-			std::smatch match;
-			
-			if (std::regex_search(content, match, reStreamPage))
-			{
-				if (match[1].str().find("https") != std::string::npos)
-				{
-					return match[1].str();
-				}
-				else
-				{
-					return "https" + match[1].str().substr(4, std::string::npos);
-				}
-			}
+			reStreamPage.assign("<a href=\"(https?://shared\\.sx/.*)\" target=");
 		}
 		else if (provider == "YouTube")
 		{
-			std::regex reStreamPage("<a href=\"(https?://www\\.youtube\\.com/.*)\" target=");
-			std::smatch match;
-			
+			reStreamPage.assign("<a href=\"(https?://www\\.youtube\\.com/.*)\" target=");
+		}
+		else
+		{
+			std::cerr << "Error: Stream provider unknown" << std::endl;
+		}
+
+		if (std::regex_search(content, match, reStreamPage))
+		{
+			streamurl = match[1].str();
+		}
+		else
+		{
+			std::cerr << "Error extracting stream" << std::endl;
+		}
+
+		if (provider == "Streamcloud" ||
+			provider == "Vivo" ||
+			provider == "Shared" ||
+			provider == "YouTube")
+		{ // Make sure we use SSL where supported
 			if (std::regex_search(content, match, reStreamPage))
 			{
-				if (match[1].str().find("https") != std::string::npos)
-				{
-					return match[1].str();
-				}
-				else
-				{
-					return "https" + match[1].str().substr(4, std::string::npos);
-				}
+					if (streamurl.find("https") == std::string::npos)
+					{
+						streamurl = "https" + streamurl.substr(4, std::string::npos);
+					}
 			}
 		}
-	}
+	} // service-if
 
-	std::cerr << "Error extracting stream" << std::endl;
-	return "";
+	return streamurl;
 }
 
 int main(int argc, char const *argv[])
@@ -172,7 +132,7 @@ int main(int argc, char const *argv[])
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
 	std::vector<std::string> streamprovider =
-	{
+	{ // FIXME: Better solution for streamprovider list
 		"Streamcloud",	// List of active streaming providers,
 		"Vivo",			// name must match hyperlinks
 		"Shared",
