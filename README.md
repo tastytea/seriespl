@@ -34,7 +34,7 @@ Working streaming providers:
 The only output format is raw (aka simple M3U) at the moment.
 
 ## Overview
-    usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] URL
+    usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] [-f format] URL
     
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
@@ -42,6 +42,7 @@ The only output format is raw (aka simple M3U) at the moment.
       -i                   Use stream providers without SSL support too
       -e                   Episode range, e.g. 2-5 or 7 or 9-
       -s                   Season range, e.g. 1-2 or 4
+      -f                   Playlist format. Available: raw, m3u or pls
 
 ## Examples
 Download all episodes of South Park Season 1-3:
@@ -60,8 +61,8 @@ Please inform yourself if using this program is legal under your jurisdiction. I
 ## Until 1.0
  * Better error handling & reporting
  * ~~Season selection~~
- * Extended M3U playlist support
- * PLS playlist support
+ * ~~Extended M3U playlist support~~
+ * ~~PLS playlist support~~
  * ~~Support for all streaming providers available on bs.to and compatible with youtube-dl~~
 
 ## After 1.0

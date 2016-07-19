@@ -32,7 +32,7 @@
 #include <utility>
 
 
-const std::string version = "0.5";
+const std::string version = "0.6";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -61,6 +61,13 @@ const std::map<StreamProviders, providerpair> providermap =
 	{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
 	{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
 	{AuroraVid, providerpair("AuroraVid", "auroravid.to")}
+};
+
+enum PlaylistFormat
+{
+	PL_RAW,
+	PL_M3U,
+	PL_PLS
 };
 
 void init_poco()
@@ -94,18 +101,19 @@ std::string getpage(const std::string &url)
 	return content;
 }
 
-std::string getlink(const std::string &url, StreamProviders provider)
+std::string getlink(const std::string &url, const StreamProviders &provider, std::string &title)
 { // Takes URL of episode-page and streaming provider, returns URL of stream-page or "" on error
 	std::string content = getpage(url);
 	std::string streamurl = "";
 
 	if (service == BurningSeries)
 	{
-		std::regex reStreamPage;
-		std::smatch match;
-
-		reStreamPage.assign("<a href=\"(https?://" +
+		std::regex reStreamPage("<a href=\"(https?://" +
 			providermap.at(provider).second + "/.*)\" target=");
+		std::regex reTitle(
+			std::string("<h2 id=\"titleGerman\">(.*)") +
+				"[[:space:]]+<small id=\"titleEnglish\" lang=\"en\">(.*)</small>");
+		std::smatch match;
 
 		if (std::regex_search(content, match, reStreamPage))
 		{
@@ -126,9 +134,71 @@ std::string getlink(const std::string &url, StreamProviders provider)
 		{
 			std::cerr << "Error extracting stream" << std::endl;
 		}
+
+		
+		if (std::regex_search(content, match, reTitle))
+		{
+			if (match[1].str() != "")
+				title = match[1].str();
+			else if (match[2].str() != "")
+				title = match[2].str();
+		}
+
+		// size_t pos = url.find('/', 20) + 1; // Skip https://bs.to/serie/
+		// title = url.substr(pos, url.find('/', url.find('/', pos) + 1) - pos);
 	} // service-if
 
 	return streamurl;
+}
+
+std::string getlink(const std::string &url, const StreamProviders &provider)
+{
+	std::string title;
+	return getlink(url, provider, title);
+}
+
+void print_playlist(const PlaylistFormat &playlist, const std::string &url,
+					const std::string &title)
+{
+	static unsigned short counter = 1;
+
+	switch (playlist)
+	{
+		case PL_RAW:
+			std::cout << url << std::endl;
+			break;
+		case PL_M3U:
+			if (counter == 1) // Write header
+			{
+				std::cout << "#EXTM3U" << std::endl;
+			}
+			std::cout << "#EXTINF:-1," << title << std::endl;
+			std::cout << url << std::endl;
+			break;
+		case PL_PLS:
+			if (counter == 1) // Write header
+			{
+				std::cout << "[playlist]" << std::endl;
+				std::cout << "Version=2" << std::endl;
+			}
+			if (url == "NUMBER_OF_EPISODES")
+			{
+				std::cout << "NumberOfEntries=" << counter - 1 << std::endl;
+			}
+			else
+			{
+				std::cout << "File" << counter << "=" << url << std::endl;
+				std::cout << "Title" << counter << "=" << title << std::endl;
+				std::cout << "Length" << counter << "=-1" << std::endl;
+			}
+			break;
+	}
+	++counter;
+}
+
+void print_playlist(const PlaylistFormat &playlist, const std::string &url)
+{
+	return print_playlist(playlist, url, "");
 }
 
 int main(int argc, char const *argv[])
@@ -145,12 +215,13 @@ int main(int argc, char const *argv[])
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	short startSeason = -1, endSeason = -1;
 	std::string content;
+	PlaylistFormat playlist = PL_RAW;
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] URL";
+		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] [-f format] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:")) != -1)
 	{
 		std::istringstream ss;
 		std::string item;
@@ -172,6 +243,8 @@ int main(int argc, char const *argv[])
 					"  -e                   Episode range, e.g. 2-5 or 7 or 9-" << std::endl;
 				std::cout <<
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
+				std::cout <<
+					"  -f                   Playlist format. Available: raw, m3u or pls" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
@@ -267,6 +340,16 @@ int main(int argc, char const *argv[])
 						sleep(2);
 					}
 				}
+				break;
+			case 'f':	// Format
+				if (strncmp(optarg, "raw", 3) == 0)
+					playlist = PL_RAW;
+				else if (strncmp(optarg, "m3u", 3) == 0)
+					playlist = PL_M3U;
+				else if (strncmp(optarg, "pls", 3) == 0)
+					playlist = PL_PLS;
+				else
+					std::cerr << "Playlist format not recognized, defaulting to raw." << std::endl;
 				break;
 			default:
 				std::cerr << usage << std::endl;
@@ -365,11 +448,19 @@ int main(int argc, char const *argv[])
 					for (; it != providermap.end(); ++it)
 					{
 						if (it->second.first == (*it_re)[3])
-							std::cout << getlink(episodelink, it->first) << std::endl;
+						{
+							std::string streamtitle;
+							std::string streamurl = getlink(episodelink, it->first, streamtitle);
+							print_playlist(playlist, streamurl, streamtitle);
+						}
 					}
 					episode = std::stoi((*it_re)[2]);
 				}
 				++it_re;
+			} // Iterating through matches
+			if (playlist == PL_PLS)
+			{ // Print NumberOfEntries
+				print_playlist(PL_PLS, "NUMBER_OF_EPISODES");
 			}
 		}
 	}
