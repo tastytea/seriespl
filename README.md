@@ -8,6 +8,8 @@
  * make
  * [poco](http://pocoproject.org/) (works with 1.4.6_p4)
 
+Does not work with Debian Jessie due to old libpoco-dev.
+
 ## Get sourcecode
 ### Current release
 [Download the current release](https://github.com/tastytea/seriespl/releases).
@@ -17,6 +19,7 @@
 
 ## Compile
     make
+    make install
 
 # Usage
 Working streaming providers:
@@ -35,7 +38,7 @@ The only output format is raw (aka simple M3U) at the moment.
     
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
-                           Streamcloud,Vivo,PowerWatch,CloudTime
+                           Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
       -i                   Use stream providers without SSL support too
       -e                   Episode range, e.g. 2-5 or 7 or 9-
       -s                   Season range, e.g. 1-2 or 4

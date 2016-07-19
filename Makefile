@@ -9,6 +9,7 @@ LIBS   = -lPocoNet -lPocoNetSSL -lPocoFoundation -lpthread
 CFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native
 SRC    = main.cpp
 TARGET = seriespl
+PREFIX = /usr/local
 
 # If on Raspberry Pi
 ifeq ($(shell uname -m),armv6l)
@@ -21,7 +22,14 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(LIBS) -o $(TARGET) $(SRC)
 	strip --strip-all $(TARGET)
 
-.PHONY: clean
+.PHONY: install
+install: $(TARGET)
+	install -m 0755 $(TARGET) $(PREFIX)/bin
 
+.PHONY: uninstall
+uninstall: $(TARGET)
+	rm $(PREFIX)/bin/$(TARGET)
+
+.PHONY: clean
 clean:
 	rm -f $(TARGET)
