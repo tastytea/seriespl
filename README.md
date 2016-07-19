@@ -22,6 +22,9 @@ Does not work with Debian Jessie due to old libpoco-dev.
     make install
 
 # Usage
+Working websites:
+ * https://bs.to/
+
 Working streaming providers:
  * Streamcloud
  * Vivo
@@ -30,8 +33,6 @@ Working streaming providers:
  * PowerWatch (no ssl)
  * CloudTime (no ssl)
  * AuroraVid (no ssl)
-
-The only output format is raw (aka simple M3U) at the moment.
 
 ## Overview
     usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] [-f format] URL
