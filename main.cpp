@@ -28,9 +28,9 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <limits>
+#include <map>
+#include <utility>
 
-//TODO: Better error handling & reporting
-//TODO: Other Services
 
 const std::string version = "0.5";
 enum Services
@@ -39,8 +39,45 @@ enum Services
 };
 Services service;
 
-std::string getpage(const std::string &url)
+enum StreamProviders
+{ // Available stream providers
+	Streamcloud,
+	Vivo,
+	Shared,
+	YouTube,
+	PowerWatch,
+	CloudTime,
+	AuroraVid
+};
+std::vector<StreamProviders> Providers;	// List of active stream providers
+
+typedef const std::pair <std::string, std::string> providerpair; // Name and domain
+const std::map<StreamProviders, providerpair> providermap =
+{ // Map stream providers to string and URL
+	{Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
+	{Vivo, providerpair("Vivo", "vivo.sx")},
+	{Shared, providerpair("Shared", "shared.sx")},
+	{YouTube, providerpair("YouTube", "www.youtube.com")},
+	{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
+	{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
+	{AuroraVid, providerpair("AuroraVid", "auroravid.to")}
+};
+
+void init_poco()
 {
+	Poco::Net::HTTPStreamFactory::registerFactory();
+	Poco::Net::HTTPSStreamFactory::registerFactory();
+
+	Poco::Net::initializeSSL();
+	Poco::Net::SSLManager::InvalidCertificateHandlerPtr ptrHandler(
+		new Poco::Net::AcceptCertificateHandler(false));
+	Poco::Net::Context::Ptr ptrContext(
+		new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
+	Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, ptrContext);
+}
+
+std::string getpage(const std::string &url)
+{ // Fetch URL, return content
 	std::string content;
 	try
 	{
@@ -57,8 +94,8 @@ std::string getpage(const std::string &url)
 	return content;
 }
 
-std::string getlink(const std::string &url, const std::string &provider)
-{ // Takes URL of episode-page, returns URL of stream-page or "" on error
+std::string getlink(const std::string &url, StreamProviders provider)
+{ // Takes URL of episode-page and streaming provider, returns URL of stream-page or "" on error
 	std::string content = getpage(url);
 	std::string streamurl = "";
 
@@ -67,60 +104,27 @@ std::string getlink(const std::string &url, const std::string &provider)
 		std::regex reStreamPage;
 		std::smatch match;
 
-		if (provider == "Streamcloud")
-		{
-			reStreamPage.assign("<a href=\"(https?://streamcloud\\.eu/.*)\" target=");
-		}
-		else if (provider == "Vivo")
-		{
-			reStreamPage.assign("<a href=\"(https?://vivo\\.sx/.*)\" target=");
-		}
-		else if (provider == "PowerWatch")
-		{
-			reStreamPage.assign("<a href=\"(https?://powerwatch\\.pw/.*)\" target=");
-		}
-		else if (provider == "CloudTime")
-		{
-			reStreamPage.assign("<a href=\"(https?://www.cloudtime\\.to/.*)\" target=");
-		}
-		else if (provider == "AuroraVid")
-		{
-			reStreamPage.assign("<a href=\"(https?://auroravid\\.to/.*)\" target=");
-		}
-		else if (provider == "Shared")
-		{
-			reStreamPage.assign("<a href=\"(https?://shared\\.sx/.*)\" target=");
-		}
-		else if (provider == "YouTube")
-		{
-			reStreamPage.assign("<a href=\"(https?://www\\.youtube\\.com/.*)\" target=");
-		}
-		else
-		{
-			std::cerr << "Error: Stream provider unknown" << std::endl;
-		}
+		reStreamPage.assign("<a href=\"(https?://" +
+			providermap.at(provider).second + "/.*)\" target=");
 
 		if (std::regex_search(content, match, reStreamPage))
 		{
 			streamurl = match[1].str();
+			
+			if (provider == Streamcloud ||
+				provider == Vivo ||
+				provider == Shared ||
+				provider == YouTube)
+			{ // Make sure we use SSL where supported
+				if (streamurl.find("https") == std::string::npos)
+				{
+					streamurl = "https" + streamurl.substr(4, std::string::npos);
+				}
+			}
 		}
 		else
 		{
 			std::cerr << "Error extracting stream" << std::endl;
-		}
-
-		if (provider == "Streamcloud" ||
-			provider == "Vivo" ||
-			provider == "Shared" ||
-			provider == "YouTube")
-		{ // Make sure we use SSL where supported
-			if (std::regex_search(content, match, reStreamPage))
-			{
-					if (streamurl.find("https") == std::string::npos)
-					{
-						streamurl = "https" + streamurl.substr(4, std::string::npos);
-					}
-			}
 		}
 	} // service-if
 
@@ -128,18 +132,20 @@ std::string getlink(const std::string &url, const std::string &provider)
 }
 
 int main(int argc, char const *argv[])
-{ // TODO: options for season(s), playlist format
+{
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
-	std::vector<std::string> streamprovider =
-	{ // FIXME: Better solution for streamprovider list
-		"Streamcloud",	// List of active streaming providers,
-		"Vivo",			// name must match hyperlinks
-		"Shared",
-		"YouTube"
+	Providers =
+	{ // Set default list of active streaming providers, SSL only
+		Streamcloud,
+		Vivo,
+		Shared,
+		YouTube
 	};
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
-	 short startSeason = -1, endSeason = -1;
+	short startSeason = -1, endSeason = -1;
+	std::string content;
+
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] URL";
@@ -169,23 +175,28 @@ int main(int argc, char const *argv[])
 				return 0;
 				break;
 			case 'p':	// Provider
-				streamprovider.clear();
+				Providers.clear();
 				ss.str(optarg);
 				while (std::getline(ss, item, ','))
 				{
-					streamprovider.push_back(item);
+					std::map<StreamProviders, providerpair>::const_iterator it = providermap.begin();
+					for (; it != providermap.end(); ++it)
+					{
+						if (it->second.first == item)
+							Providers.push_back(it->first);
+					}
 				}
 				break;
 			case 'i':	// Insecure
-					streamprovider =
+					Providers =
 					{
-						"Streamcloud",
-						"Vivo",
-						"Shared",
-						"YouTube",
-						"PowerWatch",
-						"CloudTime",
-						"AuroraVid"
+						Streamcloud,
+						Vivo,
+						Shared,
+						YouTube,
+						PowerWatch,
+						CloudTime,
+						AuroraVid
 					};
 				break;
 			case 'e':	// Episodes
@@ -285,30 +296,19 @@ int main(int argc, char const *argv[])
 		service = BurningSeries;
 	}
 
-	Poco::Net::HTTPStreamFactory::registerFactory();
-	Poco::Net::HTTPSStreamFactory::registerFactory();
-
-	Poco::Net::initializeSSL();
-	Poco::Net::SSLManager::InvalidCertificateHandlerPtr ptrHandler(
-		new Poco::Net::AcceptCertificateHandler(false));
-	Poco::Net::Context::Ptr ptrContext(
-		new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
-	Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, ptrContext);
-
-	std::string content;
+	init_poco();
 
 	if (service == BurningSeries)
 	{
-		std::vector<std::string>::iterator it;
 		std::string provider_re = "(";
 
-		for (it = streamprovider.begin(); it != streamprovider.end(); ++it)
+		for (std::vector<StreamProviders>::iterator it = Providers.begin(); it != Providers.end(); ++it)
 		{ // Build regular expression for all supported streaming providers
-			if (it != streamprovider.begin())
+			if (it != Providers.begin())
 			{ // Add | unless it is the first match
 				provider_re += "|";
 			}
-			provider_re += *it;
+			provider_re += providermap.at(*it).first;
 		}
 		provider_re += ")";
 
@@ -361,7 +361,12 @@ int main(int argc, char const *argv[])
 						std::cerr << "." << std::endl;
 					}
 					std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
-					std::cout << getlink(episodelink, (*it_re)[3]) << std::endl;
+					std::map<StreamProviders, providerpair>::const_iterator it = providermap.begin();
+					for (; it != providermap.end(); ++it)
+					{
+						if (it->second.first == (*it_re)[3])
+							std::cout << getlink(episodelink, it->first) << std::endl;
+					}
 					episode = std::stoi((*it_re)[2]);
 				}
 				++it_re;
