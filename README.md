@@ -35,15 +35,15 @@ Working streaming providers:
  * AuroraVid (no ssl)
 
 ## Overview
-    usage: seriespl [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] [-f format] URL
-    
+    usage: seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL
+
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
       -i                   Use stream providers without SSL support too
       -e                   Episode range, e.g. 2-5 or 7 or 9-
       -s                   Season range, e.g. 1-2 or 4
-      -f                   Playlist format. Available: raw, m3u or pls
+      -f                   Playlist format. Available: raw, m3u, pls
 
 ## Examples
 Download all episodes of South Park Season 1-3:
@@ -54,19 +54,22 @@ Watch all episodes starting from 6 of South Park Season 1:
 
     seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
 
+Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
+    seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
+
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
 
 
 # Todo
 ## Until 1.0
- * Better error handling & reporting
+ * ~~Better error handling & reporting~~
  * ~~Season selection~~
  * ~~Extended M3U playlist support~~
  * ~~PLS playlist support~~
  * ~~Support for all streaming providers available on bs.to and compatible with youtube-dl~~
 
-## After 1.0
+## After 2.0
  * Support for more Websites
 
 # Bugs & feature requests
