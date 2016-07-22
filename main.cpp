@@ -32,7 +32,7 @@
 #include <utility>
 
 
-const std::string version = "0.6";
+const std::string version = "1.0";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -85,7 +85,7 @@ void init_poco()
 
 std::string getpage(const std::string &url)
 { // Fetch URL, return content
-	std::string content;
+	std::string content = "";
 	try
 	{
 		auto &opener = Poco::URIStreamOpener::defaultOpener();
@@ -135,17 +135,13 @@ std::string getlink(const std::string &url, const StreamProviders &provider, std
 			std::cerr << "Error extracting stream" << std::endl;
 		}
 
-		
 		if (std::regex_search(content, match, reTitle))
 		{
-			if (match[1].str() != "")
+			if (match[1].str() != "")		// German
 				title = match[1].str();
-			else if (match[2].str() != "")
+			else if (match[2].str() != "")	// English
 				title = match[2].str();
 		}
-
-		// size_t pos = url.find('/', 20) + 1; // Skip https://bs.to/serie/
-		// title = url.substr(pos, url.find('/', url.find('/', pos) + 1) - pos);
 	} // service-if
 
 	return streamurl;
@@ -219,7 +215,7 @@ int main(int argc, char const *argv[])
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-i]|[-p stream providers] [-e episode range] [-s season range] [-f format] URL";
+		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL";
 	
 	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:")) != -1)
 	{
@@ -244,7 +240,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				std::cout <<
-					"  -f                   Playlist format. Available: raw, m3u or pls" << std::endl;
+					"  -f                   Playlist format. Available: raw, m3u, pls" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
@@ -252,12 +248,17 @@ int main(int argc, char const *argv[])
 				ss.str(optarg);
 				while (std::getline(ss, item, ','))
 				{
-					std::map<StreamProviders, providerpair>::const_iterator it = providermap.begin();
-					for (; it != providermap.end(); ++it)
+					std::map<StreamProviders, providerpair>::const_iterator it;
+					for (it = providermap.begin(); it != providermap.end(); ++it)
 					{
 						if (it->second.first == item)
 							Providers.push_back(it->first);
 					}
+				}
+				if (Providers.empty())
+				{
+					std::cerr << "Error: List of streaming providers is empty." << std::endl;
+					return 2;
 				}
 				break;
 			case 'i':	// Insecure
@@ -384,8 +385,9 @@ int main(int argc, char const *argv[])
 	if (service == BurningSeries)
 	{
 		std::string provider_re = "(";
+		std::vector<StreamProviders>::iterator it;
 
-		for (std::vector<StreamProviders>::iterator it = Providers.begin(); it != Providers.end(); ++it)
+		for (it = Providers.begin(); it != Providers.end(); ++it)
 		{ // Build regular expression for all supported streaming providers
 			if (it != Providers.begin())
 			{ // Add | unless it is the first match
@@ -419,7 +421,8 @@ int main(int argc, char const *argv[])
 				content = getpage(directoryurl);
 			}
 
-			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" + provider_re + ")-[0-9])\">");
+			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" +
+				provider_re + ")-[0-9])\">");
 			std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 			std::sregex_iterator it_re_end;
 
@@ -444,8 +447,8 @@ int main(int argc, char const *argv[])
 						std::cerr << "." << std::endl;
 					}
 					std::string episodelink = "https://bs.to/" + (*it_re)[1].str();
-					std::map<StreamProviders, providerpair>::const_iterator it = providermap.begin();
-					for (; it != providermap.end(); ++it)
+					std::map<StreamProviders, providerpair>::const_iterator it;
+					for (it = providermap.begin(); it != providermap.end(); ++it)
 					{
 						if (it->second.first == (*it_re)[3])
 						{
