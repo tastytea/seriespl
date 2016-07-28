@@ -5,6 +5,59 @@
  * some day, and you think this stuff is worth it, you can give me a hug.     *
  ******************************************************************************/
 
+/*! \page seriespl
+	Extract stream-URLs for entire seasons of tv series from bs.to 
+	
+	\section SYNOPSIS
+	seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL
+	
+	\section DESCRIPTION
+	__seriespl__ extracts stream-URLs for entire seasons of tv series from bs.to
+	(Burning-Series). These URLs can then be further processed by e.g. youtube-dl or mpv.
+	
+	\section OPTIONS
+	\b -h \n
+	Show help
+
+	\b -p  <em>STREAM PROVIDERS</em> \n
+	Comma delimited list. Available:
+	Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
+
+	\b -i \n
+	Use stream providers without SSL support too
+	
+	\b -e \e EPISODES \n
+	Episode range, e.g. 2-5 or 7 or 9-
+
+	\b -s \e SEASONS \n
+	Season range, e.g. 1-2 or 4
+
+	\b -f \e FORMAT \n
+	Playlist format. Available: raw, m3u, pls
+
+	\section EXAMPLES
+	Download all episodes of South Park Season 1-3:
+	\code
+    seriespl -s 1-3 https://bs.to/serie/South-Park | youtube-dl -a -
+    \endcode
+
+	Watch all episodes starting from 6 of South Park Season 1:
+	\code
+    seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
+    \endcode
+
+    Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
+	\code
+    seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
+    \endcode
+
+    \section AUTHOR
+    Written by tastytea \<tastytea@tastytea.de\>.
+    \section LICENSE
+    THE HUG-WARE LICENSE,  \<https://tastytea.de/licenses/HUG-WARE\>\n
+    This is free software: you are free to change and redistribute it.
+    There is NO WARRANTY, to the extent permitted by law. */
+
 #include "Poco/Exception.h"
 #include "Poco/StreamCopier.h"
 
@@ -32,7 +85,7 @@
 #include <utility>
 
 
-const std::string version = "1.0";
+const std::string version = "1.0.1";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
