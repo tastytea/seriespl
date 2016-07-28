@@ -7,7 +7,7 @@
  * glibc (another libc should work, must support getopt)
  * make
  * [poco](http://pocoproject.org/) (works with 1.4.6_p4)
- * [Doxygen](http://doxygen.org/) (For the man page)
+ * [Doxygen](http://doxygen.org/) (for the man page)
 
 Does not work with Debian Jessie due to old libpoco-dev.
 

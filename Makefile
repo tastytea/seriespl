@@ -29,11 +29,14 @@ $(MAN): $(SRC)
 .PHONY: install
 install: $(TARGET)
 	install -m 0755 $(TARGET) $(PREFIX)/bin
+	mkdir -p $(PREFIX)/share/man/man1
 	install -m 0644 $(MAN) $(PREFIX)/share/man/man1
 
 .PHONY: uninstall
 uninstall: $(TARGET)
 	rm $(PREFIX)/bin/$(TARGET)
+	rm $(PREFIX)/share/$(MAN)
+	rmdir --ignore-fail-on-non-empty $(PREFIX)/share/man/man1
 
 .PHONY: clean
 clean:
