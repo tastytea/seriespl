@@ -27,7 +27,7 @@
 	Use stream providers without SSL support too
 	
 	\b -e \e EPISODES \n
-	Episode range, e.g. 2-5 or 7 or 9- or c (for current)
+	Episode range, e.g. 2-5 or 7 or 9-, use c for current
 
 	\b -s \e SEASONS \n
 	Season range, e.g. 1-2 or 4
@@ -90,7 +90,7 @@
 #include <utility>
 
 
-const std::string version = "1.0.3";
+const std::string version = "1.2.0";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -270,7 +270,7 @@ int main(int argc, char const *argv[])
 	short startSeason = -1, endSeason = -1;
 	std::string content;
 	PlaylistFormat playlist = PL_RAW;
-	bool current_episode = false;
+	uint8_t current_episode = 0; // 0 = no, 1 = c-, 2 = -c, 3 = c
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
@@ -295,7 +295,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
-					"  -e                   Episode range, e.g. 2-5 or 7 or 9- or c (for current)" << std::endl;
+					"  -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current" << std::endl;
 				std::cout <<
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				std::cout <<
@@ -340,9 +340,8 @@ int main(int argc, char const *argv[])
 					try
 					{
 						if (episodes.substr(0, pos) == "c")
-						{ // Prevent endEpisode from getting set to startEpisode later
-							current_episode = true;
-							--endEpisode;
+						{
+							current_episode = 1;
 						}
 						else
 						{
@@ -350,7 +349,21 @@ int main(int argc, char const *argv[])
 						}
 						if (episodes.length() > pos + 1)
 						{ // If episodes = 5-, output all episodes, beginning with 5
-							endEpisode = std::stoi( episodes.substr(pos + 1) );
+							if (episodes.substr(pos + 1) == "c")
+							{
+								if (current_episode == 1)
+								{
+									current_episode = 3;
+								}
+								else
+								{
+									current_episode = 2;
+								}
+							}
+							else
+							{
+								endEpisode = std::stoi( episodes.substr(pos + 1) );
+							}
 						}
 					}
 					catch (std::exception &e)
@@ -366,7 +379,7 @@ int main(int argc, char const *argv[])
 					{ 
 						if (episodes == "c")
 						{
-							current_episode = true;
+							current_episode = 3;
 						}
 						else
 						{ // Is episodes a single number?
@@ -495,17 +508,20 @@ int main(int argc, char const *argv[])
 				content = getpage(directoryurl);
 			}
 
-			if (current_episode)
+			if (current_episode != 0)
 			{
 				std::regex reEpisode("https://bs.to/serie/[^/]*/[[:digit:]]+/([[:digit:]]+)-.*");
 				std::smatch match;
 
 				if (std::regex_search(directoryurl, match, reEpisode))
 				{
-					startEpisode = std::stoi(match[1].str());
-					if (endEpisode == std::numeric_limits<unsigned short>::max())
-					{ // endEpisode is untouched
-						endEpisode = startEpisode;
+					if ((current_episode & 1) != 0)
+					{
+						startEpisode = std::stoi(match[1].str());
+					}
+					if ((current_episode & 2) != 0)
+					{
+						endEpisode = std::stoi(match[1].str());
 					}
 				}
 				else

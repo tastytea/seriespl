@@ -42,7 +42,7 @@ Working streaming providers:
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
       -i                   Use stream providers without SSL support too
-      -e                   Episode range, e.g. 2-5 or 7 or 9- or c (for current)
+      -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s                   Season range, e.g. 1-2 or 4
       -f                   Playlist format. Available: raw, m3u, pls
 
