@@ -36,7 +36,8 @@ install: $(TARGET)
 uninstall: $(TARGET)
 	rm $(PREFIX)/bin/$(TARGET)
 	rm $(PREFIX)/share/$(MAN)
-	rmdir --ignore-fail-on-non-empty $(PREFIX)/share/man/man1
+	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/share/man/man1
+	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/bin
 
 .PHONY: clean
 clean:
