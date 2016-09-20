@@ -270,7 +270,7 @@ int main(int argc, char const *argv[])
 	short startSeason = -1, endSeason = -1;
 	std::string content;
 	PlaylistFormat playlist = PL_RAW;
-	bool single_episode = false;
+	bool current_episode = false;
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
@@ -339,7 +339,15 @@ int main(int argc, char const *argv[])
 				{
 					try
 					{
-						startEpisode = std::stoi( episodes.substr(0, pos) );
+						if (episodes.substr(0, pos) == "c")
+						{ // Prevent endEpisode from getting set to startEpisode later
+							current_episode = true;
+							--endEpisode;
+						}
+						else
+						{
+							startEpisode = std::stoi( episodes.substr(0, pos) );
+						}
 						if (episodes.length() > pos + 1)
 						{ // If episodes = 5-, output all episodes, beginning with 5
 							endEpisode = std::stoi( episodes.substr(pos + 1) );
@@ -358,7 +366,7 @@ int main(int argc, char const *argv[])
 					{ 
 						if (episodes == "c")
 						{
-							single_episode = true;
+							current_episode = true;
 						}
 						else
 						{ // Is episodes a single number?
@@ -487,7 +495,7 @@ int main(int argc, char const *argv[])
 				content = getpage(directoryurl);
 			}
 
-			if (single_episode)
+			if (current_episode)
 			{
 				std::regex reEpisode("https://bs.to/serie/[^/]*/[[:digit:]]+/([[:digit:]]+)-.*");
 				std::smatch match;
@@ -495,7 +503,10 @@ int main(int argc, char const *argv[])
 				if (std::regex_search(directoryurl, match, reEpisode))
 				{
 					startEpisode = std::stoi(match[1].str());
-					endEpisode = std::stoi(match[1].str());
+					if (endEpisode == std::numeric_limits<unsigned short>::max())
+					{ // endEpisode is untouched
+						endEpisode = startEpisode;
+					}
 				}
 				else
 				{
