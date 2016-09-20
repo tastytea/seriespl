@@ -6,7 +6,7 @@ else
 endif
 
 LIBS   = -lPocoNet -lPocoNetSSL -lPocoFoundation -lpthread
-CFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native
+CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native $(LIBS)
 SRC    = main.cpp
 TARGET = seriespl
 MAN    = man/man1/seriespl.1
@@ -14,13 +14,13 @@ PREFIX = /usr/local
 
 # If on Raspberry Pi
 ifeq ($(shell uname -m),armv6l)
-	CFLAGS = -Os -pipe -Wall -std=c++11
+	CXXFLAGS = -Os -pipe -Wall -std=c++11
 endif
 
 all: $(TARGET) $(MAN)
 
 $(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(LIBS) -o $(TARGET) $(SRC)
+	$(CC) $(CXXFLAGS) -o $(TARGET) $(SRC)
 	strip --strip-all $(TARGET)
 
 $(MAN): $(SRC)
