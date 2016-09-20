@@ -27,7 +27,7 @@
 	Use stream providers without SSL support too
 	
 	\b -e \e EPISODES \n
-	Episode range, e.g. 2-5 or 7 or 9-
+	Episode range, e.g. 2-5 or 7 or 9- or c (for current)
 
 	\b -s \e SEASONS \n
 	Season range, e.g. 1-2 or 4
@@ -49,6 +49,11 @@
     Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 	\code
     seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
+    \endcode
+
+    Watch only current Episode:
+	\code
+    seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
     \endcode
 
     \section AUTHOR
@@ -85,7 +90,7 @@
 #include <utility>
 
 
-const std::string version = "1.0.1";
+const std::string version = "1.0.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -265,6 +270,7 @@ int main(int argc, char const *argv[])
 	short startSeason = -1, endSeason = -1;
 	std::string content;
 	PlaylistFormat playlist = PL_RAW;
+	bool single_episode = false;
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
@@ -289,7 +295,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
-					"  -e                   Episode range, e.g. 2-5 or 7 or 9-" << std::endl;
+					"  -e                   Episode range, e.g. 2-5 or 7 or 9- or c (for current)" << std::endl;
 				std::cout <<
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				std::cout <<
@@ -349,9 +355,16 @@ int main(int argc, char const *argv[])
 				else
 				{
 					try
-					{ // Is episodes a single number?
-						startEpisode = std::stoi(episodes);
-						endEpisode = std::stoi(episodes);
+					{ 
+						if (episodes == "c")
+						{
+							single_episode = true;
+						}
+						else
+						{ // Is episodes a single number?
+							startEpisode = std::stoi(episodes);
+							endEpisode = std::stoi(episodes);
+						}
 					}
 					catch (std::exception &e)
 					{
@@ -472,6 +485,23 @@ int main(int argc, char const *argv[])
 			else
 			{ // If no season range was selected, use supplied URL
 				content = getpage(directoryurl);
+			}
+
+			if (single_episode)
+			{
+				std::regex reEpisode("https://bs.to/serie/[^/]*/[[:digit:]]+/([[:digit:]]+)-.*");
+				std::smatch match;
+
+				if (std::regex_search(directoryurl, match, reEpisode))
+				{
+					startEpisode = std::stoi(match[1].str());
+					endEpisode = std::stoi(match[1].str());
+				}
+				else
+				{
+					std::cerr << "Could not extract current episode." << std::endl;
+					return 1;
+				}
 			}
 
 			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" +

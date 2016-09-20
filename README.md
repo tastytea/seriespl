@@ -42,7 +42,7 @@ Working streaming providers:
       -p stream providers  Comma delimited list. Available:
                            Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
       -i                   Use stream providers without SSL support too
-      -e                   Episode range, e.g. 2-5 or 7 or 9-
+      -e                   Episode range, e.g. 2-5 or 7 or 9- or c (for current)
       -s                   Season range, e.g. 1-2 or 4
       -f                   Playlist format. Available: raw, m3u, pls
 
@@ -58,6 +58,10 @@ Watch all episodes starting from 6 of South Park Season 1:
 Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 
     seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
+
+Watch only current Episode:
+
+    seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
 
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
