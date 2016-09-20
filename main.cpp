@@ -90,7 +90,7 @@
 #include <utility>
 
 
-const std::string version = "1.0.2";
+const std::string version = "1.0.3";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -516,7 +516,7 @@ int main(int argc, char const *argv[])
 			}
 
 			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" +
-				provider_re + ")-[0-9])\">");
+				provider_re + ")-[0-9])\"></a>");
 			std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 			std::sregex_iterator it_re_end;
 
