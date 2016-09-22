@@ -31,6 +31,7 @@ Working streaming providers:
  * Vivo
  * Shared
  * YouTube
+ * OpenLoad
  * PowerWatch (no ssl)
  * CloudTime (no ssl)
  * AuroraVid (no ssl)
@@ -41,7 +42,7 @@ Working streaming providers:
 
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
-                           Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto
+                           Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto
       -i                   Use stream providers without SSL support too
       -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s                   Season range, e.g. 1-2 or 4

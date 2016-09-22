@@ -21,7 +21,7 @@
 
 	\b -p  <em>STREAM PROVIDERS</em> \n
 	Comma delimited list. Available:
-	Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto
+	Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto
 
 	\b -i \n
 	Use stream providers without SSL support too
@@ -90,7 +90,7 @@
 #include <utility>
 
 
-const std::string version = "1.1.1";
+const std::string version = "1.1.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -103,6 +103,7 @@ enum StreamProviders
 	Vivo,
 	Shared,
 	YouTube,
+	OpenLoad,
 	PowerWatch,
 	CloudTime,
 	AuroraVid,
@@ -117,6 +118,7 @@ const std::map<StreamProviders, providerpair> providermap =
 	{Vivo, providerpair("Vivo", "vivo.sx")},
 	{Shared, providerpair("Shared", "shared.sx")},
 	{YouTube, providerpair("YouTube", "www.youtube.com")},
+	{OpenLoad, providerpair("OpenLoad", "openload.co")},
 	{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
 	{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
 	{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
@@ -168,8 +170,8 @@ std::string getlink(const std::string &url, const StreamProviders &provider, std
 
 	if (service == BurningSeries)
 	{
-		std::regex reStreamPage("<a href=\"(https?://" +
-			providermap.at(provider).second + "/.*)\" target=");
+		std::regex reStreamPage("(<a href| src)=[\"\'](https?://" +
+			providermap.at(provider).second + "/.*)[\"\']( target=|></iframe>)");
 		std::regex reTitle(
 			std::string("<h2 id=\"titleGerman\">(.*)") +
 				"[[:space:]]+<small id=\"titleEnglish\" lang=\"en\">(.*)</small>");
@@ -177,7 +179,7 @@ std::string getlink(const std::string &url, const StreamProviders &provider, std
 
 		if (std::regex_search(content, match, reStreamPage))
 		{
-			streamurl = match[1].str();
+			streamurl = match[2].str();
 			
 			if (provider == Streamcloud ||
 				provider == Vivo ||
@@ -266,7 +268,8 @@ int main(int argc, char const *argv[])
 		Streamcloud,
 		Vivo,
 		Shared,
-		YouTube
+		YouTube,
+		OpenLoad
 	};
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	short startSeason = -1, endSeason = -1;
@@ -293,7 +296,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -p stream providers  Comma delimited list. Available:" << std::endl;
 				std::cout <<
-					"                       Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto" << std::endl;
+					"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto" << std::endl;
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
