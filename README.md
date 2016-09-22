@@ -67,17 +67,5 @@ Watch only current Episode:
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
 
-
-# Todo
-## Until 1.0
- * ~~Better error handling & reporting~~
- * ~~Season selection~~
- * ~~Extended M3U playlist support~~
- * ~~PLS playlist support~~
- * ~~Support for all streaming providers available on bs.to and compatible with youtube-dl~~
-
-## After 1.0
- * Support for more Websites
-
 # Bugs & feature requests
 [Bugtracker](https://github.com/tastytea/seriespl/issues) on GitHub or via [E-Mail](mailto:bugs Ⓐ tastytea.de)
