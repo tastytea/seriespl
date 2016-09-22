@@ -34,13 +34,14 @@ Working streaming providers:
  * PowerWatch (no ssl)
  * CloudTime (no ssl)
  * AuroraVid (no ssl)
+ * Vidto (no ssl)
 
 ## Overview
     usage: seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL
 
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:
-                           Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
+                           Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto
       -i                   Use stream providers without SSL support too
       -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s                   Season range, e.g. 1-2 or 4

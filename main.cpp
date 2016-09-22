@@ -21,7 +21,7 @@
 
 	\b -p  <em>STREAM PROVIDERS</em> \n
 	Comma delimited list. Available:
-	Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid
+	Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto
 
 	\b -i \n
 	Use stream providers without SSL support too
@@ -90,7 +90,7 @@
 #include <utility>
 
 
-const std::string version = "1.1.0";
+const std::string version = "1.1.1";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -105,7 +105,8 @@ enum StreamProviders
 	YouTube,
 	PowerWatch,
 	CloudTime,
-	AuroraVid
+	AuroraVid,
+	Vidto
 };
 std::vector<StreamProviders> Providers;	// List of active stream providers
 
@@ -118,7 +119,8 @@ const std::map<StreamProviders, providerpair> providermap =
 	{YouTube, providerpair("YouTube", "www.youtube.com")},
 	{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
 	{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
-	{AuroraVid, providerpair("AuroraVid", "auroravid.to")}
+	{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
+	{Vidto, providerpair("Vidto", "vidto.me")}
 };
 
 enum PlaylistFormat
@@ -291,7 +293,7 @@ int main(int argc, char const *argv[])
 				std::cout <<
 					"  -p stream providers  Comma delimited list. Available:" << std::endl;
 				std::cout <<
-					"                       Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid" << std::endl;
+					"                       Streamcloud,Vivo,Shared,YouTube,PowerWatch,CloudTime,AuroraVid,Vidto" << std::endl;
 				std::cout <<
 					"  -i                   Use stream providers without SSL support too" << std::endl;
 				std::cout <<
@@ -329,7 +331,8 @@ int main(int argc, char const *argv[])
 						YouTube,
 						PowerWatch,
 						CloudTime,
-						AuroraVid
+						AuroraVid,
+						Vidto
 					};
 				break;
 			case 'e':	// Episodes
