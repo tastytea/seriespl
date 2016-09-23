@@ -81,7 +81,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.3.0";
+const std::string version = "1.3.1";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -305,6 +305,7 @@ int main(int argc, char const *argv[])
 						Vivo,
 						Shared,
 						YouTube,
+						OpenLoad,
 						PowerWatch,
 						CloudTime,
 						AuroraVid,
