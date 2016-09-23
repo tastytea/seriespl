@@ -1,9 +1,9 @@
 /******************************************************************************
- * "THE HUG-WARE LICENSE":                                                    *
- * tastytea <tastytea@tastytea.de> wrote this file. As long as you retain     *
- * this notice you can do whatever you want with this stuff. If we meet       *
- * some day, and you think this stuff is worth it, you can give me a hug.     *
+ * "THE HUG-WARE LICENSE" (Revision 2): As long as you retain this notice you *
+ * can do whatever you want with this stuff. If we meet some day, and you     *
+ * think this stuff is worth it, you can give me/us a hug.                    *
  ******************************************************************************/
+//Author: tastytea <tastytea@tastytea.de>
 
 /*! \page seriespl
 	Extract stream-URLs for entire seasons of tv series from bs.to 
@@ -38,30 +38,30 @@
 	\section EXAMPLES
 	Download all episodes of South Park Season 1-3:
 	\code
-    seriespl -s 1-3 https://bs.to/serie/South-Park | youtube-dl -a -
-    \endcode
+	seriespl -s 1-3 https://bs.to/serie/South-Park | youtube-dl -a -
+	\endcode
 
 	Watch all episodes starting from 6 of South Park Season 1:
 	\code
-    seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
-    \endcode
+	seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
+	\endcode
 
-    Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
+	Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 	\code
-    seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
-    \endcode
+	seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
+	\endcode
 
-    Watch only current Episode:
+	Watch only current Episode:
 	\code
-    seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
-    \endcode
+	seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
+	\endcode
 
-    \section AUTHOR
-    Written by tastytea \<tastytea@tastytea.de\>.
-    \section LICENSE
-    THE HUG-WARE LICENSE,  \<https://tastytea.de/licenses/HUG-WARE\>\n
-    This is free software: you are free to change and redistribute it.
-    There is NO WARRANTY, to the extent permitted by law. */
+	\section AUTHOR
+	Written by tastytea \<tastytea@tastytea.de\>.
+	\section LICENSE
+	THE HUG-WARE LICENSE (Revision 2): As long as you retain this notice you\n
+	can do whatever you want with this stuff. If we meet some day, and you\n
+	think this stuff is worth it, you can give me/us a hug. */
 
 #include <memory>
 #include <iostream>
