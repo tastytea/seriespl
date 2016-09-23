@@ -3,7 +3,7 @@
 # Install
 ## Dependencies
  * Linux (May work on other OS, not tested)
- * Newer than ancient clang or gcc (must support -std=c++11)
+ * clang or gcc
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
  * [libconfig](http://www.hyperrealm.com/libconfig/libconfig.html) (libconfig++ in some package managers)

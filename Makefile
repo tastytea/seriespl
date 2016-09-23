@@ -10,18 +10,16 @@ CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native
 NAME = seriespl
 PREFIX = /usr/local
 
-# If on Raspberry Pi
-ifeq ($(shell uname -m),armv6l)
-	CXXFLAGS = -Os -pipe -Wall -std=c++11
-endif
 
-
+.PHONY: all
 all: dirs $(NAME) man
 
+.PHONY: dirs
 dirs: bin obj
 
 $(NAME): bin/$(NAME)
 
+.PHONY: man
 man: man/man1/$(NAME).1
 
 bin obj:
@@ -34,7 +32,7 @@ obj/%.o: src/%.cpp $(wildcard src/*.hpp)
 
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
-	$(CC) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
+	$(CC) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
 	strip --strip-all bin/$(NAME)
 
 man/man1/$(NAME).1: src/main.cpp
