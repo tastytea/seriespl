@@ -78,7 +78,7 @@
 
 #include "http.hpp"
 
-const std::string version = "1.2.0";
+const std::string version = "1.2.1";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -494,7 +494,7 @@ int main(int argc, char const *argv[])
 			}
 
 			std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" +
-				provider_re + ")-[0-9])\"></a>");
+				provider_re + ")-[0-9])\">(" + provider_re + ")?</a>");
 			std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 			std::sregex_iterator it_re_end;
 
