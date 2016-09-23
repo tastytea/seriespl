@@ -6,15 +6,16 @@
 //Author: tastytea <tastytea@tastytea.de>
 
 
-#ifndef HTTP_HPP
-#define HTTP_HPP
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
 
-#include <curl/curl.h>
-#include <vector>
 #include <string>
+#include <map>
+#include <libconfig.h++>
 
-size_t curl_write_data(void *contents, size_t size, size_t nmemb, void *user);
+typedef std::map<std::string, std::string> cfgmap;
+typedef std::pair<std::string, std::string> cfgpair;
 
-std::string getpage(const std::string &url); // Fetch URL, return content
+bool readconfig(cfgmap &data);
 
 #endif

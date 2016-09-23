@@ -6,6 +6,8 @@
 //Author: tastytea <tastytea@tastytea.de>
 
 
+#include "http.hpp"
+
 #include <curl/curl.h>
 #include <vector>
 #include <iostream>

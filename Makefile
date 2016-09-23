@@ -5,9 +5,9 @@ else
 	CC = g++
 endif
 
-LIBS   = -lcurl
+LIBS   = -lcurl -lconfig++
 CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native $(LIBS)
-SRC    = main.cpp http.cpp
+SRC    = main.cpp http.cpp config.cpp
 TARGET = seriespl
 PREFIX = /usr/local
 

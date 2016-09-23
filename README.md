@@ -5,7 +5,8 @@
  * Linux (May work on other OS, not tested)
  * Newer than ancient clang or gcc (must support -std=c++11)
  * make
- * [curl](https://curl.haxx.se/) (Called libcurl in some package managers)
+ * [curl](https://curl.haxx.se/) (libcurl in some package managers)
+ * libconfig (libconfig++ in some package managers)
  * [Doxygen](http://doxygen.org/) (for the man page)
 
 ## Get sourcecode
@@ -61,6 +62,13 @@ Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 Watch only current Episode:
 
     seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
+
+# Config
+Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/seriespl.cfg`.
+
+    streamingproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+
+The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
 
 # Legal aspects
 Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.

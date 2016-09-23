@@ -58,6 +58,7 @@
 
 	\section AUTHOR
 	Written by tastytea \<tastytea@tastytea.de\>.
+
 	\section LICENSE
 	THE HUG-WARE LICENSE (Revision 2): As long as you retain this notice you\n
 	can do whatever you want with this stuff. If we meet some day, and you\n
@@ -75,10 +76,12 @@
 #include <limits>
 #include <map>
 #include <utility>
+#include <cstdio>
 
 #include "http.hpp"
+#include "config.hpp"
 
-const std::string version = "1.2.2";
+const std::string version = "1.3.0";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -119,6 +122,35 @@ enum PlaylistFormat
 	PL_M3U,
 	PL_PLS
 };
+
+void populate_providers(const std::string &providerlist)
+{
+	std::istringstream ss;
+
+	ss.str(providerlist);
+	Providers.clear();
+
+	std::regex reConfig("([[:alnum:]]+)");
+	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
+	std::sregex_iterator it_re_end;
+
+	std::cout << providerlist << std::endl;
+	while (it_re != it_re_end)
+	{
+		std::map<StreamProviders, providerpair>::const_iterator it;
+		for (it = providermap.begin(); it != providermap.end(); ++it)
+		{
+			if (it->second.first == (*it_re)[1])
+				Providers.push_back(it->first);
+		}
+		++it_re;
+	}
+	if (Providers.empty())
+	{
+		std::cerr << "Error: List of streaming providers is empty." << std::endl;
+		exit(2);
+	}
+}
 
 std::string getlink(const std::string &url, const StreamProviders &provider, std::string &title)
 { // Takes URL of episode-page and streaming provider, returns URL of stream-page or "" on error
@@ -228,6 +260,7 @@ int main(int argc, char const *argv[])
 		YouTube,
 		OpenLoad
 	};
+	cfgmap config;
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	short startSeason = -1, endSeason = -1;
 	std::string content;
@@ -240,8 +273,6 @@ int main(int argc, char const *argv[])
 	
 	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:")) != -1)
 	{
-		std::istringstream ss;
-		std::string item;
 		std::string episodes, seasons;
 		size_t pos;
 		switch (opt)
@@ -265,22 +296,7 @@ int main(int argc, char const *argv[])
 				return 0;
 				break;
 			case 'p':	// Provider
-				Providers.clear();
-				ss.str(optarg);
-				while (std::getline(ss, item, ','))
-				{
-					std::map<StreamProviders, providerpair>::const_iterator it;
-					for (it = providermap.begin(); it != providermap.end(); ++it)
-					{
-						if (it->second.first == item)
-							Providers.push_back(it->first);
-					}
-				}
-				if (Providers.empty())
-				{
-					std::cerr << "Error: List of streaming providers is empty." << std::endl;
-					return 2;
-				}
+				populate_providers(std::string(optarg));
 				break;
 			case 'i':	// Insecure
 					Providers =
@@ -430,6 +446,11 @@ int main(int argc, char const *argv[])
 		service = BurningSeries;
 	}
 
+	// read config and set streaming providers, if specified
+	if (readconfig(config))
+	{
+		populate_providers(config["streamproviders"].c_str());
+	}
 
 	if (service == BurningSeries)
 	{
