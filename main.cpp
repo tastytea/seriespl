@@ -78,7 +78,7 @@
 
 #include "http.hpp"
 
-const std::string version = "1.1.3";
+const std::string version = "1.2.0";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
