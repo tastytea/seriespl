@@ -78,7 +78,7 @@
 
 #include "http.hpp"
 
-const std::string version = "1.2.1";
+const std::string version = "1.2.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -488,8 +488,8 @@ int main(int argc, char const *argv[])
 				}
 				else
 				{
-					std::cerr << "Could not extract current episode." << std::endl;
-					return 1;
+					std::cerr << "Error: Could not extract current episode." << std::endl;
+					return 3;
 				}
 			}
 
@@ -498,6 +498,11 @@ int main(int argc, char const *argv[])
 			std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 			std::sregex_iterator it_re_end;
 
+			if (it_re == it_re_end)
+			{ // No matches
+				std::cerr << "Error: No episodes found" << std::endl;
+				return 4;
+			}
 			while (it_re != it_re_end)
 			{ // 1 == link, 2 == episode, 3 == provider
 				static short episode = 0;
