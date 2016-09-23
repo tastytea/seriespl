@@ -81,7 +81,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.3.1";
+const std::string version = "1.3.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -134,7 +134,6 @@ void populate_providers(const std::string &providerlist)
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
 	std::sregex_iterator it_re_end;
 
-	std::cout << providerlist << std::endl;
 	while (it_re != it_re_end)
 	{
 		std::map<StreamProviders, providerpair>::const_iterator it;
