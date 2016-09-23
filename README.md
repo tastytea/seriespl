@@ -5,10 +5,8 @@
  * Linux (May work on other OS, not tested)
  * Newer than ancient clang or gcc (must support -std=c++11)
  * make
- * [curl](https://curl.haxx.se/)
+ * [curl](https://curl.haxx.se/) (Called libcurl in some package managers)
  * [Doxygen](http://doxygen.org/) (for the man page)
-
-Does not work with Debian Jessie due to old libpoco-dev.
 
 ## Get sourcecode
 ### Current release
