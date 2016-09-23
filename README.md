@@ -6,7 +6,7 @@
  * Newer than ancient clang or gcc (must support -std=c++11)
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
- * libconfig (libconfig++ in some package managers)
+ * [libconfig](http://www.hyperrealm.com/libconfig/libconfig.html) (libconfig++ in some package managers)
  * [Doxygen](http://doxygen.org/) (for the man page)
 
 ## Get sourcecode

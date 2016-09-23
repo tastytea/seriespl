@@ -7,8 +7,8 @@ endif
 
 LIBS   = -lcurl -lconfig++
 CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native $(LIBS)
-SRC    = main.cpp http.cpp config.cpp
-TARGET = seriespl
+SRC    = src/main.cpp src/http.cpp src/config.cpp
+TARGET = bin/seriespl
 PREFIX = /usr/local
 
 # If on Raspberry Pi
@@ -22,7 +22,7 @@ $(TARGET): $(SRC)
 	$(CC) $(CXXFLAGS) -o $(TARGET) $(SRC)
 	strip --strip-all $(TARGET)
 
-man: $(SRC)
+man: src/main.cpp
 	doxygen > /dev/null
 
 .PHONY: install
@@ -30,12 +30,12 @@ install: $(TARGET)
 	mkdir -p $(PREFIX)/bin
 	install -m 0755 $(TARGET) $(PREFIX)/bin
 	mkdir -p $(PREFIX)/share/man/man1
-	install -m 0644 man/man1/$(TARGET).1 $(PREFIX)/share/man/man1
+	install -m 0644 man/man1/seriespl.1 $(PREFIX)/share/man/man1
 
 .PHONY: uninstall
-uninstall: $(TARGET)
-	rm $(PREFIX)/bin/$(TARGET)
-	rm $(PREFIX)/share/man/man1/$(TARGET).1
+uninstall:
+	rm $(PREFIX)/$(TARGET)
+	rm $(PREFIX)/share/man/man1/seriespl.1
 	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/share/man/man1
 	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/bin
 
