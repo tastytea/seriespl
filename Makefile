@@ -5,9 +5,9 @@ else
 	CC = g++
 endif
 
-LIBS   = -lPocoNet -lPocoNetSSL -lPocoFoundation -lpthread
+LIBS   = -lcurl
 CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native $(LIBS)
-SRC    = main.cpp
+SRC    = main.cpp http.cpp
 TARGET = seriespl
 MAN    = man/man1/seriespl.1
 PREFIX = /usr/local

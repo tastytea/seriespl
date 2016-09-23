@@ -4,9 +4,8 @@
 ## Dependencies
  * Linux (May work on other OS, not tested)
  * Newer than ancient clang or gcc (must support -std=c++11)
- * glibc (another libc should work, must support getopt)
  * make
- * [poco](http://pocoproject.org/) (works with 1.4.6_p4)
+ * [curl](https://curl.haxx.se/)
  * [Doxygen](http://doxygen.org/) (for the man page)
 
 Does not work with Debian Jessie due to old libpoco-dev.

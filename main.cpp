@@ -63,19 +63,6 @@
     This is free software: you are free to change and redistribute it.
     There is NO WARRANTY, to the extent permitted by law. */
 
-#include "Poco/Exception.h"
-#include "Poco/StreamCopier.h"
-
-#include "Poco/URI.h"
-#include "Poco/URIStreamOpener.h"
-#include "Poco/Net/HTTPStreamFactory.h"
-#include "Poco/Net/HTTPSStreamFactory.h"
-
-#include "Poco/Net/AcceptCertificateHandler.h"
-#include "Poco/Net/InvalidCertificateHandler.h"
-#include "Poco/Net/Context.h"
-#include "Poco/Net/SSLManager.h"
-
 #include <memory>
 #include <iostream>
 #include <string>
@@ -89,8 +76,9 @@
 #include <map>
 #include <utility>
 
+#include "http.hpp"
 
-const std::string version = "1.1.2";
+const std::string version = "1.1.3";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -131,37 +119,6 @@ enum PlaylistFormat
 	PL_M3U,
 	PL_PLS
 };
-
-void init_poco()
-{
-	Poco::Net::HTTPStreamFactory::registerFactory();
-	Poco::Net::HTTPSStreamFactory::registerFactory();
-
-	Poco::Net::initializeSSL();
-	Poco::Net::SSLManager::InvalidCertificateHandlerPtr ptrHandler(
-		new Poco::Net::AcceptCertificateHandler(false));
-	Poco::Net::Context::Ptr ptrContext(
-		new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, ""));
-	Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, ptrContext);
-}
-
-std::string getpage(const std::string &url)
-{ // Fetch URL, return content
-	std::string content = "";
-	try
-	{
-		auto &opener = Poco::URIStreamOpener::defaultOpener();
-		auto uri = Poco::URI { url };
-		auto is = std::shared_ptr<std::istream> { opener.open(uri) };
-		Poco::StreamCopier::copyToString(*(is.get()), content);
-	}
-	catch (Poco::Exception &e)
-	{
-		std::cerr << e.displayText() << std::endl;
-	}
-
-	return content;
-}
 
 std::string getlink(const std::string &url, const StreamProviders &provider, std::string &title)
 { // Takes URL of episode-page and streaming provider, returns URL of stream-page or "" on error
@@ -473,7 +430,6 @@ int main(int argc, char const *argv[])
 		service = BurningSeries;
 	}
 
-	init_poco();
 
 	if (service == BurningSeries)
 	{
