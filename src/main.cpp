@@ -81,7 +81,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.3.2";
+const std::string version = "1.3.3";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -449,7 +449,7 @@ int main(int argc, char const *argv[])
 	// read config and set streaming providers, if specified
 	if (readconfig(config))
 	{
-		populate_providers(config["streamproviders"].c_str());
+		populate_providers(config["streamproviders"]);
 	}
 
 	if (service == BurningSeries)
