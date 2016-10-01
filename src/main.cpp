@@ -126,6 +126,8 @@ enum PlaylistFormat
 	PL_PLS
 };
 
+std::string yt_dl_path = "youtube-dl";
+
 void populate_providers(const std::string &providerlist)
 {
 	std::istringstream ss;
@@ -257,9 +259,9 @@ std::string get_direct_url(std::string &providerurl)
 	char buffer[256];
 	std::string result;
 
-	if(!(ytdl = popen((std::string("youtube-dl --get-url ") + providerurl).c_str(), "r")))
+	if(!(ytdl = popen(( yt_dl_path + " --get-url " + providerurl).c_str(), "r")))
 	{
-		std::cerr << "Error: Can not get direct URL" << std::endl;
+		std::cerr << "Error: Can not spawn process for youtube-dl" << std::endl;
 		return "";
 	}
 
@@ -267,7 +269,11 @@ std::string get_direct_url(std::string &providerurl)
 	{
 		result += buffer;
 	}
-	pclose(ytdl);
+	if (pclose(ytdl) != 0)
+	{
+		std::cerr << "Error: youtube-dl returned non-zero exit code" << std::endl;
+		return "";
+	}
 
 	return result.substr(0, result.find_last_not_of("\r\n") + 1);
 }
@@ -480,7 +486,10 @@ int main(int argc, char const *argv[])
 	// read config and set streaming providers, if specified
 	if (readconfig(config))
 	{
-		populate_providers(config["streamproviders"]);
+		if (config["streamproviders"] != "")
+			populate_providers(config["streamproviders"]);
+		if (config["youtube-dl"] != "")
+			yt_dl_path = config["youtube-dl"];
 	}
 
 	if (service == BurningSeries)

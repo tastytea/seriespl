@@ -33,10 +33,13 @@ bool readconfig(cfgmap &data)
 
 		try
 		{
-			std::string value;
+			std::string value = "";
 
 			cfg.lookupValue("streamproviders", value);
 			data.insert(cfgpair("streamproviders", value));
+			value = "";
+			cfg.lookupValue("youtube-dl", value);
+			data.insert(cfgpair("youtube-dl", value));
 		}
 		catch(const libconfig::SettingNotFoundException &e)
 		{

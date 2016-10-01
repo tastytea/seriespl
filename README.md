@@ -68,6 +68,7 @@ Watch only current Episode:
 Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/seriespl.cfg`.
 
     streamproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+    youtube-dl = "/usr/bin/youtube-dl"
 
 The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
 
