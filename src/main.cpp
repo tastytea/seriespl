@@ -59,6 +59,16 @@
 	seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
 	\endcode
 
+	\section CONFIGURATION
+	Place the config file in ${XDG_CONFIG_HOME}/seriespl.cfg or ${HOME}/seriespl.cfg.
+	Values must be surrounded by quotes.
+
+	\subsection streamproviders
+		Comma delimited list of streamproviders. Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+
+    \subsection youtube-dl
+    	Path to youtube-dl. Default: "youtube-dl"
+
 	\section AUTHOR
 	Written by tastytea \<tastytea@tastytea.de\>.
 
@@ -84,7 +94,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.4.0";
+const std::string version = "1.4.1";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -254,7 +264,6 @@ void print_playlist(const PlaylistFormat &playlist, const std::string &url)
 
 std::string get_direct_url(std::string &providerurl)
 { // Use youtube-dl to print the direct URL of the video file
-	//FIXME: path to youtube-dl in config file
 	FILE *ytdl;
 	char buffer[256];
 	std::string result;
