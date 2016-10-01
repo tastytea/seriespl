@@ -45,6 +45,7 @@ Working streaming providers:
       -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s                   Season range, e.g. 1-2 or 4
       -f                   Playlist format. Available: raw, m3u, pls
+      -y                   Use youtube-dl to print the direct URL of the video file
 
 ## Examples
 Download all episodes of South Park Season 1-3:
@@ -67,6 +68,7 @@ Watch only current Episode:
 Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/seriespl.cfg`.
 
     streamproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+    youtube-dl = "/usr/bin/youtube-dl"
 
 The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
 
