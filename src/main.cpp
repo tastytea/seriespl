@@ -54,9 +54,9 @@
 	seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
 	\endcode
 
-	Watch only current Episode:
+	Watch only current Episode in vlc, with correct title:
 	\code
-	seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
+	seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 	\endcode
 
 	\section CONFIGURATION
@@ -94,7 +94,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.4.1";
+const std::string version = "1.4.2";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries

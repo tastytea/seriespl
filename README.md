@@ -60,9 +60,9 @@ Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 
     seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
 
-Watch only current Episode:
+Watch only current Episode in vlc, with correct title:
 
-    seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
+    seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 
 # Config
 Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/seriespl.cfg`.
