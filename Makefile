@@ -21,6 +21,7 @@ all: dirs $(NAME) man
 .PHONY: dirs
 dirs: bin obj
 
+.PHONY: $(NAME)
 $(NAME): bin/$(NAME)
 
 .PHONY: man
@@ -44,17 +45,17 @@ man/man1/$(NAME).1: src/main.cpp
 
 .PHONY: install
 install: all
-	mkdir -p $(DESTDIR)/$(PREFIX)/bin
-	install -m 0755 bin/$(NAME) $(DESTDIR)/$(PREFIX)/bin
-	mkdir -p $(DESTDIR)/$(PREFIX)/share/man/man1
-	install -m 0644 man/man1/$(NAME).1 $(DESTDIR)/$(PREFIX)/share/man/man1
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 bin/$(NAME) $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
+	install -m 0644 man/man1/$(NAME).1 $(DESTDIR)$(PREFIX)/share/man/man1
 
 .PHONY: uninstall
 uninstall:
-	rm $(DESTDIR)/$(PREFIX)/bin/$(NAME)
-	rm $(DESTDIR)/$(PREFIX)/share/man/man1/$(NAME).1
-	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)/$(PREFIX)/share/man/man1
-	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)/$(PREFIX)/bin
+	rm $(DESTDIR)$(PREFIX)/bin/$(NAME)
+	rm $(DESTDIR)$(PREFIX)/share/man/man1/$(NAME).1
+	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)$(PREFIX)/share/man/man1
+	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)$(PREFIX)/bin
 
 .PHONY: clean
 clean:
