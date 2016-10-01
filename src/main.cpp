@@ -35,6 +35,9 @@
 	\b -f \e FORMAT \n
 	Playlist format. Available: raw, m3u, pls
 
+	\b -y \n
+	Use youtube-dl to print the direct URL of the video file
+
 	\section EXAMPLES
 	Download all episodes of South Park Season 1-3:
 	\code
@@ -247,6 +250,28 @@ void print_playlist(const PlaylistFormat &playlist, const std::string &url)
 	return print_playlist(playlist, url, "");
 }
 
+std::string get_direct_url(std::string &providerurl)
+{ // Use youtube-dl to print the direct URL of the video file
+	//FIXME: path to youtube-dl in config file
+	FILE *ytdl;
+	char buffer[256];
+	std::string result;
+
+	if(!(ytdl = popen((std::string("youtube-dl --get-url ") + providerurl).c_str(), "r")))
+	{
+		std::cerr << "Error: Can not get direct URL" << std::endl;
+		return "";
+	}
+
+	while(fgets(buffer, sizeof(buffer), ytdl) != NULL)
+	{
+		result += buffer;
+	}
+	pclose(ytdl);
+
+	return result.substr(0, result.find_last_not_of("\r\n") + 1);
+}
+
 int main(int argc, char const *argv[])
 {
 	std::string directoryurl = "";	// URL for the overview-page of a series,
@@ -265,12 +290,13 @@ int main(int argc, char const *argv[])
 	std::string content;
 	PlaylistFormat playlist = PL_RAW;
 	uint8_t current_episode = 0; // 0 = no, 1 = c-, 2 = -c, 3 = c
+	bool direct_url = false;
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL";
+		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:y")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -292,24 +318,26 @@ int main(int argc, char const *argv[])
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				std::cout <<
 					"  -f                   Playlist format. Available: raw, m3u, pls" << std::endl;
+				std::cout <<
+					"  -y                   Use youtube-dl to print the direct URL of the video file" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
 				populate_providers(std::string(optarg));
 				break;
 			case 'i':	// Insecure
-					Providers =
-					{
-						Streamcloud,
-						Vivo,
-						Shared,
-						YouTube,
-						OpenLoad,
-						PowerWatch,
-						CloudTime,
-						AuroraVid,
-						Vidto
-					};
+				Providers =
+				{
+					Streamcloud,
+					Vivo,
+					Shared,
+					YouTube,
+					OpenLoad,
+					PowerWatch,
+					CloudTime,
+					AuroraVid,
+					Vidto
+				};
 				break;
 			case 'e':	// Episodes
 				episodes = optarg;
@@ -417,6 +445,9 @@ int main(int argc, char const *argv[])
 					playlist = PL_PLS;
 				else
 					std::cerr << "Playlist format not recognized, defaulting to raw." << std::endl;
+				break;
+			case 'y':	// youtube-dl
+				direct_url = true;
 				break;
 			default:
 				std::cerr << usage << std::endl;
@@ -552,7 +583,15 @@ int main(int argc, char const *argv[])
 						{
 							std::string streamtitle;
 							std::string streamurl = getlink(episodelink, it->first, streamtitle);
-							print_playlist(playlist, streamurl, streamtitle);
+							if (direct_url)
+							{
+								print_playlist(playlist, get_direct_url(streamurl), streamtitle);
+							}
+							else
+							{
+								print_playlist(playlist, streamurl, streamtitle);
+							}
+
 						}
 					}
 					episode = std::stoi((*it_re)[2]);

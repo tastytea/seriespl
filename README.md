@@ -45,6 +45,7 @@ Working streaming providers:
       -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s                   Season range, e.g. 1-2 or 4
       -f                   Playlist format. Available: raw, m3u, pls
+      -y                   Use youtube-dl to print the direct URL of the video file
 
 ## Examples
 Download all episodes of South Park Season 1-3:
