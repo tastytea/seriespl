@@ -60,14 +60,14 @@
 	\endcode
 
 	\section CONFIGURATION
-	Place the config file in ${XDG_CONFIG_HOME}/seriespl.cfg or ${HOME}/seriespl.cfg.
+	Place the config file in ${XDG_CONFIG_HOME}/seriespl.cfg or ${HOME}/.config/seriespl.cfg.
 	Values must be surrounded by quotes.
 
 	\subsection streamproviders
-		Comma delimited list of streamproviders. Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+	Comma delimited list of streamproviders. Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
 
-    \subsection youtube-dl
-    	Path to youtube-dl. Default: "youtube-dl"
+	\subsection youtube-dl
+	Path to youtube-dl. Default: "youtube-dl"
 
 	\section AUTHOR
 	Written by tastytea \<tastytea@tastytea.de\>.
@@ -94,7 +94,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.4.2";
+const std::string version = "1.4.3";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries

@@ -65,7 +65,7 @@ Watch only current Episode in vlc, with correct title:
     seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 
 # Config
-Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/seriespl.cfg`.
+Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/seriespl.cfg`.
 
     streamproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
     youtube-dl = "/usr/bin/youtube-dl"
