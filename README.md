@@ -46,6 +46,7 @@ Working streaming providers:
       -s                   Season range, e.g. 1-2 or 4
       -f                   Playlist format. Available: raw, m3u, pls
       -y                   Use youtube-dl to print the direct URL of the video file
+      -V                   Output version and copyright information and exit
 
 ## Examples
 Download all episodes of South Park Season 1-3:
@@ -72,8 +73,11 @@ Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/s
 
 The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
 
-# Legal aspects
-Please inform yourself if using this program is legal under your jurisdiction. I am not responsible for your actions.
+# Copyright
+    Copyright © 2016 tastytea <tastytea@tastytea.de>.
+    License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.
+    This is free software: you are free to change and redistribute it.
+    There is NO WARRANTY, to the extent permitted by law.
 
 # Bugs & feature requests
 [Bugtracker](https://github.com/tastytea/seriespl/issues) on GitHub or via [E-Mail](mailto:bugs Ⓐ tastytea.de)

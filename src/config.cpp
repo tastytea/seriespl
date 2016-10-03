@@ -1,9 +1,21 @@
-/******************************************************************************
- * "THE HUG-WARE LICENSE" (Revision 2): As long as you retain this notice you *
- * can do whatever you want with this stuff. If we meet some day, and you     *
- * think this stuff is worth it, you can give me/us a hug.                    *
+/*
+ *	Copyright © 2016 tastytea <tastytea@tastytea.de>
+ *
+ *	This file is part of seriespl.
+ *
+ *	seriespl is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, version 2 of the License.
+ *
+ *	seriespl is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *
  ******************************************************************************/
-//Author: tastytea <tastytea@tastytea.de>
 
 
 #include "config.hpp"

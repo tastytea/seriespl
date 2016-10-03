@@ -1,9 +1,22 @@
-/******************************************************************************
- * "THE HUG-WARE LICENSE" (Revision 2): As long as you retain this notice you *
- * can do whatever you want with this stuff. If we meet some day, and you     *
- * think this stuff is worth it, you can give me/us a hug.                    *
+/*
+ *	Copyright © 2016 tastytea <tastytea@tastytea.de>
+ *
+ *	This file is part of seriespl.
+ *
+ *	seriespl is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, version 2 of the License.
+ *
+ *	seriespl is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *
  ******************************************************************************/
-//Author: tastytea <tastytea@tastytea.de>
+
 
 /*! \page seriespl
 	Extract stream-URLs for entire seasons of tv series from bs.to 
@@ -38,6 +51,9 @@
 	\b -y \n
 	Use youtube-dl to print the direct URL of the video file
 
+	\b -V \n
+	Output version and copyright information and exit
+
 	\section EXAMPLES
 	Download all episodes of South Park Season 1-3:
 	\code
@@ -69,13 +85,11 @@
 	\subsection youtube-dl
 	Path to youtube-dl. Default: "youtube-dl"
 
-	\section AUTHOR
-	Written by tastytea \<tastytea@tastytea.de\>.
-
-	\section LICENSE
-	THE HUG-WARE LICENSE (Revision 2): As long as you retain this notice you\n
-	can do whatever you want with this stuff. If we meet some day, and you\n
-	think this stuff is worth it, you can give me/us a hug. */
+	\section COPYRIGHT
+	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
+	\<http://www.gnu.org/licenses/gpl-2.0.html\>.\n
+	This is free software: you are free to change and redistribute it.
+	There is NO WARRANTY, to the extent permitted by law. */
 
 #include <memory>
 #include <iostream>
@@ -94,7 +108,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.4.3";
+const std::string version = "1.4.4";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -311,7 +325,7 @@ int main(int argc, char const *argv[])
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:y")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yV")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -335,6 +349,8 @@ int main(int argc, char const *argv[])
 					"  -f                   Playlist format. Available: raw, m3u, pls" << std::endl;
 				std::cout <<
 					"  -y                   Use youtube-dl to print the direct URL of the video file" << std::endl;
+				std::cout <<
+					"  -V                   Output version and copyright information and exit" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
@@ -463,6 +479,14 @@ int main(int argc, char const *argv[])
 				break;
 			case 'y':	// youtube-dl
 				direct_url = true;
+				break;
+			case 'V':	// Version
+				std::cout << "seriespl " << version << "\n"
+						  << "Copyright © 2016 tastytea <tastytea@tastytea.de>.\n"
+						  << "License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.\n"
+						  << "This is free software: you are free to change and redistribute it.\n"
+						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;
+				return 0;
 				break;
 			default:
 				std::cerr << usage << std::endl;
