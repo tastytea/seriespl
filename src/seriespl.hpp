@@ -27,11 +27,11 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.7";
+	const std::string version = "1.4.8";
 
-	Seriespl(int argc, char const *argv[]);
+	Seriespl();
 	~Seriespl();
-	int run();
+	int run(int argc, char const *argv[]);
 
 private:
 	typedef const std::pair <std::string, std::string> providerpair; // Name and domain

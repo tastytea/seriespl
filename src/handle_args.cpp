@@ -57,7 +57,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 					"  -y                   Use youtube-dl to print the direct URL of the video file" << std::endl;
 				std::cout <<
 					"  -V                   Output version and copyright information and exit" << std::endl;
-				return 0;
+				return -1;
 				break;
 			case 'p':	// Provider
 				populate_providers(std::string(optarg));
@@ -183,7 +183,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 						  << "License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.\n"
 						  << "This is free software: you are free to change and redistribute it.\n"
 						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;
-				return 0;
+				return -1;
 				break;
 			default:
 				std::cerr << usage << std::endl;

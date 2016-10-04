@@ -33,7 +33,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-Seriespl::Seriespl(int argc, char const *argv[])
+Seriespl::Seriespl()
 	// Set default list of active streaming providers, SSL only
 :	Providers({ Streamcloud, Vivo, Shared, YouTube, OpenLoad }),
 	providermap
@@ -57,16 +57,25 @@ Seriespl::Seriespl(int argc, char const *argv[])
 		if (config["youtube-dl"] != "")
 			yt_dl_path = config["youtube-dl"];
 	}
-	handle_args(argc, argv);
-
-	set_service();
 }
 
 Seriespl::~Seriespl() {}
 
-int Seriespl::run()
+int Seriespl::run(int argc, char const *argv[])
 {
+	int ret = handle_args(argc, argv);
 	std::string content;
+
+	if (ret > 0)
+	{
+		return ret;
+	}
+	else if (ret < 0)
+	{
+		return 0;
+	}
+
+	set_service();
 
 	if (service == BurningSeries)
 	{

@@ -22,7 +22,7 @@
 
 int main(int argc, char const *argv[])
 {
-	Seriespl app(argc, argv);
+	Seriespl app;
 
-	return app.run();
+	return app.run(argc, argv);
 }
