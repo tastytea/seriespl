@@ -13,7 +13,7 @@
  *	GNU General Public License for more details.
  *
  *	You should have received a copy of the GNU General Public License
- *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *	along with seriespl. If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
 
@@ -24,7 +24,7 @@
 #include <vector>
 #include <iostream>
 
-size_t curl_write_data(void *contents, size_t size, size_t nmemb, void *user)
+size_t GetHTTP::curl_write_data(void *contents, size_t size, size_t nmemb, void *user)
 {
 	auto chunk = reinterpret_cast<char*>(contents);
 	auto buffer = reinterpret_cast<std::vector<char>*>(user);
@@ -38,7 +38,7 @@ size_t curl_write_data(void *contents, size_t size, size_t nmemb, void *user)
 	return sizeIncrease;
 }
 
-std::string getpage(const std::string &url)
+std::string GetHTTP::getpage(const std::string &url)
 { // Fetch URL, return content
 	CURL *curl;
 	CURLcode res;

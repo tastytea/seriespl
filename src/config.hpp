@@ -13,7 +13,7 @@
  *	GNU General Public License for more details.
  *
  *	You should have received a copy of the GNU General Public License
- *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *	along with seriespl. If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
 
@@ -25,9 +25,13 @@
 #include <map>
 #include <libconfig.h++>
 
-typedef std::map<std::string, std::string> cfgmap;
-typedef std::pair<std::string, std::string> cfgpair;
+class Config
+{
+public:
+	typedef std::map<std::string, std::string> cfgmap;
+	typedef std::pair<std::string, std::string> cfgpair;
 
-bool readconfig(cfgmap &data);
+	static bool read(cfgmap &data);
+};
 
 #endif

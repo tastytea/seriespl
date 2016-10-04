@@ -13,7 +13,7 @@
  *	GNU General Public License for more details.
  *
  *	You should have received a copy of the GNU General Public License
- *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *	along with seriespl. If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
 
@@ -21,9 +21,10 @@
 #include "config.hpp"
 #include <string>
 #include <iostream>
+#include <cstdlib>
 #include <libconfig.h++>
 
-bool readconfig(cfgmap &data)
+bool Config::read(cfgmap &data)
 {
 	libconfig::Config cfg;
 	std::string filename;
