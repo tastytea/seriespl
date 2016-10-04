@@ -20,6 +20,7 @@
 
 #include "seriespl.hpp"
 #include <iostream>
+#include <vector>
 #include <getopt.h>
 #include <unistd.h>	// sleep()
 #include <cstring>	// strncmp()
@@ -62,18 +63,9 @@ int Seriespl::handle_args(int argc, char const *argv[])
 				populate_providers(std::string(optarg));
 				break;
 			case 'i':	// Insecure
-				Providers =
-				{
-					Streamcloud,
-					Vivo,
-					Shared,
-					YouTube,
-					OpenLoad,
-					PowerWatch,
-					CloudTime,
-					AuroraVid,
-					Vidto
-				};
+				// Add Providers without SSL support
+				Providers.insert(Providers.end(),
+					{ PowerWatch, CloudTime, AuroraVid, Vidto });
 				break;
 			case 'e':	// Episodes
 				episodes = optarg;
