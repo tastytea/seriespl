@@ -41,7 +41,7 @@ bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	strip --strip-all bin/$(NAME)
 
 man/man1/$(NAME).1: src/main.cpp
-	doxygen > /dev/null
+	doxygen
 
 .PHONY: install
 install: all
