@@ -27,7 +27,7 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.4";
+	const std::string version = "1.4.5";
 	typedef const std::pair <std::string, std::string> providerpair; // Name and domain
 
 	Seriespl();
