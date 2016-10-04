@@ -1,8 +1,8 @@
 # Use clang if available, else gcc
 ifneq ($(shell which clang++ 2> /dev/null),)
-	CC = clang++
+	CXX = clang++
 else
-	CC = g++
+	CXX = g++
 endif
 
 LDLIBS   = -lcurl -lconfig++
@@ -10,18 +10,21 @@ CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native
 NAME = seriespl
 PREFIX = /usr/local
 
-# If on Raspberry Pi
-ifeq ($(shell uname -m),armv6l)
-	CXXFLAGS = -Os -pipe -Wall -std=c++11
+# arm-g++ doesn't seem to support -march=native, despite saying so
+ifneq (,$(findstring arm,$(CXX)))
+	CXXFLAGS := $(filter-out -mtune=native,$(CXXFLAGS))
 endif
 
-
+.PHONY: all
 all: dirs $(NAME) man
 
+.PHONY: dirs
 dirs: bin obj
 
+.PHONY: $(NAME)
 $(NAME): bin/$(NAME)
 
+.PHONY: man
 man: man/man1/$(NAME).1
 
 bin obj:
@@ -30,29 +33,29 @@ bin obj:
 
 # $@ = left side of :, $< = first element right of : (%.cpp)
 obj/%.o: src/%.cpp $(wildcard src/*.hpp)
-	$(CC) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
 
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
-	$(CC) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
+	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
 	strip --strip-all bin/$(NAME)
 
 man/man1/$(NAME).1: src/main.cpp
 	doxygen > /dev/null
 
 .PHONY: install
-install: $(TARGET)
-	mkdir -p $(PREFIX)/bin
-	install -m 0755 bin/$(NAME) $(PREFIX)/bin
-	mkdir -p $(PREFIX)/share/man/man1
-	install -m 0644 man/man1/$(NAME).1 $(PREFIX)/share/man/man1
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 bin/$(NAME) $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
+	install -m 0644 man/man1/$(NAME).1 $(DESTDIR)$(PREFIX)/share/man/man1
 
 .PHONY: uninstall
 uninstall:
-	rm $(PREFIX)/bin/$(NAME)
-	rm $(PREFIX)/share/man/man1/$(NAME).1
-	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/share/man/man1
-	rmdir --parents --ignore-fail-on-non-empty $(PREFIX)/bin
+	rm $(DESTDIR)$(PREFIX)/bin/$(NAME)
+	rm $(DESTDIR)$(PREFIX)/share/man/man1/$(NAME).1
+	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)$(PREFIX)/share/man/man1
+	rmdir --parents --ignore-fail-on-non-empty $(DESTDIR)$(PREFIX)/bin
 
 .PHONY: clean
 clean:

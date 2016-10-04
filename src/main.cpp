@@ -1,9 +1,22 @@
-/******************************************************************************
- * "THE HUG-WARE LICENSE" (Revision 2): As long as you retain this notice you *
- * can do whatever you want with this stuff. If we meet some day, and you     *
- * think this stuff is worth it, you can give me/us a hug.                    *
+/*
+ *	Copyright © 2016 tastytea <tastytea@tastytea.de>
+ *
+ *	This file is part of seriespl.
+ *
+ *	seriespl is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, version 2 of the License.
+ *
+ *	seriespl is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *
  ******************************************************************************/
-//Author: tastytea <tastytea@tastytea.de>
+
 
 /*! \page seriespl
 	Extract stream-URLs for entire seasons of tv series from bs.to 
@@ -35,6 +48,12 @@
 	\b -f \e FORMAT \n
 	Playlist format. Available: raw, m3u, pls
 
+	\b -y \n
+	Use youtube-dl to print the direct URL of the video file
+
+	\b -V \n
+	Output version and copyright information and exit
+
 	\section EXAMPLES
 	Download all episodes of South Park Season 1-3:
 	\code
@@ -51,18 +70,26 @@
 	seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
 	\endcode
 
-	Watch only current Episode:
+	Watch only current Episode in vlc, with correct title:
 	\code
-	seriespl -e c https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | mpv --playlist=-
+	seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 	\endcode
 
-	\section AUTHOR
-	Written by tastytea \<tastytea@tastytea.de\>.
+	\section CONFIGURATION
+	Place the config file in ${XDG_CONFIG_HOME}/seriespl.cfg or ${HOME}/.config/seriespl.cfg.
+	Values must be surrounded by quotes.
 
-	\section LICENSE
-	THE HUG-WARE LICENSE (Revision 2): As long as you retain this notice you\n
-	can do whatever you want with this stuff. If we meet some day, and you\n
-	think this stuff is worth it, you can give me/us a hug. */
+	\subsection streamproviders
+	Comma delimited list of streamproviders. Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+
+	\subsection youtube-dl
+	Path to youtube-dl. Default: "youtube-dl"
+
+	\section COPYRIGHT
+	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
+	\<http://www.gnu.org/licenses/gpl-2.0.html\>.\n
+	This is free software: you are free to change and redistribute it.
+	There is NO WARRANTY, to the extent permitted by law. */
 
 #include <memory>
 #include <iostream>
@@ -81,7 +108,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.3.0";
+const std::string version = "1.4.4";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -123,6 +150,8 @@ enum PlaylistFormat
 	PL_PLS
 };
 
+std::string yt_dl_path = "youtube-dl";
+
 void populate_providers(const std::string &providerlist)
 {
 	std::istringstream ss;
@@ -134,7 +163,6 @@ void populate_providers(const std::string &providerlist)
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
 	std::sregex_iterator it_re_end;
 
-	std::cout << providerlist << std::endl;
 	while (it_re != it_re_end)
 	{
 		std::map<StreamProviders, providerpair>::const_iterator it;
@@ -248,6 +276,31 @@ void print_playlist(const PlaylistFormat &playlist, const std::string &url)
 	return print_playlist(playlist, url, "");
 }
 
+std::string get_direct_url(std::string &providerurl)
+{ // Use youtube-dl to print the direct URL of the video file
+	FILE *ytdl;
+	char buffer[256];
+	std::string result;
+
+	if(!(ytdl = popen(( yt_dl_path + " --get-url " + providerurl).c_str(), "r")))
+	{
+		std::cerr << "Error: Can not spawn process for youtube-dl" << std::endl;
+		return "";
+	}
+
+	while(fgets(buffer, sizeof(buffer), ytdl) != NULL)
+	{
+		result += buffer;
+	}
+	if (pclose(ytdl) != 0)
+	{
+		std::cerr << "Error: youtube-dl returned non-zero exit code" << std::endl;
+		return "";
+	}
+
+	return result.substr(0, result.find_last_not_of("\r\n") + 1);
+}
+
 int main(int argc, char const *argv[])
 {
 	std::string directoryurl = "";	// URL for the overview-page of a series,
@@ -266,12 +319,13 @@ int main(int argc, char const *argv[])
 	std::string content;
 	PlaylistFormat playlist = PL_RAW;
 	uint8_t current_episode = 0; // 0 = no, 1 = c-, 2 = -c, 3 = c
+	bool direct_url = false;
 
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL";
+		" [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yV")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -293,23 +347,28 @@ int main(int argc, char const *argv[])
 					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
 				std::cout <<
 					"  -f                   Playlist format. Available: raw, m3u, pls" << std::endl;
+				std::cout <<
+					"  -y                   Use youtube-dl to print the direct URL of the video file" << std::endl;
+				std::cout <<
+					"  -V                   Output version and copyright information and exit" << std::endl;
 				return 0;
 				break;
 			case 'p':	// Provider
 				populate_providers(std::string(optarg));
 				break;
 			case 'i':	// Insecure
-					Providers =
-					{
-						Streamcloud,
-						Vivo,
-						Shared,
-						YouTube,
-						PowerWatch,
-						CloudTime,
-						AuroraVid,
-						Vidto
-					};
+				Providers =
+				{
+					Streamcloud,
+					Vivo,
+					Shared,
+					YouTube,
+					OpenLoad,
+					PowerWatch,
+					CloudTime,
+					AuroraVid,
+					Vidto
+				};
 				break;
 			case 'e':	// Episodes
 				episodes = optarg;
@@ -418,6 +477,17 @@ int main(int argc, char const *argv[])
 				else
 					std::cerr << "Playlist format not recognized, defaulting to raw." << std::endl;
 				break;
+			case 'y':	// youtube-dl
+				direct_url = true;
+				break;
+			case 'V':	// Version
+				std::cout << "seriespl " << version << "\n"
+						  << "Copyright © 2016 tastytea <tastytea@tastytea.de>.\n"
+						  << "License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.\n"
+						  << "This is free software: you are free to change and redistribute it.\n"
+						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;
+				return 0;
+				break;
 			default:
 				std::cerr << usage << std::endl;
 				return 1;
@@ -449,7 +519,10 @@ int main(int argc, char const *argv[])
 	// read config and set streaming providers, if specified
 	if (readconfig(config))
 	{
-		populate_providers(config["streamproviders"].c_str());
+		if (config["streamproviders"] != "")
+			populate_providers(config["streamproviders"]);
+		if (config["youtube-dl"] != "")
+			yt_dl_path = config["youtube-dl"];
 	}
 
 	if (service == BurningSeries)
@@ -552,7 +625,15 @@ int main(int argc, char const *argv[])
 						{
 							std::string streamtitle;
 							std::string streamurl = getlink(episodelink, it->first, streamtitle);
-							print_playlist(playlist, streamurl, streamtitle);
+							if (direct_url)
+							{
+								print_playlist(playlist, get_direct_url(streamurl), streamtitle);
+							}
+							else
+							{
+								print_playlist(playlist, streamurl, streamtitle);
+							}
+
 						}
 					}
 					episode = std::stoi((*it_re)[2]);
