@@ -42,7 +42,7 @@ bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
 	strip --strip-all bin/$(NAME)
 
-man/man1/$(NAME).1: src/main.cpp
+man/man1/$(NAME).1: manpage.doxygen
 	doxygen
 
 .PHONY: install

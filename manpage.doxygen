@@ -70,4 +70,9 @@
 	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
 	\<http://www.gnu.org/licenses/gpl-2.0.html\>.\n
 	This is free software: you are free to change and redistribute it.
-	There is NO WARRANTY, to the extent permitted by law. */
+	There is NO WARRANTY, to the extent permitted by law.
+
+	\section BUGS
+	If the season range contains numbers that are higher than the available seasons,
+	season 1 is returned.
+*/
