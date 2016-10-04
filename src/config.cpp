@@ -21,6 +21,7 @@
 #include "config.hpp"
 #include <string>
 #include <iostream>
+#include <cstdlib>
 #include <libconfig.h++>
 
 bool readconfig(cfgmap &data)

@@ -6,7 +6,9 @@ else
 endif
 
 LDLIBS   = -lcurl -lconfig++
-CXXFLAGS = -O2 -pipe -Wall -std=c++11 -mtune=native
+CXXFLAGS = -O2 -pipe -Wall -mtune=native
+# Make sure that c++11 is selected
+override CXXFLAGS += -std=c++11
 NAME = seriespl
 PREFIX = /usr/local
 
