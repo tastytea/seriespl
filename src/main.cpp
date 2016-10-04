@@ -108,7 +108,7 @@
 #include "http.hpp"
 #include "config.hpp"
 
-const std::string version = "1.4.4";
+const std::string version = "1.4.5";
 enum Services
 { // Services who provide links to entire seasons
 	BurningSeries
@@ -236,6 +236,8 @@ void print_playlist(const PlaylistFormat &playlist, const std::string &url,
 					const std::string &title)
 {
 	static unsigned short counter = 1;
+	std::string newtitle = title;
+	size_t pos = 0;
 
 	switch (playlist)
 	{
@@ -247,7 +249,13 @@ void print_playlist(const PlaylistFormat &playlist, const std::string &url,
 			{
 				std::cout << "#EXTM3U" << std::endl;
 			}
-			std::cout << "#EXTINF:-1," << title << std::endl;
+			// Replacing comma with U+201A, SINGLE LOW-9 QUOTATION MARK
+			// Because VLC uses commas in titles as separator for metadata
+			while ((pos = title.find(',', pos + 1)) != std::string::npos)
+			{
+				newtitle.replace(pos, 1, "‚");
+			}
+			std::cout << "#EXTINF:-1," << newtitle << std::endl;
 			std::cout << url << std::endl;
 			break;
 		case PL_PLS:
