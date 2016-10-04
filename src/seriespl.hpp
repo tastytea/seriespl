@@ -27,15 +27,14 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.5";
-	typedef const std::pair <std::string, std::string> providerpair; // Name and domain
+	const std::string version = "1.4.6";
 
-	Seriespl();
+	Seriespl(int argc, char const *argv[]);
 	~Seriespl();
-	int handle_args(int argc, char const *argv[]);
-	int start();
+	int run();
 
 private:
+	typedef const std::pair <std::string, std::string> providerpair; // Name and domain
 	enum Services
 	{ // Services who provide links to entire seasons
 		BurningSeries
@@ -54,35 +53,26 @@ private:
 		Vidto
 	};
 	std::vector<StreamProviders> Providers;	// List of active stream providers
-	const std::map<StreamProviders, providerpair> providermap =
-	{ // Map stream providers to string and URL
-		{Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
-		{Vivo, providerpair("Vivo", "vivo.sx")},
-		{Shared, providerpair("Shared", "shared.sx")},
-		{YouTube, providerpair("YouTube", "www.youtube.com")},
-		{OpenLoad, providerpair("OpenLoad", "openload.co")},
-		{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
-		{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
-		{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
-		{Vidto, providerpair("Vidto", "vidto.me")}
-	};
+	// Map stream providers to string and URL
+	const std::map<StreamProviders, providerpair> providermap;
 	enum PlaylistFormat
 	{
 		PL_RAW,
 		PL_M3U,
 		PL_PLS
 	};
-	std::string yt_dl_path = "youtube-dl";
+	std::string yt_dl_path = "youtube-dl";	// Path to youtube-dl
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
-	cfgmap config;
+	Config::cfgmap config;
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	short startSeason = -1, endSeason = -1;
-	std::string content;
 	uint8_t current_episode = 0; // 0 = no, 1 = c-, 2 = -c, 3 = c
 	bool direct_url = false;
 	PlaylistFormat playlist = PL_RAW;
 
+	int handle_args(int argc, char const *argv[]);
+	void set_service();
 	void populate_providers(const std::string &providerlist);
 	std::string getlink(const std::string &url, const StreamProviders &provider,
 						std::string &title);

@@ -24,7 +24,7 @@
 #include <cstdlib>
 #include <libconfig.h++>
 
-bool readconfig(cfgmap &data)
+bool Config::read(cfgmap &data)
 {
 	libconfig::Config cfg;
 	std::string filename;

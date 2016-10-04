@@ -25,9 +25,13 @@
 #include <map>
 #include <libconfig.h++>
 
-typedef std::map<std::string, std::string> cfgmap;
-typedef std::pair<std::string, std::string> cfgpair;
+class Config
+{
+public:
+	typedef std::map<std::string, std::string> cfgmap;
+	typedef std::pair<std::string, std::string> cfgpair;
 
-bool readconfig(cfgmap &data);
+	static bool read(cfgmap &data);
+};
 
 #endif

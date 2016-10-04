@@ -25,8 +25,13 @@
 #include <vector>
 #include <string>
 
-size_t curl_write_data(void *contents, size_t size, size_t nmemb, void *user);
+class GetHTTP
+{
+public:
+	static std::string getpage(const std::string &url); // Fetch URL, return content
 
-std::string getpage(const std::string &url); // Fetch URL, return content
+private:
+	static size_t curl_write_data(void *contents, size_t size, size_t nmemb, void *user);
+};
 
 #endif
