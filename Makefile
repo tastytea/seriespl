@@ -1,16 +1,17 @@
-# Use clang if available, else gcc
-ifneq ($(shell which clang++ 2> /dev/null),)
-	CXX = clang++
-else
-	CXX = g++
+# Makefile for seriespl
+ifndef CXX
+	CXX = c++
 endif
-
 LDLIBS   = -lcurl -lconfig++
-CXXFLAGS = -O2 -pipe -Wall -mtune=native
+ifndef CXXFLAGS
+	CXXFLAGS = -O2 -pipe -Wall -mtune=native
+endif
 # Make sure that c++11 is selected
 override CXXFLAGS += -std=c++11
 NAME = seriespl
-PREFIX = /usr/local
+ifndef PREFIX
+	PREFIX = /usr/local
+endif
 
 # arm-g++ doesn't seem to support -march=native, despite saying so
 ifneq (,$(findstring arm,$(CXX)))
@@ -40,7 +41,6 @@ obj/%.o: src/%.cpp $(wildcard src/*.hpp)
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
-	strip --strip-all bin/$(NAME)
 
 man/man1/$(NAME).1: manpage.doxygen
 	doxygen

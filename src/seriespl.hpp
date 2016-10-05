@@ -27,7 +27,7 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.8";
+	const std::string version = "1.4.9";
 
 	Seriespl();
 	~Seriespl();
