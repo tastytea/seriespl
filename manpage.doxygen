@@ -61,10 +61,10 @@
 	Values must be surrounded by quotes.
 
 	\subsection streamproviders
-	Comma delimited list of streamproviders. Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+	Comma delimited list of streamproviders. Default: \"Streamcloud,Vivo,Shared,YouTube,OpenLoad\"
 
 	\subsection youtube-dl
-	Path to youtube-dl. Default: "youtube-dl"
+	Path to youtube-dl. Default: \"youtube-dl\"
 
 	\section COPYRIGHT
 	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
