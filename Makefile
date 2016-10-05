@@ -43,7 +43,8 @@ bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
 
 man/man1/$(NAME).1: manpage.doxygen
-	doxygen
+	(cat Doxyfile && echo -n "PROJECT_NUMBER = " && \
+		grep "version =" src/seriespl.hpp | cut -d\" -f2) | doxygen -
 
 .PHONY: install
 install: all
