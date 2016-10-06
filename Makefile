@@ -12,11 +12,12 @@ NAME = seriespl
 ifndef PREFIX
 	PREFIX = /usr/local
 endif
-
 # arm-g++ doesn't seem to support -march=native, despite saying so
 ifneq (,$(findstring arm,$(CXX)))
 	CXXFLAGS := $(filter-out -mtune=native,$(CXXFLAGS))
 endif
+VERSION=$(shell grep "version =" src/seriespl.hpp | cut -d\" -f2)
+
 
 .PHONY: all
 all: dirs $(NAME) man
@@ -43,8 +44,7 @@ bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
 
 man/man1/$(NAME).1: manpage.doxygen
-	(cat Doxyfile && echo -n "PROJECT_NUMBER = " && \
-		grep "version =" src/seriespl.hpp | cut -d\" -f2) | doxygen -
+	(cat Doxyfile && echo "PROJECT_NUMBER = $(VERSION)") | doxygen -
 
 .PHONY: install
 install: all
