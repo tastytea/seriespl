@@ -2,8 +2,8 @@
 
 # Install
 ## Dependencies
- * Linux (May work on other OS, not tested)
- * clang or gcc
+ * Linux or macOS (These are tested, other should work, too)
+ * gcc or clang
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
  * [libconfig](http://www.hyperrealm.com/libconfig/libconfig.html) (libconfig++ in some package managers)
@@ -19,6 +19,10 @@
 ## Compile
     make
     make install
+
+If you have installed dependencies in non standard paths (homebrew for example installs into /usr/local), you can use `EXTRA_CXXFLAGS` and `EXTRA_LDFLAGS` to point to these paths. For example:
+
+    make EXTRA_CXXFLAGS="-I/usr/local/include" EXTRA_LDFLAGS="-L/usr/local/lib"
 
 # Usage
 Working websites:
