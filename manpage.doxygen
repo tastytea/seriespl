@@ -57,7 +57,7 @@
 	\endcode
 
 	\section CONFIGURATION
-	Place the config file in ${XDG_CONFIG_HOME}/seriespl.cfg or ${HOME}/.config/seriespl.cfg.
+	Place the config file in <tt>${XDG_CONFIG_HOME}/seriespl.cfg</tt> or <tt>${HOME}/.config/seriespl.cfg</tt>.
 	Values must be surrounded by quotes.
 
 	\subsection streamproviders
@@ -65,6 +65,9 @@
 
 	\subsection youtube-dl
 	Path to youtube-dl. Default: \"youtube-dl\"
+
+	\section see SEE ALSO
+	\b youtube-dl(1)
 
 	\section COPYRIGHT
 	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
