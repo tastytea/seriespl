@@ -65,3 +65,4 @@ clean:
 	rm -f obj/*.o
 	rm -f bin/$(NAME)
 	rm -rf man
+	rm -f doxygen_sqlite3.db
