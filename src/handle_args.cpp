@@ -38,25 +38,17 @@ int Seriespl::handle_args(int argc, char const *argv[])
 		switch (opt)
 		{
 			case 'h':	// Help
-				std::cout << usage << std::endl << std::endl;
-				std::cout <<
-					"  -h                   Show this help" << std::endl;
-				std::cout <<
-					"  -p stream providers  Comma delimited list. Available:" << std::endl;
-				std::cout <<
-					"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto" << std::endl;
-				std::cout <<
-					"  -i                   Use stream providers without SSL support too" << std::endl;
-				std::cout <<
-					"  -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current" << std::endl;
-				std::cout <<
-					"  -s                   Season range, e.g. 1-2 or 4" << std::endl;
-				std::cout <<
-					"  -f                   Playlist format. Available: raw, m3u, pls" << std::endl;
-				std::cout <<
-					"  -y                   Use youtube-dl to print the direct URL of the video file" << std::endl;
-				std::cout <<
-					"  -V                   Output version and copyright information and exit" << std::endl;
+				std::cout << usage << "\n\n"
+				"  -h                   Show this help\n"
+				"  -p stream providers  Comma delimited list. Available:\n"
+				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,"
+				                        "PowerWatch,CloudTime,AuroraVid,Vidto\n"
+				"  -i                   Use stream providers without SSL support too\n"
+				"  -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current\n"
+				"  -s                   Season range, e.g. 1-2 or 4\n"
+				"  -f                   Playlist format. Available: raw, m3u, pls\n"
+				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
+				"  -V                   Output version and copyright information and exit" << std::endl;
 				return -1;
 				break;
 			case 'p':	// Provider
@@ -76,7 +68,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 					{
 						if (episodes.substr(0, pos) == "c")
 						{
-							current_episode = 1;
+							current_episode |= 1;
 						}
 						else
 						{
@@ -86,14 +78,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 						{ // If episodes = 5-, output all episodes, beginning with 5
 							if (episodes.substr(pos + 1) == "c")
 							{
-								if (current_episode == 1)
-								{
-									current_episode = 3;
-								}
-								else
-								{
-									current_episode = 2;
-								}
+								current_episode |= 2;
 							}
 							else
 							{

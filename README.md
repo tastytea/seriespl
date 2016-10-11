@@ -31,9 +31,11 @@ If you have installed dependencies in non standard paths (homebrew for example i
 
 # Usage
 Working websites:
+
  * https://bs.to/
 
 Working streaming providers:
+
  * Streamcloud
  * Vivo
  * Shared
