@@ -47,7 +47,7 @@ Working streaming providers:
  * Vidto (no ssl)
 
 ## Overview
-    usage: seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL
+    usage: seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL
 
       -h                   Show this help
       -p stream providers  Comma delimited list. Available:

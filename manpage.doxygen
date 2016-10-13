@@ -3,7 +3,7 @@
 	Extract stream-URLs for entire seasons of tv series from bs.to 
 	
 	\section SYNOPSIS
-	seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] URL
+	seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL
 	
 	\section DESCRIPTION
 	__seriespl__ extracts stream-URLs for entire seasons of tv series from bs.to
