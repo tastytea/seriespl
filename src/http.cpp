@@ -119,7 +119,7 @@ std::string Seriespl::getlink(const std::string &url, const StreamProviders &pro
 	return getlink(url, provider, title);
 }
 
-std::string Seriespl::get_direct_url(std::string &providerurl)
+std::string Seriespl::get_direct_url(const std::string &providerurl)
 { // Use youtube-dl to print the direct URL of the video file
 	FILE *ytdl;
 	char buffer[256];

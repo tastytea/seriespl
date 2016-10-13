@@ -27,11 +27,21 @@ void Seriespl::print_playlist(const PlaylistFormat &playlist, const std::string 
 	static unsigned short counter = 1;
 	std::string newtitle = title;
 	size_t pos = 0;
+	std::string newurl;
+
+	if (direct_url)
+	{
+		newurl = get_direct_url(url);
+	}
+	else
+	{
+		newurl = url;
+	}
 
 	switch (playlist)
 	{
 		case PL_RAW:
-			std::cout << url << std::endl;
+			std::cout << newurl << std::endl;
 			break;
 		case PL_M3U:
 			if (counter == 1) // Write header
@@ -45,7 +55,7 @@ void Seriespl::print_playlist(const PlaylistFormat &playlist, const std::string 
 				newtitle.replace(pos, 1, "‚");	// The ‚ is not a comma
 			}
 			std::cout << "#EXTINF:-1," << newtitle << std::endl;
-			std::cout << url << std::endl;
+			std::cout << newurl << std::endl;
 			break;
 		case PL_PLS:
 			if (counter == 1) // Write header
@@ -53,13 +63,13 @@ void Seriespl::print_playlist(const PlaylistFormat &playlist, const std::string 
 				std::cout << "[playlist]" << std::endl;
 				std::cout << "Version=2" << std::endl;
 			}
-			if (url == "NUMBER_OF_EPISODES")
+			if (newurl == "NUMBER_OF_EPISODES")
 			{
 				std::cout << "NumberOfEntries=" << counter - 1 << std::endl;
 			}
 			else
 			{
-				std::cout << "File" << counter << "=" << url << std::endl;
+				std::cout << "File" << counter << "=" << newurl << std::endl;
 				std::cout << "Title" << counter << "=" << title << std::endl;
 				std::cout << "Length" << counter << "=-1" << std::endl;
 			}

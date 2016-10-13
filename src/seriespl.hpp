@@ -27,7 +27,7 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.10";
+	const std::string version = "1.4.11";
 
 	Seriespl();
 	~Seriespl();
@@ -79,8 +79,9 @@ private:
 	std::string getlink(const std::string &url, const StreamProviders &provider,
 						std::string &title);
 	std::string getlink(const std::string &url, const StreamProviders &provider);
-	std::string get_direct_url(std::string &providerurl);
+	std::string get_direct_url(const std::string &providerurl);
 	void print_playlist(const PlaylistFormat &playlist, const std::string &url,
 						const std::string &title);
 	void print_playlist(const PlaylistFormat &playlist, const std::string &url);
+	int burningseries();
 };
