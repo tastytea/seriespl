@@ -12,8 +12,8 @@
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License
- *	along with seriespl.  If not, see <http://www.gnu.org/licenses/>.
+ *	You should have received a copy of the GNU General Public License along
+ *	with seriespl.  If not, see <https://www.gnu.org/licenses/gpl-2.0.html>.
  *
  ******************************************************************************/
 
@@ -165,7 +165,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 			case 'V':	// Version
 				std::cout << "seriespl " << version << "\n"
 						  << "Copyright © 2016 tastytea <tastytea@tastytea.de>.\n"
-						  << "License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.\n"
+						  << "License GPLv2: GNU GPL version 2 <https://www.gnu.org/licenses/gpl-2.0.html>.\n"
 						  << "This is free software: you are free to change and redistribute it.\n"
 						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;
 				return -1;
