@@ -127,7 +127,7 @@ int Seriespl::burningseries()
 					{
 						std::string streamtitle;
 						std::string streamurl = getlink(episodelink, it->first, streamtitle);
-						print_playlist(playlist, get_direct_url(streamurl), streamtitle);
+						print_playlist(playlist, streamurl, streamtitle);
 
 					}
 				}

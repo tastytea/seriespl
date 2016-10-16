@@ -24,6 +24,8 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <cstdio>		// popen()
+#include <sys/wait.h>	// WEXITSTATUS()
 #include "seriespl.hpp"
 
 size_t Seriespl::curl_write_data(void *contents, size_t size, size_t nmemb, void *user)
@@ -85,10 +87,11 @@ std::string Seriespl::getlink(const std::string &url, const StreamProviders &pro
 		{
 			streamurl = match[2].str();
 			
-			if (provider == Streamcloud ||
+			if (provider == Streamcloud ||	//FIXME: This sucks
 				provider == Vivo ||
 				provider == Shared ||
-				provider == YouTube)
+				provider == YouTube ||
+				provider == OpenLoad)
 			{ // Make sure we use SSL where supported
 				if (streamurl.find("https") == std::string::npos)
 				{
@@ -124,8 +127,10 @@ std::string Seriespl::get_direct_url(const std::string &providerurl)
 	FILE *ytdl;
 	char buffer[256];
 	std::string result;
+	int status = 0;
 
-	if(!(ytdl = popen(( yt_dl_path + " --get-url " + providerurl).c_str(), "r")))
+	ytdl = popen((yt_dl_path + " --get-url " + providerurl).c_str(), "r");
+	if (ytdl == NULL)
 	{
 		std::cerr << "Error: Can not spawn process for youtube-dl" << std::endl;
 		return "";
@@ -135,9 +140,11 @@ std::string Seriespl::get_direct_url(const std::string &providerurl)
 	{
 		result += buffer;
 	}
-	if (pclose(ytdl) != 0)
+	status = pclose(ytdl);
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 	{
-		std::cerr << "Error: youtube-dl returned non-zero exit code" << std::endl;
+		std::cerr << "Error: youtube-dl returned non-zero exit code ("
+			<< WEXITSTATUS(status) << ")" << std::endl;
 		return "";
 	}
 
