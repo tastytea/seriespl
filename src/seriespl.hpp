@@ -27,14 +27,13 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.12";
+	const std::string version = "1.4.13";
 
 	Seriespl();
 	~Seriespl();
 	int run(int argc, char const *argv[]);
 
 private:
-	typedef const std::pair <std::string, std::string> providerpair; // Name and domain
 	enum Services
 	{ // Services who provide links to entire seasons
 		BurningSeries
@@ -52,9 +51,12 @@ private:
 		AuroraVid,
 		Vidto
 	};
+	const std::vector<StreamProviders> Providers_ssl;
+	const std::vector<StreamProviders> Providers_nossl;
 	std::vector<StreamProviders> Providers;	// List of active stream providers
 	// Map stream providers to string and URL
-	const std::map<StreamProviders, providerpair> providermap;
+	typedef const std::pair <const std::string, const std::string> providerpair; // Name and domain
+	const std::map<const StreamProviders, const providerpair> providermap;
 	enum PlaylistFormat
 	{
 		PL_RAW,

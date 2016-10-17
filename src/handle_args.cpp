@@ -57,7 +57,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 			case 'i':	// Insecure
 				// Add Providers without SSL support
 				Providers.insert(Providers.end(),
-					{ PowerWatch, CloudTime, AuroraVid, Vidto });
+					Providers_nossl.begin(), Providers_nossl.end());
 				break;
 			case 'e':	// Episodes
 				episodes = optarg;

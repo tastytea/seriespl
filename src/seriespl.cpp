@@ -32,7 +32,9 @@
 
 Seriespl::Seriespl()
 	// Set default list of active streaming providers, SSL only
-:	Providers({ Streamcloud, Vivo, Shared, YouTube, OpenLoad }),
+:	Providers_ssl({ Streamcloud, Vivo, Shared, YouTube, OpenLoad }),
+	Providers_nossl({ PowerWatch, CloudTime, AuroraVid, Vidto }),
+	Providers(Providers_ssl),
 	providermap
 	({
 		{Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},

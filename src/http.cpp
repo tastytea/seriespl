@@ -86,16 +86,16 @@ std::string Seriespl::getlink(const std::string &url, const StreamProviders &pro
 		if (std::regex_search(content, match, reStreamPage))
 		{
 			streamurl = match[2].str();
-			
-			if (provider == Streamcloud ||	//FIXME: This sucks
-				provider == Vivo ||
-				provider == Shared ||
-				provider == YouTube ||
-				provider == OpenLoad)
+			std::vector<StreamProviders>::const_iterator it;
+
+			for (it = Providers_ssl.begin(); it < Providers_ssl.end(); ++it)
 			{ // Make sure we use SSL where supported
-				if (streamurl.find("https") == std::string::npos)
+				if (*it == provider)
 				{
-					streamurl = "https" + streamurl.substr(4, std::string::npos);
+					if (streamurl.find("https") == std::string::npos)
+					{ // Replace "http" with "https"
+						streamurl = "https" + streamurl.substr(4, std::string::npos);
+					}
 				}
 			}
 		}
