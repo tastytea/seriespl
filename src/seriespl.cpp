@@ -46,15 +46,17 @@ Seriespl::Seriespl()
 		{CloudTime, providerpair("CloudTime", "www.cloudtime.to")},
 		{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
 		{Vidto, providerpair("Vidto", "vidto.me")}
-	})
+	}),
+	config("seriespl")
 {
 	// read config and set streaming providers, if specified
-	if (Config::read(config))
+	config.verbose = true;
+	if (config.read())
 	{
-		if (config["streamproviders"] != "")
-			populate_providers(config["streamproviders"]);
-		if (config["youtube-dl"] != "")
-			yt_dl_path = config["youtube-dl"];
+		if (config.get_value("streamproviders") != "")
+			populate_providers(config.get_value("streamproviders"));
+		if (config.get_value("youtube-dl") != "")
+			yt_dl_path = config.get_value("youtube-dl");
 	}
 }
 

@@ -1,3 +1,5 @@
+// Very limited, but easy to use, wrapper for libconfig++
+
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -17,20 +19,27 @@
  *
  ******************************************************************************/
 
-
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
 #include <string>
-#include <map>
+#include <libconfig.h++>
+
 
 class Config
 {
 public:
-	typedef std::map<std::string, std::string> cfgmap;
-	typedef std::pair<std::string, std::string> cfgpair;
+	explicit Config(const std::string &name);
+	~Config();
+	bool read();
+	std::string get_value(const std::string &key);
 
-	static bool read(cfgmap &data);
+	bool verbose;
+
+private:
+	const std::string _name = "";
+	std::string _filepath = "";
+	libconfig::Config _cfg;
 };
 
 #endif

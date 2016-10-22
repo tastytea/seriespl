@@ -17,59 +17,68 @@
  *
  ******************************************************************************/
 
-
 #include "config.hpp"
 #include <string>
 #include <iostream>
 #include <cstdlib>
 #include <libconfig.h++>
 
-bool Config::read(cfgmap &data)
+
+Config::Config(const std::string &name)
+:	_name(name),
+	verbose(false)
 {
-	libconfig::Config cfg;
-	std::string filename;
-	
+}
+
+Config::~Config() {}
+
+bool Config::read()
+{
 	if (getenv("XDG_CONFIG_HOME") != NULL)
 	{
-		filename = std::string(getenv("XDG_CONFIG_HOME"));
+		_filepath = std::string(getenv("XDG_CONFIG_HOME"));
 	}
 	else
 	{
-		filename = std::string(getenv("HOME")) + "/.config";
+		_filepath = std::string(getenv("HOME")) + "/.config";
 	}
-	filename += "/seriespl.cfg";
+	_filepath += "/" + _name + ".cfg";
 
 	//Read config file. On error report and return false
 	try
 	{
-		cfg.readFile(filename.c_str());
-
-		try
-		{
-			std::string value = "";
-
-			cfg.lookupValue("streamproviders", value);
-			data.insert(cfgpair("streamproviders", value));
-			value = "";
-			cfg.lookupValue("youtube-dl", value);
-			data.insert(cfgpair("youtube-dl", value));
-		}
-		catch(const libconfig::SettingNotFoundException &e)
-		{
-			//std::cerr <<"Setting not found in configuration file." << std::endl;
-		}
+		_cfg.readFile(_filepath.c_str());
 	}
 	catch(const libconfig::FileIOException &e)
 	{
-		//std::cerr << "I/O error while reading configuration file." << std::endl;
+		if (verbose)
+			std::cerr << "ERROR: Config: I/O error while reading \"" << _filepath
+				<< "\"." << std::endl;
 		return false;
 	}
 	catch(const libconfig::ParseException &e)
 	{
-		std::cerr << "Parse error at " << e.getFile() << ":" << e.getLine()
+		std::cerr << "ERROR: Config: Parse error at " << e.getFile() << ":" << e.getLine()
 			<< " - " << e.getError() << std::endl;
 		return false;
 	}
 
 	return true;
+}
+
+std::string Config::get_value(const std::string &key)
+{
+	std::string value = "";
+
+	try
+	{
+		_cfg.lookupValue(key, value);
+		return value;
+	}
+	catch(const libconfig::SettingNotFoundException &e)
+	{ //FIXME: Never gets triggered
+		if (verbose)
+			std::cerr << "ERROR: Config: \"" << key << "\" not found." << std::endl;
+		return "";
+	}
 }

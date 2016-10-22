@@ -27,7 +27,7 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.14";
+	const std::string version = "1.4.15";
 
 	Seriespl();
 	~Seriespl();
@@ -66,7 +66,7 @@ private:
 	std::string yt_dl_path = "youtube-dl";	// Path to youtube-dl
 	std::string directoryurl = "";	// URL for the overview-page of a series,
 									// e.g. https://bs.to/serie/Die-Simpsons/1
-	Config::cfgmap config;
+	Config config;
 	unsigned short startEpisode = 0, endEpisode = std::numeric_limits<unsigned short>::max();
 	short startSeason = -1, endSeason = -1;
 	uint8_t current_episode = 0; // 0 = no, 1 = c-, 2 = -c, 3 = c
