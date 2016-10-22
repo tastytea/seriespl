@@ -50,7 +50,7 @@ void Seriespl::print_playlist(const PlaylistFormat &playlist, const std::string 
 			}
 			// Replacing comma with U+201A, SINGLE LOW-9 QUOTATION MARK
 			// Because VLC uses commas in titles as separator for metadata
-			while ((pos = title.find(',', pos + 1)) != std::string::npos)
+			while ((pos = newtitle.find(',', pos + 1)) != std::string::npos)
 			{
 				newtitle.replace(pos, 1, "‚");	// The ‚ is not a comma
 			}
