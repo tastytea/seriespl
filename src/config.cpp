@@ -25,8 +25,8 @@
 
 
 Config::Config(const std::string &name)
-:	_name(name),
-	verbose(false)
+:	verbose(false),
+	_name(name)
 {
 }
 

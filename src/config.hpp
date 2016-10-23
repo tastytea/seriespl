@@ -37,8 +37,8 @@ public:
 	bool verbose;
 
 private:
-	const std::string _name = "";
-	std::string _filepath = "";
+	const std::string _name;
+	std::string _filepath;
 	libconfig::Config _cfg;
 };
 
