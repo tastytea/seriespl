@@ -15,7 +15,7 @@
 
 	\b -p  <em>STREAM PROVIDERS</em> \n
 	Comma delimited list. Available:
-	Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto
+	Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto
 
 	\b -i \n
 	Use stream providers without SSL support too
@@ -61,7 +61,8 @@
 	Values must be surrounded by quotes.
 
 	\subsection streamproviders
-	Comma delimited list of streamproviders. Default: \"Streamcloud,Vivo,Shared,YouTube,OpenLoad\"
+	Comma delimited list of streamproviders. Default:
+	\"Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD\"
 
 	\subsection youtube-dl
 	Path to youtube-dl. Default: \"youtube-dl\"

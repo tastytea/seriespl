@@ -27,7 +27,7 @@
 class Seriespl
 {
 public:
-	const std::string version = "1.4.15";
+	const std::string version = "1.4.16";
 
 	Seriespl();
 	~Seriespl();
@@ -46,6 +46,7 @@ private:
 		Shared,
 		YouTube,
 		OpenLoad,
+		OpenLoadHD,
 		PowerWatch,
 		CloudTime,
 		AuroraVid,

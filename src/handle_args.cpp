@@ -41,7 +41,7 @@ int Seriespl::handle_args(int argc, char const *argv[])
 				std::cout << usage << "\n\n"
 				"  -h                   Show this help\n"
 				"  -p stream providers  Comma delimited list. Available:\n"
-				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,"
+				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,"
 				                        "PowerWatch,CloudTime,AuroraVid,Vidto\n"
 				"  -i                   Use stream providers without SSL support too\n"
 				"  -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current\n"
