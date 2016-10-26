@@ -25,9 +25,8 @@ If you have installed dependencies in non standard paths (homebrew for example i
     make EXTRA_CXXFLAGS="-I/usr/local/include" EXTRA_LDFLAGS="-L/usr/local/lib"
 
 ## Packages
- * [Gentoo ebuild](https://bugs.gentoo.org/show_bug.cgi?id=596196)
- * [Void package](https://github.com/voidlinux/void-packages/pull/4837)
- * [Debian package](https://github.com/tastytea/seriespl/releases) (amd64)
+ * [Gentoo ebuilds](https://github.com/tastytea/seriespl/tree/master/packages/gentoo/)
+ * [Void package](https://raw.githubusercontent.com/tastytea/seriespl/master/packages/void/template)
 
 # Usage
 Working websites:
