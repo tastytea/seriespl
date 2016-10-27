@@ -58,6 +58,8 @@ Seriespl::Seriespl()
 			populate_providers(config.get_value("streamproviders"));
 		if (config.get_value("youtube-dl") != "")
 			yt_dl_path = config.get_value("youtube-dl");
+		if (config.get_value("user-agent") != "")
+			useragent = config.get_value("user-agent");
 	}
 }
 

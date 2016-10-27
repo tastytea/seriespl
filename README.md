@@ -46,16 +46,17 @@ Working streaming providers:
  * Vidto (no ssl)
 
 ## Overview
-    usage: seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL
-
-      -h                   Show this help
+    usage: bin/seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] [-a user-agent] [-V] URL
+    
+      -h                   Show this help and exit
       -p stream providers  Comma delimited list. Available:
-                           Streamcloud,Vivo,Shared,YouTube,OpenLoad,PowerWatch,CloudTime,AuroraVid,Vidto
+                           Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto
       -i                   Use stream providers without SSL support too
-      -e                   Episode range, e.g. 2-5 or 7 or 9-, use c for current
-      -s                   Season range, e.g. 1-2 or 4
-      -f                   Playlist format. Available: raw, m3u, pls
+      -e episodes          Episode range, e.g. 2-5 or 7 or 9-, use c for current
+      -s episodes          Season range, e.g. 1-2 or 4
+      -f format            Playlist format. Available: raw, m3u, pls
       -y                   Use youtube-dl to print the direct URL of the video file
+      -a user-agent        Set User-Agent
       -V                   Output version and copyright information and exit
 
 ## Examples
@@ -76,10 +77,11 @@ Watch only current Episode in vlc, with correct title:
     seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 
 # Config
-Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/seriespl.cfg`.
+Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/seriespl.cfg`. Example:
 
     streamproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
     youtube-dl = "/usr/bin/youtube-dl"
+    user-agent = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
 
 The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
 

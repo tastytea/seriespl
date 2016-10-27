@@ -11,7 +11,7 @@
 	
 	\section OPTIONS
 	\b -h \n
-	Show help
+	Show help and exit
 
 	\b -p  <em>STREAM PROVIDERS</em> \n
 	Comma delimited list. Available:
@@ -31,6 +31,9 @@
 
 	\b -y \n
 	Use youtube-dl to print the direct URL of the video file
+
+	\b -a \e USER-AGENT \n
+	Set User-Agent
 
 	\b -V \n
 	Output version and copyright information and exit
@@ -66,6 +69,9 @@
 
 	\subsection youtube-dl
 	Path to youtube-dl. Default: \"youtube-dl\"
+
+	\subsection user-agent
+	User-Agent to send. Default: unset
 
 	\section see SEE ALSO
 	\b youtube-dl(1)

@@ -53,7 +53,10 @@ std::string Seriespl::getpage(const std::string &url)
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
-	//curl_easy_setopt(curl, CURLOPT_USERAGENT, "seriespl/" + version);
+	if (useragent != "")
+	{
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, useragent.c_str());
+	}
 
 	res = curl_easy_perform(curl);
 
