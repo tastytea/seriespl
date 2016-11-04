@@ -46,6 +46,10 @@ bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 man/man1/$(NAME).1: manpage.doxygen
 	(cat Doxyfile && echo "PROJECT_NUMBER = $(VERSION)") | doxygen -
 
+.PHONY: debug
+debug: CXXFLAGS += -DDEBUG -g -ggdb
+debug: $(NAME)
+
 .PHONY: install
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
