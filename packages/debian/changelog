@@ -1,0 +1,13 @@
+seriespl (1.4.16-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Bugfixes
+    - Added OpenLoadHD
+
+ -- tastytea <tastytea@tastytea.de>  Fri, 04 Nov 2016 12:43:00 +0100
+
+seriespl (1.4.9-1) UNRELEASED; urgency=medium
+
+  * Initial release.
+
+ -- tastytea <tastytea@tastytea.de>  Sun, 09 Oct 2016 04:43:30 +0200

@@ -1,0 +1,12 @@
+Source: seriespl
+Maintainer: tastytea <tastytea@tastytea.de>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9), libcurl4-openssl-dev (>= 7.38.0), libconfig++-dev (>= 1.4.9-2), doxygen (>= 1.8.8-5)
+
+Package: seriespl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Extracts stream-URLs for entire seasons of tv series from bs.to
+ seriespl can be chained with e.g. youtube-dl or mpv.
