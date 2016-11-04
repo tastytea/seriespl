@@ -25,8 +25,7 @@ If you have installed dependencies in non standard paths (homebrew for example i
     make EXTRA_CXXFLAGS="-I/usr/local/include" EXTRA_LDFLAGS="-L/usr/local/lib"
 
 ## Packages
- * [Gentoo ebuilds](https://github.com/tastytea/seriespl/tree/master/packages/gentoo/)
- * [Void package](https://raw.githubusercontent.com/tastytea/seriespl/master/packages/void/template)
+You find meta files for packages and instructions to build them for **Gentoo**, **Void** and **Debian** in [packages/](https://github.com/tastytea/seriespl/tree/master/packages/).
 
 # Usage
 Working websites:
