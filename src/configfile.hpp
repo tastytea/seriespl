@@ -1,3 +1,5 @@
+// Very limited, but easy to use, wrapper for libconfig++
+
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -17,12 +19,26 @@
  *
  ******************************************************************************/
 
-#include "config.hpp"
-#include <iostream>
+#ifndef CONFIGFILE_HPP
+#define CONFIGFILE_HPP
 
-int main(int argc, char const *argv[])
+#include <string>
+#include <libconfig.h++>
+
+class ConfigFile
 {
-	Config cfg(argc, argv);
+public:
+	explicit ConfigFile(const std::string &name);
+	~ConfigFile();
+	bool read();
+	std::string get_value(const std::string &key);
 
-	return 0;
-}
+	bool verbose;
+
+private:
+	const std::string _name;
+	std::string _filepath;
+	libconfig::Config _cfg;
+};
+
+#endif

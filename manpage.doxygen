@@ -18,7 +18,7 @@
 	Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto
 
 	\b -i \n
-	Use stream providers without SSL support too
+	Use hosting providers without SSL support too
 	
 	\b -e \e EPISODES \n
 	Episode range, e.g. 2-5 or 7 or 9-, use c for current
@@ -63,8 +63,8 @@
 	Place the config file in <tt>${XDG_CONFIG_HOME}/seriespl.cfg</tt> or <tt>${HOME}/.config/seriespl.cfg</tt>.
 	Values must be surrounded by quotes.
 
-	\subsection streamproviders
-	Comma delimited list of streamproviders. Default:
+	\subsection hostingproviders
+	Comma delimited list of hostingproviders. Default:
 	\"Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD\"
 
 	\subsection youtube-dl

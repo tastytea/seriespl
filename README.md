@@ -32,7 +32,7 @@ Working websites:
 
  * https://bs.to/
 
-Working streaming providers:
+Working hosting providers:
 
  * Streamcloud
  * Vivo
@@ -48,9 +48,9 @@ Working streaming providers:
     usage: bin/seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] [-a user-agent] [-V] URL
     
       -h                   Show this help and exit
-      -p stream providers  Comma delimited list. Available:
+      -p hosting providers Comma delimited list. Available:
                            Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto
-      -i                   Use stream providers without SSL support too
+      -i                   Use hosting providers without SSL support too
       -e episodes          Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s episodes          Season range, e.g. 1-2 or 4
       -f format            Playlist format. Available: raw, m3u, pls
@@ -78,7 +78,7 @@ Watch only current Episode in vlc, with correct title:
 # Config
 Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/seriespl.cfg`. Example:
 
-    streamproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
+    hostingproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
     youtube-dl = "/usr/bin/youtube-dl"
     user-agent = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
 
