@@ -17,25 +17,35 @@
  *
  ******************************************************************************/
 
+#ifndef WEBSITE_HPP
+#define WEBSITE_HPP
+
 #include "config.hpp"
-#include "burningseries.hpp"
-#include <iostream>
+#include <string>
 #include <vector>
+#include <sys/types.h>
+#include <utility>		// std::pair
 
-int main(int argc, char const *argv[])
+class Website
 {
-	Config cfg(argc, argv);
-	if (cfg.get_website() == Config::BurningSeries)
-	{
-		Burningseries website(cfg);
-		std::vector<Website::episodepair> episodes;
+public:
+	// getlinks: URL, title; other: URL, meta
+	typedef std::pair <std::string, std::string> episodepair;
+	/*! \param &cfg Config object */
+	explicit Website(const Config &cfg);
+	/*!	Derived classes must implement this.
+		\param &links Vector to hold links and titles for episodes, pair-wise
+		\return 0 on success */
+	virtual uint8_t getlinks(std::vector<episodepair> &episodes) = 0;
 
-		website.getlinks(episodes);
-		for (const Website::episodepair &epair : episodes)
-		{
-			std::cout << epair.first << " - " << epair.second << std::endl;
-		}
-	}
+protected:
+	const Config &_cfg;
 
-	return 0;
-}
+	/*! Fetch url, return content */
+	std::string getpage(const std::string &url);
+
+private:
+	static size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);
+};
+
+#endif

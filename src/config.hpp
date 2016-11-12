@@ -25,6 +25,7 @@
 #include <array>
 #include <vector>
 #include <map>
+#include <utility>		// std::pair
 
 class Config
 {
@@ -53,12 +54,26 @@ public:
 		AuroraVid,
 		Vidto
 	};
-
-	Config(const int &argc, const char *argv[]);
-
-private:
 	// Name, URL-regex
 	typedef const std::pair <const std::string, const std::string> providerpair;
+
+	Config(const int &argc, const char *argv[]);
+	const Config::Websites &get_website() const;
+	const std::vector<Config::HostingProviders> &get_providers_ssl() const;
+	const std::vector<Config::HostingProviders> &get_providers_nossl() const;
+	const std::vector<Config::HostingProviders> &get_providers() const;
+	const std::map<const Config::HostingProviders, const Config::providerpair>
+		&get_providermap() const;
+	const std::string &get_yt_dl_path() const;
+	const std::string &get_useragent() const;
+	const std::array<uint16_t, 2> &get_episode_range() const;
+	const std::array<uint16_t, 2> &get_season_range() const;
+	const uint8_t &get_use_current_episode() const;
+	const Config::PlaylistFormat &get_playlist() const;
+	const bool &get_direct_url() const;
+	const std::string &get_url() const;
+
+private:
 	Websites _website;
 	const std::vector<HostingProviders> _providers_ssl;
 	const std::vector<HostingProviders> _providers_nossl;
@@ -67,12 +82,12 @@ private:
 	const std::map<const HostingProviders, const providerpair> _providermap;
 	std::string _yt_dl_path;		// Path to youtube-dl
 	std::string _useragent;
-	uint16_t _episode_range[2];		// from, to
-	uint16_t _season_range[2];		// from, to
-	uint8_t _use_current_episode;	// 0 = no, 1 = c-, 2 = -c, 3 = c
-	PlaylistFormat _playlist;		// Format of playlist
-	bool _direct_url;				// filter through youtube-dl
-	std::string _url;				// User supplied URL
+	std::array<uint16_t, 2> _episode_range;	// from, to
+	std::array<uint16_t, 2> _season_range;	// from, to
+	uint8_t _use_current_episode;			// 0b00 = no, 0b01 = c-, 0b10 = -c, 0b11 = c
+	PlaylistFormat _playlist;				// Format of playlist
+	bool _direct_url;						// filter through youtube-dl
+	std::string _url;						// User supplied URL
 
 	void handle_args(const int &argc, const char *argv[]);
 	void populate_providers(const std::string &providerlist);

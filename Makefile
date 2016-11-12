@@ -7,7 +7,7 @@ ifndef CXXFLAGS
 	CXXFLAGS = -O2 -pipe -Wall -mtune=native
 endif
 # Make sure that c++11 is selected
-override CXXFLAGS += -std=c++11
+override CXXFLAGS += -std=c++14
 NAME = seriespl
 ifndef PREFIX
 	PREFIX = /usr/local

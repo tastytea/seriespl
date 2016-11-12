@@ -17,25 +17,24 @@
  *
  ******************************************************************************/
 
+#ifndef BURNINGSERIES_HPP
+#define BURNINGSERIES_HPP
+
+#include "website.hpp"
 #include "config.hpp"
-#include "burningseries.hpp"
-#include <iostream>
 #include <vector>
+#include <string>
 
-int main(int argc, char const *argv[])
+class Burningseries : public Website
 {
-	Config cfg(argc, argv);
-	if (cfg.get_website() == Config::BurningSeries)
-	{
-		Burningseries website(cfg);
-		std::vector<Website::episodepair> episodes;
+public:
+	explicit Burningseries(const Config &cfg) : Website(cfg) {};
+	uint8_t getlinks(std::vector<episodepair> &episodes);
 
-		website.getlinks(episodes);
-		for (const Website::episodepair &epair : episodes)
-		{
-			std::cout << epair.first << " - " << epair.second << std::endl;
-		}
-	}
+private:
+	/*! \param &pages Vector of URLs and providers, pair-wise
+		\return 0 on success */
+	uint8_t get_episode_pages(std::vector<episodepair> &pages);
+};
 
-	return 0;
-}
+#endif

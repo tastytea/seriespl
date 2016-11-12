@@ -26,6 +26,7 @@
 #include <cstring>	// strncmp()
 #include <iostream>
 #include <regex>
+#include <limits>	// std::numeric_limits
 
 constexpr char Config::version[];	// Defined in config.hpp
 
@@ -48,9 +49,9 @@ Config::Config(const int &argc, const char *argv[])
 	}),
 	_yt_dl_path("youtube-dl"),
 	_useragent(""),
-	_episode_range{0, 0},
-	_season_range{0, 0},
-	_use_current_episode(0),
+	_episode_range{{0, std::numeric_limits<uint16_t>::max()}},
+	_season_range{{0, 0}},
+	_use_current_episode(0b00),
 	_playlist(PL_RAW),
 	_direct_url(false),
 	_url("")
@@ -69,6 +70,72 @@ Config::Config(const int &argc, const char *argv[])
 	}
 
 	handle_args(argc, argv);
+}
+
+const Config::Websites &Config::get_website() const
+{
+	return _website;
+}
+
+const std::vector<Config::HostingProviders> &Config::get_providers_ssl() const
+{
+	return _providers_ssl;
+}
+
+const std::vector<Config::HostingProviders> &Config::get_providers_nossl() const
+{
+	return _providers_nossl;
+}
+
+const std::vector<Config::HostingProviders> &Config::get_providers() const
+{
+	return _providers;
+}
+
+const std::map<const Config::HostingProviders, const Config::providerpair>
+	&Config::get_providermap() const
+{
+	return _providermap;
+}
+
+const std::string &Config::get_yt_dl_path() const
+{
+	return _yt_dl_path;
+}
+
+const std::string &Config::get_useragent() const
+{
+	return _useragent;
+}
+
+const std::array<uint16_t, 2> &Config::get_episode_range() const
+{
+	return _episode_range;
+}
+
+const std::array<uint16_t, 2> &Config::get_season_range() const
+{
+	return _season_range;
+}
+
+const uint8_t &Config::get_use_current_episode() const
+{
+	return _use_current_episode;
+}
+
+const Config::PlaylistFormat &Config::get_playlist() const
+{
+	return _playlist;
+}
+
+const bool &Config::get_direct_url() const
+{
+	return _direct_url;
+}
+
+const std::string &Config::get_url() const
+{
+	return _url;
 }
 
 void Config::handle_args(const int &argc, const char *argv[])
