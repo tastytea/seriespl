@@ -3,7 +3,7 @@
 # Install
 ## Dependencies
  * Linux or macOS (These are tested, other should work, too)
- * gcc or clang
+ * C++ compiler (tested: gcc and clang)
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
  * [libconfig](http://www.hyperrealm.com/libconfig/libconfig.html) (libconfig++ in some package managers)
@@ -45,7 +45,7 @@ Working hosting providers:
  * Vidto (no ssl)
 
 ## Overview
-    usage: bin/seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] [-a user-agent] [-V] URL
+    usage: bin/seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
     
       -h                   Show this help and exit
       -p hosting providers Comma delimited list. Available:

@@ -23,23 +23,32 @@
 #include "playlist.hpp"
 #include <iostream>
 #include <vector>
+#include <sys/types.h>
 
 int main(int argc, char const *argv[])
 {
 	Config cfg(argc, argv);
 	if (cfg.get_website() == Config::BurningSeries)
 	{
+		uint8_t ret;
+
 		Burningseries website(cfg);
 		std::vector<Website::episodepair> episodes;
 		Filter filter(cfg);
 		Playlist playlist(cfg);
 
-		website.getlinks(episodes);
+		ret = website.getlinks(episodes);
+		if (ret != 0)
+			return ret;
 		if (cfg.get_direct_url())
 		{
-			filter.youtube_dl(episodes);
+			ret = filter.youtube_dl(episodes);
+			if (ret != 0)
+				return ret;
 		}
-		playlist.print(episodes);
+		ret = playlist.print(episodes);
+		if (ret != 0)
+			return ret;
 	}
 
 	return 0;

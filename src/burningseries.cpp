@@ -174,9 +174,9 @@ const uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
 			std::cerr << "Error: No episodes found" << std::endl;
 			return 4;
 		}
+		uint16_t episode = 1;
 		while (it_re != it_re_end)
 		{ // 1 == link, 2 == episode, 3 == provider
-			static uint16_t episode = 1;
 			uint16_t found_episode = std::stoi((*it_re)[2]);
 			if (episode == 1 && episoderange[0] > 1)
 			{ // Set episode to the right starting value if episode range is specified
@@ -202,6 +202,10 @@ const uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
 					(*it_re)[3].str()));
 
 				episode = found_episode + 1;
+			}
+			else if (found_episode > episoderange[1])
+			{
+				break;
 			}
 			++it_re;
 		} // Iterating through matches

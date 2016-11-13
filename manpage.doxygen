@@ -3,7 +3,7 @@
 	Extract stream-URLs for entire seasons of tv series from bs.to 
 	
 	\section SYNOPSIS
-	seriespl [-h] [-i]|[-p list] [-e episodes] [-s seasons] [-f format] [-y] URL
+	seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
 	
 	\section DESCRIPTION
 	__seriespl__ extracts stream-URLs for entire seasons of tv series from bs.to
@@ -83,6 +83,6 @@
 	There is NO WARRANTY, to the extent permitted by law.
 
 	\section BUGS
-	If the season range contains numbers that are higher than the available seasons,
+	With bs.to, if the season range contains numbers that are higher than the available seasons,
 	season 1 is returned.
 */
