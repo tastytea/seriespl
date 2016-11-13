@@ -29,8 +29,9 @@
 class Filter
 {
 public:
-	// getlinks: URL, title; other: URL, meta
+	// URL, title
 	typedef std::pair<std::string, const std::string> episodepair;
+
 	/*! \param &cfg Config object */
 	explicit Filter(const Config &cfg);
 	/*!	\param &episodes Vector of std::pair<std::string, std::string>

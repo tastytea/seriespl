@@ -17,30 +17,29 @@
  *
  ******************************************************************************/
 
+#ifndef PLAYLIST_HPP
+#define PLAYLIST_HPP
+
 #include "config.hpp"
-#include "burningseries.hpp"
-#include "filter.hpp"
-#include "playlist.hpp"
-#include <iostream>
+#include <string>
 #include <vector>
+#include <sys/types.h>
+#include <utility>		// std::pair
 
-int main(int argc, char const *argv[])
+class Playlist
 {
-	Config cfg(argc, argv);
-	if (cfg.get_website() == Config::BurningSeries)
-	{
-		Burningseries website(cfg);
-		std::vector<Website::episodepair> episodes;
-		Filter filter(cfg);
-		Playlist playlist(cfg);
+public:
+	// URL, title
+	typedef std::pair<std::string, const std::string> episodepair;
 
-		website.getlinks(episodes);
-		if (cfg.get_direct_url())
-		{
-			filter.youtube_dl(episodes);
-		}
-		playlist.print(episodes);
-	}
+	/*! \param &cfg Config object */
+	explicit Playlist(const Config &cfg);
+	const uint8_t print(const std::vector<episodepair> &episodes) const;
 
-	return 0;
-}
+private:
+	Config _cfg;
+
+	const std::string replace_chars(const std::string &title) const;
+};
+
+#endif

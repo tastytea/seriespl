@@ -22,7 +22,6 @@
 #include <string>
 #include <vector>
 #include <sys/types.h>
-#include <utility>		// std::pair
 #include <cstdio>		// popen()
 #include <sys/wait.h>	// WEXITSTATUS()
 #include <iostream>

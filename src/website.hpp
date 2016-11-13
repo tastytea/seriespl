@@ -31,6 +31,7 @@ class Website
 public:
 	// getlinks: URL, title; other: URL, meta
 	typedef std::pair<std::string, const std::string> episodepair;
+	
 	/*! \param &cfg Config object */
 	explicit Website(const Config &cfg);
 	/*!	Derived classes must implement this.
