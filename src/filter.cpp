@@ -19,6 +19,7 @@
 
 #include "filter.hpp"
 #include "config.hpp"
+#include "global.hpp"
 #include <string>
 #include <vector>
 #include <sys/types.h>
@@ -30,9 +31,9 @@ Filter::Filter(const Config &cfg)
 :	_cfg(cfg)
 {}
 
-const uint8_t Filter::youtube_dl(std::vector<episodepair> &episodes)
+const uint8_t Filter::youtube_dl(std::vector<Global::episodepair> &episodes)
 {
-	for (episodepair &epair : episodes)
+	for (Global::episodepair &epair : episodes)
 	{
 		FILE *ytdl;
 		char buffer[256];

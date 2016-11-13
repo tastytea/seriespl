@@ -1,3 +1,4 @@
+// Read configuration file and parse command-line arguments
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -30,7 +31,6 @@
 class Config
 {
 public:
-	static constexpr char version[] = "2.0.0";
 	enum PlaylistFormat
 	{
 		PL_RAW,

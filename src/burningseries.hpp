@@ -1,3 +1,4 @@
+// Process bs.to URLs
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -22,6 +23,7 @@
 
 #include "website.hpp"
 #include "config.hpp"
+#include "global.hpp"
 #include <vector>
 #include <string>
 
@@ -29,12 +31,12 @@ class Burningseries : public Website
 {
 public:
 	explicit Burningseries(const Config &cfg) : Website(cfg) {};
-	const uint8_t getlinks(std::vector<episodepair> &episodes);
+	const uint8_t getlinks(std::vector<Global::episodepair> &episodes);
 
 private:
 	/*! \param &pages Vector of std::pair<std::string, std::string>, containing URLs and providers
 		\return 0 on success */
-	const uint8_t get_episode_pages(std::vector<episodepair> &pages);
+	const uint8_t get_episode_pages(std::vector<Global::episodepair> &pages);
 };
 
 #endif

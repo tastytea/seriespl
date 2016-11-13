@@ -1,3 +1,4 @@
+// Playlist printing
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -21,20 +22,17 @@
 #define PLAYLIST_HPP
 
 #include "config.hpp"
+#include "global.hpp"
 #include <string>
 #include <vector>
 #include <sys/types.h>
-#include <utility>		// std::pair
 
 class Playlist
 {
 public:
-	// URL, title
-	typedef std::pair<std::string, const std::string> episodepair;
-
 	/*! \param &cfg Config object */
 	explicit Playlist(const Config &cfg);
-	const uint8_t print(const std::vector<episodepair> &episodes) const;
+	const uint8_t print(const std::vector<Global::episodepair> &episodes) const;
 
 private:
 	Config _cfg;

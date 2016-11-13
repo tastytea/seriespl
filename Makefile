@@ -16,7 +16,7 @@ endif
 ifneq (,$(findstring arm,$(CXX)))
 	CXXFLAGS := $(filter-out -mtune=native,$(CXXFLAGS))
 endif
-VERSION=$(shell grep "version\[\] =" src/config.hpp | cut -d\" -f2)
+VERSION=$(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
 
 
 .PHONY: all

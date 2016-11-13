@@ -1,4 +1,4 @@
-// Base class for all websites
+// Global constants and typedefs
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -18,35 +18,17 @@
  *
  ******************************************************************************/
 
-#ifndef WEBSITE_HPP
-#define WEBSITE_HPP
+#ifndef GLOBAL_HPP
+#define GLOBAL_HPP
 
-#include "config.hpp"
-#include "global.hpp"
+#include <utility>		// std::pair
 #include <string>
-#include <vector>
-#include <sys/types.h>
 
-class Website
+namespace Global
 {
-public:
-	/*! \param &cfg Config object */
-	explicit Website(const Config &cfg);
-	/*!	Derived classes must implement this.
-		\param &episodes Vector of std::pair<std::string, std::string>
-		to hold URLs and titles for episodes
-		\return 0 on success */
-	virtual const uint8_t getlinks(std::vector<Global::episodepair> &episodes) = 0;
-
-protected:
-	const Config &_cfg;
-
-	/*! \param &url URL to fetch
-		\return Webpage */
-	const std::string getpage(const std::string &url);
-
-private:
-	static const size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);
-};
+	static constexpr char version[] = "2.0.1";
+	// URL, provider|title
+	typedef std::pair<std::string, const std::string> episodepair;
+}
 
 #endif

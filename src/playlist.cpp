@@ -19,6 +19,7 @@
 
 #include "playlist.hpp"
 #include "config.hpp"
+#include "global.hpp"
 #include <vector>
 #include <sys/types.h>
 #include <iostream>
@@ -27,11 +28,11 @@ Playlist::Playlist(const Config &cfg)
 :	_cfg(cfg)
 {}
 
-const uint8_t Playlist::print(const std::vector<episodepair> &episodes) const
+const uint8_t Playlist::print(const std::vector<Global::episodepair> &episodes) const
 {
 	uint16_t counter = 1;
 
-	for (const episodepair &epair : episodes)
+	for (const Global::episodepair &epair : episodes)
 	{
 		switch (_cfg.get_playlist())
 		{

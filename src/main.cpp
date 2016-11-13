@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 #include "config.hpp"
+#include "global.hpp"
 #include "burningseries.hpp"
 #include "filter.hpp"
 #include "playlist.hpp"
@@ -33,7 +34,7 @@ int main(int argc, char const *argv[])
 		uint8_t ret;
 
 		Burningseries website(cfg);
-		std::vector<Website::episodepair> episodes;
+		std::vector<Global::episodepair> episodes;
 		Filter filter(cfg);
 		Playlist playlist(cfg);
 

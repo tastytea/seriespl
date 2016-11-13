@@ -20,6 +20,7 @@
 #include "burningseries.hpp"
 #include "website.hpp"
 #include "config.hpp"
+#include "global.hpp"
 #include <string>
 #include <vector>
 #include <map>
@@ -28,9 +29,9 @@
 #include <regex>
 #include <iostream>
 
-const uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
+const uint8_t Burningseries::getlinks(std::vector<Global::episodepair> &episodes)
 {
-	std::vector<episodepair> pages;
+	std::vector<Global::episodepair> pages;
 	uint8_t ret;
 	const std::map<const Config::HostingProviders, const Config::providerpair>
 		&providermap = _cfg.get_providermap();
@@ -41,7 +42,7 @@ const uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 		return ret;
 	}
 
-	for (const Website::episodepair &epair : pages)
+	for (const Global::episodepair &epair : pages)
 	{
 		std::map<Config::HostingProviders, Config::providerpair>::const_iterator itm;
 		for (itm = providermap.begin(); itm != providermap.end(); ++itm)
@@ -86,7 +87,7 @@ const uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 					else if (match[2].str() != "")	// English
 						title = match[2].str();
 				}
-				episodes.push_back(episodepair(hosterurl, title));
+				episodes.push_back(Global::episodepair(hosterurl, title));
 			}
 		}
 	}
@@ -94,7 +95,7 @@ const uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 	return 0;
 }
 
-const uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
+const uint8_t Burningseries::get_episode_pages(std::vector<Global::episodepair> &pages)
 {
 	std::string provider_re = "(";
 	std::vector<Config::HostingProviders>::const_iterator it;
@@ -198,7 +199,7 @@ const uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
 				}
 
 				// Put URL and provider to episode pages into &pages
-				pages.push_back(episodepair("https://bs.to/" + (*it_re)[1].str(),
+				pages.push_back(Global::episodepair("https://bs.to/" + (*it_re)[1].str(),
 					(*it_re)[3].str()));
 
 				episode = found_episode + 1;

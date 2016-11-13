@@ -19,6 +19,7 @@
 
 #include "config.hpp"
 #include "configfile.hpp"
+#include "global.hpp"
 #include <string>
 #include <getopt.h>
 #include <cstdlib>	// exit()
@@ -27,8 +28,6 @@
 #include <iostream>
 #include <regex>
 #include <limits>	// std::numeric_limits
-
-constexpr char Config::version[];	// Defined in config.hpp
 
 Config::Config(const int &argc, const char *argv[])
 :	_providers_ssl({ Streamcloud, Vivo, Shared, YouTube, OpenLoad, OpenLoadHD }),
@@ -278,7 +277,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				_direct_url = true;
 				break;
 			case 'V':	// Version
-				std::cout << "seriespl " << Config::version << "\n"
+				std::cout << "seriespl " << Global::version << "\n"
 						  << "Copyright © 2016 tastytea <tastytea@tastytea.de>.\n"
 						  << "License GPLv2: GNU GPL version 2 <https://www.gnu.org/licenses/gpl-2.0.html>.\n"
 						  << "This is free software: you are free to change and redistribute it.\n"

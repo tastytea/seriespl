@@ -1,3 +1,4 @@
+// Filter URLs through youtube-dl
 /*
  *	Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -21,23 +22,20 @@
 #define FILTER_HPP
 
 #include "config.hpp"
+#include "global.hpp"
 #include <string>
 #include <vector>
 #include <sys/types.h>
-#include <utility>		// std::pair
 
 class Filter
 {
 public:
-	// URL, title
-	typedef std::pair<std::string, const std::string> episodepair;
-
 	/*! \param &cfg Config object */
 	explicit Filter(const Config &cfg);
 	/*!	\param &episodes Vector of std::pair<std::string, std::string>
 		containing URLs and titles for episodes. URLs will be replaced.
 		\return 0 on success */
-	const uint8_t youtube_dl(std::vector<episodepair> &episodes);
+	const uint8_t youtube_dl(std::vector<Global::episodepair> &episodes);
 
 private:
 	const Config &_cfg;
