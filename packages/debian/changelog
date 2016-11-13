@@ -1,3 +1,10 @@
+seriespl (2.0.0-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Rewrite
+
+ -- tastytea <tastytea@tastytea.de>  Sun, 13 Nov 2016 18:49:00 +0100
+
 seriespl (1.4.16-1) UNRELEASED; urgency=medium
 
   * New upstream release
