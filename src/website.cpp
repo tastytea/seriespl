@@ -28,7 +28,7 @@ Website::Website(const Config &cfg)
 :	_cfg(cfg)
 {}
 
-size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream)
+const size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream)
 {
 	if (stream != NULL)
 	{
@@ -40,7 +40,7 @@ size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std::stri
 		return 0;
 	}
 }
-std::string Website::getpage(const std::string &url)
+const std::string Website::getpage(const std::string &url)
 {
 	CURL *curl;
 	CURLcode res;

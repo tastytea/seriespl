@@ -28,7 +28,7 @@
 #include <regex>
 #include <iostream>
 
-uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
+const uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 {
 	std::vector<episodepair> pages;
 	uint8_t ret;
@@ -41,17 +41,16 @@ uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 		return ret;
 	}
 
-	std::vector<episodepair>::const_iterator itv;
-	for (itv = pages.begin(); itv != pages.end(); ++itv)
+	for (const Website::episodepair &epair : pages)
 	{
 		std::map<Config::HostingProviders, Config::providerpair>::const_iterator itm;
 		for (itm = providermap.begin(); itm != providermap.end(); ++itm)
 		{
-			if (itm->second.first == itv->second)
+			if (itm->second.first == epair.second)
 			{	// Look up provider of found link in providermap
 				const Config::HostingProviders provider = itm->first;
 				const std::string domain = itm->second.second;
-				std::string content = getpage(itv->first);
+				std::string content = getpage(epair.first);
 				std::regex reHosterPage("(<a href| src)=[\"\'](https?://" +
 					domain + "/.*)[\"\']( target=|></iframe>)");
 				std::regex reTitle(std::string("<h2 id=\"titleGerman\">(.*)") +
@@ -95,7 +94,7 @@ uint8_t Burningseries::getlinks(std::vector<episodepair> &episodes)
 	return 0;
 }
 
-uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
+const uint8_t Burningseries::get_episode_pages(std::vector<episodepair> &pages)
 {
 	std::string provider_re = "(";
 	std::vector<Config::HostingProviders>::const_iterator it;

@@ -19,6 +19,7 @@
 
 #include "config.hpp"
 #include "burningseries.hpp"
+#include "filter.hpp"
 #include <iostream>
 #include <vector>
 
@@ -29,8 +30,13 @@ int main(int argc, char const *argv[])
 	{
 		Burningseries website(cfg);
 		std::vector<Website::episodepair> episodes;
+		Filter filter(cfg);
 
 		website.getlinks(episodes);
+		if (cfg.get_direct_url())
+		{
+			filter.youtube_dl(episodes);
+		}
 		for (const Website::episodepair &epair : episodes)
 		{
 			std::cout << epair.first << " - " << epair.second << std::endl;

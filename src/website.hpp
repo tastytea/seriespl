@@ -30,22 +30,24 @@ class Website
 {
 public:
 	// getlinks: URL, title; other: URL, meta
-	typedef std::pair <std::string, std::string> episodepair;
+	typedef std::pair<std::string, const std::string> episodepair;
 	/*! \param &cfg Config object */
 	explicit Website(const Config &cfg);
 	/*!	Derived classes must implement this.
-		\param &links Vector to hold links and titles for episodes, pair-wise
+		\param &episodes Vector of std::pair<std::string, std::string>
+		to hold URLs and titles for episodes
 		\return 0 on success */
-	virtual uint8_t getlinks(std::vector<episodepair> &episodes) = 0;
+	virtual const uint8_t getlinks(std::vector<episodepair> &episodes) = 0;
 
 protected:
 	const Config &_cfg;
 
-	/*! Fetch url, return content */
-	std::string getpage(const std::string &url);
+	/*! \param &url URL to fetch
+		\return Webpage */
+	const std::string getpage(const std::string &url);
 
 private:
-	static size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);
+	static const size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);
 };
 
 #endif

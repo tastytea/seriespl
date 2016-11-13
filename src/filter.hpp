@@ -17,24 +17,29 @@
  *
  ******************************************************************************/
 
-#ifndef BURNINGSERIES_HPP
-#define BURNINGSERIES_HPP
+#ifndef FILTER_HPP
+#define FILTER_HPP
 
-#include "website.hpp"
 #include "config.hpp"
-#include <vector>
 #include <string>
+#include <vector>
+#include <sys/types.h>
+#include <utility>		// std::pair
 
-class Burningseries : public Website
+class Filter
 {
 public:
-	explicit Burningseries(const Config &cfg) : Website(cfg) {};
-	const uint8_t getlinks(std::vector<episodepair> &episodes);
+	// getlinks: URL, title; other: URL, meta
+	typedef std::pair<std::string, const std::string> episodepair;
+	/*! \param &cfg Config object */
+	explicit Filter(const Config &cfg);
+	/*!	\param &episodes Vector of std::pair<std::string, std::string>
+		containing URLs and titles for episodes. URLs will be replaced.
+		\return 0 on success */
+	const uint8_t youtube_dl(std::vector<episodepair> &episodes);
 
 private:
-	/*! \param &pages Vector of std::pair<std::string, std::string>, containing URLs and providers
-		\return 0 on success */
-	const uint8_t get_episode_pages(std::vector<episodepair> &pages);
+	const Config &_cfg;
 };
 
 #endif
