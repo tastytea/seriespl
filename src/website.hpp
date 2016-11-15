@@ -32,6 +32,7 @@ class Website
 public:
 	/*! \param &cfg Config object */
 	explicit Website(const Config &cfg);
+	~Website();
 	/*!	Derived classes must implement this.
 		\param &episodes Vector of std::pair<std::string, std::string>
 		to hold URLs and titles for episodes
@@ -44,6 +45,9 @@ protected:
 	/*! \param &url URL to fetch
 		\return Webpage */
 	const std::string getpage(const std::string &url);
+	/*! \param &url URL to resolve, will be overwritten
+		\return 0 on success */
+	const uint8_t resolve_redirect(std::string &url);
 
 private:
 	static const size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);

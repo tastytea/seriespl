@@ -26,7 +26,14 @@
 
 Website::Website(const Config &cfg)
 :	_cfg(cfg)
-{}
+{
+	curl_global_init(CURL_GLOBAL_ALL);
+}
+
+Website::~Website()
+{
+	curl_global_cleanup();
+}
 
 const size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream)
 {
@@ -45,8 +52,7 @@ const std::string Website::getpage(const std::string &url)
 	CURL *curl;
 	CURLcode res;
 	std::string data;
-	
-	curl_global_init(CURL_GLOBAL_ALL);
+
 	curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
@@ -61,10 +67,42 @@ const std::string Website::getpage(const std::string &url)
 	if (res != CURLE_OK)
 	{
 		std::cerr << "Error: " << curl_easy_strerror(res) << std::endl;
+		return "";
 	}
 
 	curl_easy_cleanup(curl);
-	curl_global_cleanup();
 
 	return data;
+}
+
+const uint8_t Website::resolve_redirect(std::string &url)
+{
+	CURL *curl;
+	CURLcode res;
+	char *location;
+
+	curl = curl_easy_init();
+	if(curl)
+	{
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		res = curl_easy_perform(curl);
+		if (res == CURLE_OK)
+		{
+			res = curl_easy_getinfo(curl, CURLINFO_REDIRECT_URL, &location);
+			if((res == CURLE_OK) && location)
+			{
+				url = location;
+			}
+		}
+		else
+		{
+			return 2;
+		}
+	}
+	else
+	{
+		return 1;
+	}
+
+	return 0;
 }
