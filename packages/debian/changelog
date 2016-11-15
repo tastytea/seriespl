@@ -1,3 +1,10 @@
+seriespl (2.0.2-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - fixed bs.to (They started to use redirections)
+
+ -- tastytea <tastytea@tastytea.de>  Tue, 15 Nov 2016 16:06:00 +0100
+
 seriespl (2.0.0-1) UNRELEASED; urgency=medium
 
   * New upstream release
