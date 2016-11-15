@@ -83,6 +83,8 @@
 	There is NO WARRANTY, to the extent permitted by law.
 
 	\section BUGS
-	With bs.to, if the season range contains numbers that are higher than the available seasons,
+	\subsection bs Burning Series
+	- If the season range contains numbers that are higher than the available seasons,
 	season 1 is returned.
+	- bs.to started to use redirects to prevent crawling. If you hit a limit, URLs will not resolve anymore.
 */

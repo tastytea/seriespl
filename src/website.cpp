@@ -80,11 +80,13 @@ const uint8_t Website::resolve_redirect(std::string &url)
 	CURL *curl;
 	CURLcode res;
 	char *location;
+	uint8_t ret = 0;
 
 	curl = curl_easy_init();
 	if(curl)
 	{
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);	// Do not output body
 		res = curl_easy_perform(curl);
 		if (res == CURLE_OK)
 		{
@@ -96,13 +98,15 @@ const uint8_t Website::resolve_redirect(std::string &url)
 		}
 		else
 		{
-			return 2;
+			ret = 2;
 		}
 	}
 	else
 	{
-		return 1;
+		ret = 1;
 	}
 
-	return 0;
+	curl_easy_cleanup(curl);
+
+	return ret;
 }
