@@ -51,6 +51,7 @@ protected:
 
 private:
 	static const size_t curl_write_data(char *data, size_t size, size_t nmemb, std::string *stream);
+	const uint8_t tor_newip();
 };
 
 #endif

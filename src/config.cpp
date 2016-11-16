@@ -54,7 +54,11 @@ Config::Config(const int &argc, const char *argv[])
 	_playlist(PL_RAW),
 	_direct_url(false),
 	_url(""),
-	_resolve(false)
+	_resolve(false),
+	_use_tor(false),
+	_tor_address("127.0.0.1:9050"),
+	_tor_controlport(9051),
+	_tor_password("")
 {
 	ConfigFile configfile("seriespl");
 	if (configfile.read())
@@ -67,6 +71,12 @@ Config::Config(const int &argc, const char *argv[])
 			_yt_dl_path = configfile.get_value("youtube-dl");
 		if (configfile.get_value("user-agent") != "")
 			_useragent = configfile.get_value("user-agent");
+		if (configfile.get_value("tor_address") != "")
+			_tor_address = configfile.get_value("tor_address");
+		if (configfile.get_value("tor_controlport") != "")
+			_tor_controlport = std::stoi(configfile.get_value("tor_controlport"));
+		if (configfile.get_value("tor_password") != "")
+			_tor_password = configfile.get_value("tor_password");
 	}
 
 	handle_args(argc, argv);
@@ -143,13 +153,32 @@ const bool &Config::get_resolve() const
 	return _resolve;
 }
 
+const bool &Config::get_use_tor() const
+{
+	return _use_tor;
+}
+const std::string &Config::get_tor_address() const
+{
+	return _tor_address;
+}
+
+const uint16_t &Config::get_tor_controlport() const
+{
+	return _tor_controlport;
+}
+
+const std::string &Config::get_tor_password() const
+{
+	return _tor_password;
+}
+
 void Config::handle_args(const int &argc, const char *argv[])
 {
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:r")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rt")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -169,6 +198,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
+				"  -t                   Use Tor, change IP every 5 URLs\n"
 				"  -V                   Output version and copyright information and exit" << std::endl;
 				exit(0);
 				break;
@@ -294,8 +324,11 @@ void Config::handle_args(const int &argc, const char *argv[])
 			case 'a':	// User-Agent
 				_useragent = optarg;
 				break;
-			case 'r':	// resolve
+			case 'r':	// Resolve
 				_resolve = true;
+				break;
+			case 't':	// Tor
+				_use_tor = true;
 				break;
 			default:
 				std::cerr << usage << std::endl;

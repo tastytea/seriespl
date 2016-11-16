@@ -73,6 +73,10 @@ public:
 	const bool &get_direct_url() const;
 	const std::string &get_url() const;
 	const bool &get_resolve() const;
+	const bool &get_use_tor() const;
+	const std::string &get_tor_address() const;
+	const uint16_t &get_tor_controlport() const;
+	const std::string &get_tor_password() const;
 
 private:
 	Websites _website;
@@ -90,6 +94,10 @@ private:
 	bool _direct_url;						// filter through youtube-dl
 	std::string _url;						// User supplied URL
 	bool _resolve;							// Resolve redirections
+	bool _use_tor;							// Use Tor
+	std::string _tor_address;				// Tor host:port
+	uint16_t _tor_controlport;				// Tor ControlPort
+	std::string _tor_password;				// Tor oassword
 
 	void handle_args(const int &argc, const char *argv[]);
 	void populate_providers(const std::string &providerlist);

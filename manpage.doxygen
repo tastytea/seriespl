@@ -38,6 +38,9 @@
 	\b -r \n
 	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirecterd to an error page.
 
+	\b -t \n
+	Use Tor, change IP every 5 URLs. Consult \e CONFIGURATION for more information.
+
 	\b -V \n
 	Output version and copyright information and exit
 
@@ -76,11 +79,20 @@
 	\subsection user-agent
 	User-Agent to send. Default: unset
 
+	\subsection tor_address
+	Address of Tor daemon. Default: \"127.0.0.1:9050\"
+
+	\subsection tor_controlport
+	Tor control port. Same as ControlPort in your torrc. Default: \"9051\"
+
+	\subsection tor_password
+	Password for controlling Tor. Same as HashedControlPassword in your torrc. Default: unset
+
 	\section env ENVIRONMENT VARIABLES
 	seriespl is built using libcurl. libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
 
 	\section see SEE ALSO
-	<b>youtube-dl</b>(1) <b>libcurl</b>(3)
+	<b>youtube-dl</b>(1) <b>libcurl</b>(3) <b>tor</b>(1)
 
 	\section COPYRIGHT
 	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2

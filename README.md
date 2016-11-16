@@ -57,6 +57,7 @@ Working hosting providers:
       -y                   Use youtube-dl to print the direct URL of the video file
       -a user-agent        Set User-Agent
       -r                   Resolve redirections
+      -t                   Use Tor, change IP every 5 URLs
       -V                   Output version and copyright information and exit
 
 ## Examples
@@ -83,7 +84,7 @@ Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/s
     youtube-dl = "/usr/bin/youtube-dl"
     user-agent = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
 
-The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory.
+The names are case sensitive. Separated by comma or whitespace. The quotes are mandatory. For more info, look at the manpage.
 
 # Copyright
     Copyright © 2016 tastytea <tastytea@tastytea.de>.

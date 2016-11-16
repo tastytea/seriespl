@@ -24,6 +24,13 @@
 #include <curl/curl.h>
 #include <iostream>
 
+#include <cstdio>
+#include <cstring>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 Website::Website(const Config &cfg)
 :	_cfg(cfg)
 {
@@ -54,6 +61,11 @@ const std::string Website::getpage(const std::string &url)
 	std::string data;
 
 	curl = curl_easy_init();
+	if (_cfg.get_use_tor())
+	{
+		curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4A); 
+		curl_easy_setopt(curl, CURLOPT_PROXY, _cfg.get_tor_address().c_str());
+	}
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
@@ -82,9 +94,29 @@ const uint8_t Website::resolve_redirect(std::string &url)
 	char *location;
 	uint8_t ret = 0;
 
+	if (_cfg.get_use_tor())
+	{
+		static uint8_t counter = 0;
+
+		if (counter == 5)
+		{ // Get new IP after 5 URLs
+			tor_newip();
+			counter = 0;
+		}
+		else
+		{
+			++counter;
+		}
+	}
+
 	curl = curl_easy_init();
 	if(curl)
 	{
+		if (_cfg.get_use_tor())
+		{
+			curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4A); 
+			curl_easy_setopt(curl, CURLOPT_PROXY, _cfg.get_tor_address().c_str());
+		}
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);	// Do not output body
 		res = curl_easy_perform(curl);
@@ -109,4 +141,70 @@ const uint8_t Website::resolve_redirect(std::string &url)
 	curl_easy_cleanup(curl);
 
 	return ret;
+}
+
+const uint8_t Website::tor_newip()
+{
+	const std::string host = _cfg.get_tor_address().substr(0, _cfg.get_tor_address().find(':'));
+	const uint16_t port = _cfg.get_tor_controlport();
+	const std::string password = _cfg.get_tor_password();
+	int sockfd;
+	struct sockaddr_in remote;
+	const uint8_t bufsize = 255;
+	char buffer[bufsize];
+
+	// Clear out needed memory
+	memset(buffer, 0, bufsize);
+	memset(&remote, 0, sizeof(remote));
+	// Fill in required details in the socket structure
+	remote.sin_family = AF_INET;
+	remote.sin_port = htons(port);
+	remote.sin_addr.s_addr = inet_addr(host.c_str());	// FIXME: Should be configurable
+	const std::array<const std::string, 2> commands =
+		{"authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" };
+
+	// Create a socket
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sockfd < 0)
+	{
+		perror("socket");
+		return -1;
+	}
+	// Connect to remote host
+	if(connect(sockfd, (struct sockaddr *) &remote, sizeof(remote)) < 0)
+	{
+		perror("connect");
+		return -1;
+	}
+
+	//Send commands
+	for (const std::string &str : commands)
+	{
+		ssize_t ret;
+
+		// Send command
+		strncpy(buffer, str.c_str(), str.length());
+		ret = write(sockfd, buffer, str.length());
+		if (ret < 0)
+		{
+			perror("write");
+		}
+
+		// Receive and check status
+		if((ret = read(sockfd, &buffer, bufsize - 1)) > 0)
+		{
+			buffer[ret] = '\0'; // null terminate the string
+			if (strncmp(buffer, "250", 3) != 0)
+			{	// Print response on error
+				std::cerr << buffer;
+				return 1;
+			}
+		}
+		if(ret < 0) {
+			perror("read");
+			return -1;
+		}
+	}
+
+	return 0;
 }
