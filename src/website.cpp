@@ -104,7 +104,7 @@ const uint8_t Website::resolve_redirect(std::string &url)
 			{
 				std::cerr << "Error: Could not renew IP\n";
 			}
-			counter = 0;
+			counter = 1;
 		}
 		else
 		{
@@ -171,13 +171,13 @@ const uint8_t Website::tor_newip()
 	if(sockfd < 0)
 	{
 		perror("socket");
-		return -1;
+		return 1;
 	}
 	// Connect to remote host
 	if(connect(sockfd, (struct sockaddr *) &remote, sizeof(remote)) < 0)
 	{
 		perror("connect");
-		return -1;
+		return 1;
 	}
 
 	// Send commands
@@ -200,12 +200,12 @@ const uint8_t Website::tor_newip()
 			if (strncmp(buffer, "250", 3) != 0)
 			{	// Print response on error
 				std::cerr << buffer;
-				return 1;
+				return 2;
 			}
 		}
 		if(ret < 0) {
 			perror("read");
-			return -1;
+			return 1;
 		}
 	}
 
