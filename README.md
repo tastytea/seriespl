@@ -56,6 +56,7 @@ Working hosting providers:
       -f format            Playlist format. Available: raw, m3u, pls
       -y                   Use youtube-dl to print the direct URL of the video file
       -a user-agent        Set User-Agent
+      -r                   Resolve redirections
       -V                   Output version and copyright information and exit
 
 ## Examples

@@ -50,10 +50,9 @@ const uint8_t Burningseries::getlinks(std::vector<Global::episodepair> &episodes
 			if (itm->second.first == epair.second)
 			{	// Look up provider of found link in providermap
 				const Config::HostingProviders provider = itm->first;
-				const std::string domain = "bs.to";
 				std::string content = getpage(epair.first);
-				std::regex reHosterPage("(<a href| src)=[\"\'](https?://" +
-				domain + "/.*)[\"\']( target=|></iframe>)");
+				std::regex reHosterPage(
+					"(<a href| src)=[\"\'](https?://bs.to/out/.*)[\"\']( target=|></iframe>)");
 				std::regex reTitle(std::string("<h2 id=\"titleGerman\">(.*)") +
 					"[[:space:]]+<small id=\"titleEnglish\" lang=\"en\">(.*)</small>");
 				std::smatch match;
@@ -63,7 +62,10 @@ const uint8_t Burningseries::getlinks(std::vector<Global::episodepair> &episodes
 				if (std::regex_search(content, match, reHosterPage))
 				{
 					hosterurl = match[2].str();
-					resolve_redirect(hosterurl);
+					if (_cfg.get_resolve())
+					{
+						resolve_redirect(hosterurl);
+					}
 
 					for (const Config::HostingProviders &provider_ssl : _cfg.get_providers_ssl())
 					{ // Make sure we use SSL where supported

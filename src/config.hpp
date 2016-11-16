@@ -72,6 +72,7 @@ public:
 	const Config::PlaylistFormat &get_playlist() const;
 	const bool &get_direct_url() const;
 	const std::string &get_url() const;
+	const bool &get_resolve() const;
 
 private:
 	Websites _website;
@@ -88,6 +89,7 @@ private:
 	PlaylistFormat _playlist;				// Format of playlist
 	bool _direct_url;						// filter through youtube-dl
 	std::string _url;						// User supplied URL
+	bool _resolve;							// Resolve redirections
 
 	void handle_args(const int &argc, const char *argv[]);
 	void populate_providers(const std::string &providerlist);

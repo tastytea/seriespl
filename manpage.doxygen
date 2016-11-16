@@ -35,6 +35,9 @@
 	\b -a \e USER-AGENT \n
 	Set User-Agent
 
+	\b -r \n
+	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirecterd to an error page.
+
 	\b -V \n
 	Output version and copyright information and exit
 

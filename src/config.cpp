@@ -53,7 +53,8 @@ Config::Config(const int &argc, const char *argv[])
 	_use_current_episode(0b00),
 	_playlist(PL_RAW),
 	_direct_url(false),
-	_url("")
+	_url(""),
+	_resolve(false)
 {
 	ConfigFile configfile("seriespl");
 	if (configfile.read())
@@ -137,13 +138,18 @@ const std::string &Config::get_url() const
 	return _url;
 }
 
+const bool &Config::get_resolve() const
+{
+	return _resolve;
+}
+
 void Config::handle_args(const int &argc, const char *argv[])
 {
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:r")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -162,6 +168,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -f format            Playlist format. Available: raw, m3u, pls\n"
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
+				"  -r                   Resolve redirections\n"
 				"  -V                   Output version and copyright information and exit" << std::endl;
 				exit(0);
 				break;
@@ -286,6 +293,9 @@ void Config::handle_args(const int &argc, const char *argv[])
 				break;
 			case 'a':	// User-Agent
 				_useragent = optarg;
+				break;
+			case 'r':	// resolve
+				_resolve = true;
 				break;
 			default:
 				std::cerr << usage << std::endl;
