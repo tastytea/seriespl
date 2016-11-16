@@ -41,7 +41,7 @@ obj/%.o: src/%.cpp $(wildcard src/*.hpp)
 
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
-	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) $(LDLIBS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o bin/$(NAME) $^
+	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o bin/$(NAME) $^ $(LDFLAGS) $(EXTRA_LDFLAGS) $(LDLIBS)
 
 man/man1/$(NAME).1: manpage.doxygen
 	(cat Doxyfile && echo "PROJECT_NUMBER = $(VERSION)") | doxygen -

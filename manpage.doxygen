@@ -73,8 +73,11 @@
 	\subsection user-agent
 	User-Agent to send. Default: unset
 
+	\section env ENVIRONMENT VARIABLES
+	seriespl is built using libcurl. libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
+
 	\section see SEE ALSO
-	\b youtube-dl(1)
+	<b>youtube-dl</b>(1) <b>libcurl</b>(3)
 
 	\section COPYRIGHT
 	Copyright © 2016 tastytea \<tastytea@tastytea.de\>. License GPLv2: GNU GPL version 2
