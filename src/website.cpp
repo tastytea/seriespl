@@ -99,8 +99,11 @@ const uint8_t Website::resolve_redirect(std::string &url)
 		static uint8_t counter = 0;
 
 		if (counter == 5)
-		{ // Get new IP after 5 URLs
-			tor_newip();
+		{	// Get new IP after 5 URLs
+			if (tor_newip() != 0)
+			{
+				std::cerr << "Error: Could not renew IP\n";
+			}
 			counter = 0;
 		}
 		else
@@ -161,7 +164,7 @@ const uint8_t Website::tor_newip()
 	remote.sin_port = htons(port);
 	remote.sin_addr.s_addr = inet_addr(host.c_str());	// FIXME: Should be configurable
 	const std::array<const std::string, 2> commands =
-		{"authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" };
+		{ "authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" };
 
 	// Create a socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -177,14 +180,14 @@ const uint8_t Website::tor_newip()
 		return -1;
 	}
 
-	//Send commands
-	for (const std::string &str : commands)
+	// Send commands
+	for (const std::string &cmd : commands)
 	{
 		ssize_t ret;
 
 		// Send command
-		strncpy(buffer, str.c_str(), str.length());
-		ret = write(sockfd, buffer, str.length());
+		strncpy(buffer, cmd.c_str(), cmd.length());
+		ret = write(sockfd, buffer, cmd.length());
 		if (ret < 0)
 		{
 			perror("write");

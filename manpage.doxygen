@@ -39,7 +39,7 @@
 	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirecterd to an error page.
 
 	\b -t \n
-	Use Tor, change IP every 5 URLs. Consult \e CONFIGURATION for more information.
+	Use Tor, change IP every 5 URLs if -r is set. Consult \e CONFIGURATION for more information.
 
 	\b -V \n
 	Output version and copyright information and exit
@@ -89,7 +89,7 @@
 	Password for controlling Tor. Same as HashedControlPassword in your torrc. Default: unset
 
 	\section env ENVIRONMENT VARIABLES
-	seriespl is built using libcurl. libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
+	seriespl is built using libcurl. Unless -t is set, libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
 
 	\section see SEE ALSO
 	<b>youtube-dl</b>(1) <b>libcurl</b>(3) <b>tor</b>(1)
