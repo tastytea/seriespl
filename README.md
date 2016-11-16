@@ -61,9 +61,9 @@ Working hosting providers:
       -V                   Output version and copyright information and exit
 
 ## Examples
-Download all episodes of South Park Season 1-3:
+Download all episodes of South Park Season 1-3, resolve redirections and use Tor:
 
-    seriespl -s 1-3 https://bs.to/serie/South-Park | youtube-dl -a -
+    seriespl -s 1-3 -r -t https://bs.to/serie/South-Park | youtube-dl -a -
 
 Watch all episodes starting from 6 of South Park Season 1:
 

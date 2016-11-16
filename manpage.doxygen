@@ -45,9 +45,9 @@
 	Output version and copyright information and exit
 
 	\section EXAMPLES
-	Download all episodes of South Park Season 1-3:
+	Download all episodes of South Park Season 1-3, resolve redirections and use Tor:
 	\code
-	seriespl -s 1-3 https://bs.to/serie/South-Park | youtube-dl -a -
+	seriespl -s 1-3 -r -t https://bs.to/serie/South-Park | youtube-dl -a -
 	\endcode
 
 	Watch all episodes starting from 6 of South Park Season 1:
