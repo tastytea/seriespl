@@ -367,7 +367,7 @@ void Config::populate_providers(const std::string &providerlist)
 	_providers.clear();
 	while (it_re != it_re_end)
 	{ // Slice providerlist into alphanumeric chunks, iterate through slices
-		std::map<HostingProviders, providerpair>::const_iterator it;
+		std::map<const HostingProviders, const providerpair>::const_iterator it;
 		for (it = _providermap.begin(); it != _providermap.end(); ++it)
 		{ // Lookup slice in _providermap, add to _providers if found
 			if (it->second.first == (*it_re)[1])	// First field of value (Name)
