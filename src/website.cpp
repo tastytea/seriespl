@@ -164,7 +164,7 @@ const uint8_t Website::tor_newip()
 	remote.sin_port = htons(port);
 	remote.sin_addr.s_addr = inet_addr(host.c_str());	// FIXME: Should be configurable
 	const std::array<const std::string, 2> commands =
-		{ "authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" };
+		{{ "authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" }};
 
 	// Create a socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);

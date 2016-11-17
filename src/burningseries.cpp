@@ -44,7 +44,7 @@ const uint8_t Burningseries::getlinks(std::vector<Global::episodepair> &episodes
 
 	for (const Global::episodepair &epair : pages)
 	{
-		std::map<Config::HostingProviders, Config::providerpair>::const_iterator itm;
+		std::map<const Config::HostingProviders, const Config::providerpair>::const_iterator itm;
 		for (itm = providermap.begin(); itm != providermap.end(); ++itm)
 		{
 			if (itm->second.first == epair.second)
