@@ -1,3 +1,4 @@
+// Process watch-tvseries.net URLs
 /*
  *  Copyright © 2016 tastytea <tastytea@tastytea.de>
  *
@@ -17,46 +18,28 @@
  *
  ******************************************************************************/
 
+#ifndef GEEKTV_HPP
+#define GEEKTV_HPP
+
+#include "website.hpp"
 #include "config.hpp"
 #include "global.hpp"
-#include "burningseries.hpp"
-#include "geektv.hpp"
-#include "filter.hpp"
-#include "playlist.hpp"
-#include <iostream>
 #include <vector>
-#include <sys/types.h>
+#include <string>
 
-int main(int argc, char const *argv[])
+class Geektv : public Website
 {
-	uint8_t ret = 0;
-	Config cfg(argc, argv);
-	std::vector<Global::episodepair> episodes;
-	Filter filter(cfg);
-	Playlist playlist(cfg);
-	
-	if (cfg.get_website() == Config::Websites::BurningSeries)
-	{
-			Burningseries bs(cfg);
-			ret = bs.getlinks(episodes);
-	}
-	else if (cfg.get_website() == Config::Websites::GeekTV)
-	{
-		Geektv gtv(cfg);
-		ret = gtv.getlinks(episodes);
-	}
+public:
+	explicit Geektv(const Config &cfg) : Website(cfg) {};
+	const uint8_t getlinks(std::vector<Global::episodepair> &episodes);
 
-	if (ret != 0)
-		return ret;
-	if (cfg.get_direct_url())
-	{
-		ret = filter.youtube_dl(episodes);
-		if (ret != 0)
-			return ret;
-	}
-	ret = playlist.print(episodes);
-	if (ret != 0)
-		return ret;
+private:
+	/*! \param &pages Vector of std::string, containing URLs
+		\return 0 on success */
+	const uint8_t get_episode_pages(std::vector<std::string> &pages);
+	/*!	\param &url URL
+		\return url starting with https */
+	inline const std::string to_https(const std::string &url);
+};
 
-	return 0;
-}
+#endif

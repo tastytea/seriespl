@@ -39,7 +39,8 @@ public:
 	};
 	enum Websites
 	{ // Indexing services
-		BurningSeries
+		BurningSeries,
+		GeekTV
 	};
 	enum HostingProviders
 	{ // Available hosting providers

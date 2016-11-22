@@ -346,7 +346,11 @@ void Config::handle_args(const int &argc, const char *argv[])
 		_url = argv[optind];
 		if (_url.find("bs.to") != std::string::npos)
 		{
-			_website = BurningSeries;
+			_website = Config::Websites::BurningSeries;
+		}
+		else if (_url.find("geektv.ma") != std::string::npos)
+		{
+			_website = Config::Websites::GeekTV;
 		}
 		else
 		{
