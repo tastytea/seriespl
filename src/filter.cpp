@@ -55,10 +55,12 @@ const uint8_t Filter::youtube_dl(std::vector<Global::episodepair> &episodes)
 		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		{
 			std::cerr << "Error: youtube-dl returned non-zero exit code ("
-				<< WEXITSTATUS(status) << ")" << std::endl;
-			return 1;
+				<< WEXITSTATUS(status) << "), leaving URL untouched." << std::endl;
+		}	// If youtube-dl didn't work, leave url untouched
+		else
+		{
+			epair.first = result.substr(0, result.find_last_not_of("\r\n") + 1);
 		}
-		epair.first = result.substr(0, result.find_last_not_of("\r\n") + 1);
 	}
 
 	return 0;
