@@ -43,13 +43,14 @@ Working hosting providers:
  * CloudTime (no ssl)
  * AuroraVid (no ssl)
  * Vidto (no ssl)
+ * VoDLocker (no ssl)
 
 ## Overview
     usage: bin/seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
     
       -h                   Show this help and exit
       -p hosting providers Comma delimited list. Available:
-                           Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto
+                           Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker
       -i                   Use hosting providers without SSL support too
       -e episodes          Episode range, e.g. 2-5 or 7 or 9-, use c for current
       -s episodes          Season range, e.g. 1-2 or 4

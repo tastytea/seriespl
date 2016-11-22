@@ -53,7 +53,8 @@ public:
 		PowerWatch,
 		CloudTime,
 		AuroraVid,
-		Vidto
+		Vidto,
+		VoDLocker
 	};
 	// Name, URL-regex
 	typedef const std::pair <const std::string, const std::string> providerpair;

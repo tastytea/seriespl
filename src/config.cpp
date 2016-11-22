@@ -31,7 +31,7 @@
 
 Config::Config(const int &argc, const char *argv[])
 :	_providers_ssl({ Streamcloud, Vivo, Shared, YouTube, OpenLoad, OpenLoadHD }),
-	_providers_nossl({ PowerWatch, CloudTime, AuroraVid, Vidto }),
+	_providers_nossl({ PowerWatch, CloudTime, AuroraVid, Vidto, VoDLocker }),
 	_providers(_providers_ssl),
 	_providermap
 	({
@@ -44,7 +44,8 @@ Config::Config(const int &argc, const char *argv[])
 		{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
 		{CloudTime, providerpair("CloudTime", "cloudtime.to")},
 		{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
-		{Vidto, providerpair("Vidto", "vidto.me")}
+		{Vidto, providerpair("Vidto", "vidto.me")},
+		{VoDLocker, providerpair("VoDLocker", "vodlocker.com")}
 	}),
 	_yt_dl_path("youtube-dl"),
 	_useragent(""),
@@ -190,7 +191,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -h                   Show this help and exit\n"
 				"  -p stream providers  Comma delimited list. Available:\n"
 				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,"
-				                        "PowerWatch,CloudTime,AuroraVid,Vidto\n"
+				                        "PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker\n"
 				"  -i                   Use stream providers without SSL support too\n"
 				"  -e episodes          Episode range, e.g. 2-5 or 7 or 9-, use c for current\n"
 				"  -s episodes          Season range, e.g. 1-2 or 4\n"

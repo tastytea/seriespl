@@ -15,7 +15,7 @@
 
 	\b -p  <em>STREAM PROVIDERS</em> \n
 	Comma delimited list. Available:
-	Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD, PowerWatch,CloudTime,AuroraVid,Vidto
+	Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD, PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker
 
 	\b -i \n
 	Use hosting providers without SSL support too
