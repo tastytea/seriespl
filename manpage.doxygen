@@ -39,7 +39,7 @@
 	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirected to an error page.
 
 	\b -t \n
-	Use Tor, change IP every 5 URLs if -r is set. Consult \e CONFIGURATION for more information.
+	Use Tor, change IP every 4 URLs if -r is set. Consult \e CONFIGURATION for more information.
 
 	\b -V \n
 	Output version and copyright information and exit

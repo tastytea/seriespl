@@ -199,7 +199,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
-				"  -t                   Use Tor, change IP every 5 URLs if -r is set\n"
+				"  -t                   Use Tor\n"
 				"  -V                   Output version and copyright information and exit" << std::endl;
 				exit(0);
 				break;

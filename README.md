@@ -59,7 +59,7 @@ Working hosting providers:
       -y                   Use youtube-dl to print the direct URL of the video file
       -a user-agent        Set User-Agent
       -r                   Resolve redirections
-      -t                   Use Tor, change IP every 5 URLs
+      -t                   Use Tor
       -V                   Output version and copyright information and exit
 
 ## Examples

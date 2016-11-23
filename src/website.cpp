@@ -98,8 +98,8 @@ const uint8_t Website::resolve_redirect(std::string &url)
 	{
 		static uint8_t counter = 0;
 
-		if (counter == 5)
-		{	// Get new IP after 5 URLs
+		if (counter == 4)
+		{	// Get new IP after 4 URLs
 			if (tor_newip() != 0)
 			{
 				std::cerr << "Error: Could not renew IP\n";
