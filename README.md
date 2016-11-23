@@ -1,4 +1,4 @@
-**seriespl** extracts stream-URLs for entire seasons of tv series from bs.to (Burning-Series). These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
+**seriespl** extracts stream-URLs for entire seasons of tv series from bs.to (Burning-Series) and geektv.ma. These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
 
 # Install
 ## Dependencies
@@ -31,6 +31,7 @@ You find meta files for packages and instructions to build them for **Gentoo**, 
 Working websites:
 
  * https://bs.to/
+ * https://geektv.ma/
 
 Working hosting providers:
 
@@ -66,9 +67,9 @@ Download all episodes of South Park Season 1-3, resolve redirections and use Tor
 
     seriespl -s 1-3 -r -t https://bs.to/serie/South-Park | youtube-dl -a -
 
-Watch all episodes starting from 6 of South Park Season 1:
+Watch all episodes starting from 6 of The Simpsons Season 1:
 
-    seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
+    seriespl -e 6- https://geektv.ma/season-1/the-simpsons.html | mpv --playlist=-
 
 Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 

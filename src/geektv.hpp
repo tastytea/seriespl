@@ -37,9 +37,6 @@ private:
 	/*! \param &pages Vector of std::string, containing URLs
 		\return 0 on success */
 	const uint8_t get_episode_pages(std::vector<std::string> &pages);
-	/*!	\param &url URL
-		\return url starting with https */
-	inline const std::string to_https(const std::string &url);
 };
 
 #endif

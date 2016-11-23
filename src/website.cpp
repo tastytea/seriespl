@@ -211,3 +211,15 @@ const uint8_t Website::tor_newip()
 
 	return 0;
 }
+
+const std::string Website::to_https(const std::string &url)
+{
+	if (url[4] != 's')
+	{
+		return "https" + url.substr(4, std::string::npos);
+	}
+	else
+	{
+		return url;
+	}
+}

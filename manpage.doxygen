@@ -1,6 +1,6 @@
 // -*- LaTeX -*-
 /*!	\page seriespl
-	Extract stream-URLs for entire seasons of tv series from bs.to 
+	Extract stream-URLs for entire seasons of tv series from bs.to and geektv.ma
 	
 	\section SYNOPSIS
 	seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
@@ -36,7 +36,7 @@
 	Set User-Agent
 
 	\b -r \n
-	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirecterd to an error page.
+	Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirected to an error page.
 
 	\b -t \n
 	Use Tor, change IP every 5 URLs if -r is set. Consult \e CONFIGURATION for more information.
@@ -50,9 +50,9 @@
 	seriespl -s 1-3 -r -t https://bs.to/serie/South-Park | youtube-dl -a -
 	\endcode
 
-	Watch all episodes starting from 6 of South Park Season 1:
+	Watch all episodes starting from 6 of The Simpsons Season 1:
 	\code
-	seriespl -e 6- https://bs.to/serie/South-Park/1 | mpv --playlist=-
+	seriespl -e 6- https://geektv.ma/season-1/the-simpsons.html | mpv --playlist=-
 	\endcode
 
 	Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
@@ -100,7 +100,7 @@
 	This is free software: you are free to change and redistribute it.
 	There is NO WARRANTY, to the extent permitted by law.
 
-	\section BUGS
+	\section bugs BUGS \& NOTES
 	\subsection bs Burning Series
 	- If the season range contains numbers that are higher than the available seasons,
 	season 1 is returned.
