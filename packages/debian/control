@@ -8,5 +8,5 @@ Build-Depends: debhelper (>= 9), libcurl4-openssl-dev (>= 7.38.0), libconfig++-d
 Package: seriespl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Extracts stream-URLs for entire seasons of tv series from bs.to
+Description: Extracts stream-URLs for entire seasons of tv series from bs.to and others
  seriespl can be chained with e.g. youtube-dl or mpv.

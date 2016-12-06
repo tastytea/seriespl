@@ -1,3 +1,11 @@
+seriespl (2.2.1-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Support for geektv.ma
+    - Support for VoDLocker
+
+ -- tastytea <tastytea@tastytea.de>  Tue, 06 Dec 2016 04:01:00 +0100
+
 seriespl (2.1.3-1) UNRELEASED; urgency=medium
 
   * New upstream release

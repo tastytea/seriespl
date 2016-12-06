@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=6
-DESCRIPTION="Extracts stream-URLs for entire seasons of tv series from bs.to"
+DESCRIPTION="Extracts stream-URLs for entire seasons of tv series from bs.to and others"
 HOMEPAGE="https://github.com/tastytea/seriespl"
 SRC_URI="${HOMEPAGE}/archive/${PV}.tar.gz"
 LICENSE="GPL-2"
