@@ -16,6 +16,8 @@
 ### Development version
     git clone https://github.com/tastytea/seriespl.git
 
+[![Build Status](https://travis-ci.org/tastytea/seriespl.svg?branch=master)](https://travis-ci.org/tastytea/seriespl)
+
 ## Compile
     make
     make install
