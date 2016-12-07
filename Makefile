@@ -20,10 +20,7 @@ VERSION=$(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
 
 
 .PHONY: all
-all: dirs $(NAME) man
-
-.PHONY: dirs
-dirs: bin obj
+all: $(NAME) man
 
 .PHONY: $(NAME)
 $(NAME): bin/$(NAME)
@@ -31,16 +28,18 @@ $(NAME): bin/$(NAME)
 .PHONY: man
 man: man/$(NAME).1
 
-bin obj:
-	mkdir -p bin
-	mkdir -p obj
+.PHONY: debug
+debug: CXXFLAGS += -DDEBUG -g -ggdb
+debug: $(NAME)
 
 # $@ = left side of :, $< = first element right of : (%.cpp)
 obj/%.o: src/%.cpp $(wildcard src/*.hpp)
+	mkdir -p obj
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
 
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
+	mkdir -p bin
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o bin/$(NAME) $^ $(LDFLAGS) $(EXTRA_LDFLAGS) $(LDLIBS)
 
 man/$(NAME).1: src/$(NAME).groff
@@ -48,9 +47,9 @@ man/$(NAME).1: src/$(NAME).groff
 	sed "s/\[DATE\]/$(shell date --iso-8601)/" src/$(NAME).groff > man/$(NAME).1
 	sed -i "s/\[VERSION\]/$(VERSION)/" man/$(NAME).1
 
-.PHONY: debug
-debug: CXXFLAGS += -DDEBUG -g -ggdb
-debug: $(NAME)
+.PHONY: test
+test:
+	./bin/seriespl -V && echo "\"Test\" passed."
 
 .PHONY: install
 install: all
@@ -68,10 +67,6 @@ uninstall:
 
 .PHONY: clean
 clean:
-	rm -f obj/*.o
-	rm -f bin/$(NAME)
+	rm -rf obj/
+	rm -rf bin/
 	rm -rf man/
-
-.PHONY: test
-test:
-	./bin/seriespl -V && echo "\"Test\" passed."
