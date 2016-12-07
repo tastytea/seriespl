@@ -29,7 +29,7 @@ dirs: bin obj
 $(NAME): bin/$(NAME)
 
 .PHONY: man
-man: man/man1/$(NAME).1
+man: $(NAME).1
 
 bin obj:
 	mkdir -p bin
@@ -43,8 +43,9 @@ obj/%.o: src/%.cpp $(wildcard src/*.hpp)
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o bin/$(NAME) $^ $(LDFLAGS) $(EXTRA_LDFLAGS) $(LDLIBS)
 
-man/man1/$(NAME).1: manpage.doxygen
-	(cat Doxyfile && echo "PROJECT_NUMBER = $(VERSION)") | doxygen -
+$(NAME).1: manpage
+	sed "s/\[DATE\]/$(shell date --iso-8601)/" manpage > $(NAME).1
+	sed -i "s/\[VERSION\]/$(VERSION)/" $(NAME).1
 
 .PHONY: debug
 debug: CXXFLAGS += -DDEBUG -g -ggdb
@@ -55,7 +56,7 @@ install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 bin/$(NAME) $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
-	install -m 0644 man/man1/$(NAME).1 $(DESTDIR)$(PREFIX)/share/man/man1
+	install -m 0644 $(NAME).1 $(DESTDIR)$(PREFIX)/share/man/man1
 
 .PHONY: uninstall
 uninstall:
@@ -68,8 +69,7 @@ uninstall:
 clean:
 	rm -f obj/*.o
 	rm -f bin/$(NAME)
-	rm -rf man
-	rm -f doxygen_sqlite3.db
+	rm -f $(NAME).1
 
 .PHONY: test
 test:

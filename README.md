@@ -3,11 +3,10 @@
 # Install
 ## Dependencies
  * Linux or macOS (These are tested, other should work, too)
- * C++ compiler (tested: gcc and clang)
+ * C++ compiler (tested: gcc 4.9 and clang 3.5.0)
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
  * [libconfig](http://www.hyperrealm.com/libconfig/libconfig.html) (libconfig++ in some package managers)
- * [Doxygen](http://doxygen.org/) (for the man page)
 
 ## Get sourcecode
 ### Current release
