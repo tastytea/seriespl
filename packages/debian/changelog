@@ -1,3 +1,10 @@
+seriespl (2.2.2-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - removed Doxygen dependency
+
+ -- tastytea <tastytea@tastytea.de>  Wed, 07 Dec 2016 07:47:00 +0100
+
 seriespl (2.2.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
