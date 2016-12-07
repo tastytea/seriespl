@@ -15,6 +15,7 @@ Show help and exit
 
 \fB-p\fR  \fISTREAM PROVIDERS\fR
 Comma delimited list. Available:
+.br
 Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD, PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker
 
 \fB-i\fR
@@ -66,9 +67,9 @@ Place the config file in "${XDG_CONFIG_HOME}/seriespl.cfg" or "${HOME}/.config/s
 Values must be surrounded by quotes.
 
 .SS hostingproviders
-Comma delimited list of hostingproviders. Default:
+Comma delimited list of hostingproviders.
 .br
-"Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD"
+Default: "Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD"
 
 .SS youtube-dl
 Path to youtube-dl. Default: "youtube-dl"
