@@ -70,3 +70,7 @@ clean:
 	rm -f bin/$(NAME)
 	rm -rf man
 	rm -f doxygen_sqlite3.db
+
+.PHONY: test
+test:
+	./bin/seriespl -V && echo "\"Test\" passed."
