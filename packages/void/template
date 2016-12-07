@@ -1,11 +1,9 @@
 # Template file for 'seriespl'
 pkgname=seriespl
-version=2.2.1
+version=2.2.2
 revision=1
 build_style=gnu-makefile
-hostmakedepends="doxygen"
 makedepends="libcurl-devel libconfig++-devel"
-depends="youtube-dl"
 short_desc="Extracts stream-URLs for entire seasons of tv series from bs.to and others"
 maintainer="tastytea <tastytea@tastytea.de>"
 license="GPL-2"

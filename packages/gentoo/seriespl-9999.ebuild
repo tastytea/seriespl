@@ -11,11 +11,8 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~arm"
 DEPEND=">=net-misc/curl-7.50.3
-		>=dev-libs/libconfig-1.5[cxx]
-		>=app-doc/doxygen-1.8.11-r2"
-RDEPEND=">=net-misc/curl-7.50.3
-		 >=dev-libs/libconfig-1.5[cxx]
-		 >=net-misc/youtube-dl-2016.09.19"
+		>=dev-libs/libconfig-1.5[cxx]"
+RDEPEND="${DEPEND}"
 
 src_unpack() {
 	git-r3_src_unpack
