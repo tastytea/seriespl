@@ -40,7 +40,7 @@ Set User-Agent
 Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirected to an error page.
 
 \fB-t\fR
-Use Tor, change IP every 4 URLs if -r is set. Consult \e CONFIGURATION for more information.
+Use Tor, change IP every 4 URLs if -r is set. Consult \fBCONFIGURATION\fR for more information.
 
 \fB-V\fR
 Output version and copyright information and exit
