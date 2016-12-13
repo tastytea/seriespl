@@ -3,7 +3,7 @@ Maintainer: tastytea <tastytea@tastytea.de>
 Section: misc
 Priority: optional
 Standards-Version: 3.9.6
-Build-Depends: debhelper (>= 9), libcurl4-openssl-dev (>= 7.38.0), libconfig++-dev (>= 1.4.9-2)
+Build-Depends: debhelper (>= 9), libcurl4-openssl-dev (>= 7.35.0), libconfig++-dev (>= 1.4.9-2)
 
 Package: seriespl
 Architecture: any

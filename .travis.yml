@@ -10,3 +10,18 @@ before_install:
   - sudo apt-get install -qq g++-4.9 libconfig++-dev libcurl4-openssl-dev
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 60
 script: make && make test
+
+before_deploy:
+  - sudo apt-get install -qq debhelper
+  - cp packages/void/{,void-}template
+  - cd packages && ./build_deb.sh ${TRAVIS_TAG}
+deploy:
+  provider: releases
+  file:
+    - "packages/void/void-template"
+    - "packages/gentoo/seriespl-${TRAVIS_TAG}.ebuild"
+    - "packages/seriespl_${TRAVIS_TAG}-1_amd64.deb"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $CC = gcc
