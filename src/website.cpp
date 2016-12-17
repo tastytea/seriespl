@@ -18,11 +18,13 @@
  ******************************************************************************/
 
 #include "website.hpp"
+#include "config.hpp"
 #include <sys/types.h>
 #include <string>
 #include <vector>
 #include <curl/curl.h>
 #include <iostream>
+#include <map>
 
 #include <cstdio>
 #include <cstring>
@@ -214,6 +216,22 @@ const uint8_t Website::tor_newip()
 
 const std::string Website::to_https(const std::string &url)
 {
+	// Look up if provider supports SSL
+	std::map<const Config::HostingProviders, const Config::providerpair>::const_iterator it;
+	for (it = _cfg.get_providermap().begin(); it != _cfg.get_providermap().end(); ++it)
+	{
+		if (url.find("//" + (*it).second.second) != std::string::npos)
+		{
+			for (const Config::HostingProviders &provider : _cfg.get_providers_nossl())
+			{
+				if ((*it).first == provider)
+				{
+					return url;
+				}
+			}
+		}
+	}
+
 	if (url[4] != 's')
 	{
 		return "https" + url.substr(4, std::string::npos);
