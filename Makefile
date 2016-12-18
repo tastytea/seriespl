@@ -1,29 +1,30 @@
 # Makefile for seriespl
+NAME     = seriespl
+VERSION  = $(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
+LDLIBS   = -lcurl -lconfig++
+
 ifndef CXX
 	CXX = c++
 endif
-LDLIBS   = -lcurl -lconfig++
 ifndef CXXFLAGS
 	CXXFLAGS = -O2 -pipe -Wall -mtune=native
 endif
-# Make sure that c++11 is selected
+# Make sure that c++14 is selected
 override CXXFLAGS += -std=c++14
-NAME = seriespl
-ifndef PREFIX
-	PREFIX = /usr/local
-endif
-# arm-g++ doesn't seem to support -march=native, despite saying so
+# arm-g++ doesn't support -mtune=native
 ifneq (,$(findstring arm,$(CXX)))
 	CXXFLAGS := $(filter-out -mtune=native,$(CXXFLAGS))
 endif
-VERSION=$(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
+ifndef PREFIX
+	PREFIX = /usr/local
+endif
 
 
 .PHONY: all
 all: $(NAME) man
 
 .PHONY: $(NAME)
-$(NAME): bin/$(NAME)
+$(NAME): dirs bin/$(NAME)
 
 .PHONY: man
 man: man/$(NAME).1
@@ -32,14 +33,21 @@ man: man/$(NAME).1
 debug: CXXFLAGS += -DDEBUG -g -ggdb
 debug: $(NAME)
 
+.PHONY: dirs
+dirs: obj bin
+
+obj:
+	mkdir -p obj
+
+bin:
+	mkdir -p bin
+
 # $@ = left side of :, $< = first element right of : (%.cpp)
 obj/%.o: src/%.cpp $(wildcard src/*.hpp)
-	mkdir -p obj
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
 
 # $^ = right side of :
 bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
-	mkdir -p bin
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o bin/$(NAME) $^ $(LDFLAGS) $(EXTRA_LDFLAGS) $(LDLIBS)
 
 man/$(NAME).1: src/$(NAME).groff
