@@ -16,7 +16,9 @@ Show help and exit
 \fB-p\fR  \fISTREAM PROVIDERS\fR
 Comma delimited list. Available:
 .br
-Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD, PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker
+With SSL: Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD
+.br
+Without SSL: PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker
 
 \fB-i\fR
 Use hosting providers without SSL support too
