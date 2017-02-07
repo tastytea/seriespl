@@ -4,7 +4,7 @@
 seriespl \- Extract stream-URLs for entire seasons of tv series from bs.to and others
 
 .SH SYNOPSIS
-seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
+seriespl [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
 
 .SH DESCRIPTION
 \fBseriespl\fR	extracts stream-URLs for entire seasons of tv series from bs.to	(Burning-Series) and others. These URLs can then be further processed by e.g. youtube-dl or mpv.

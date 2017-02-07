@@ -177,7 +177,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 {
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
-		" [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
+		" [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
 	
 	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rt")) != -1)
 	{

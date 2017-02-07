@@ -169,7 +169,7 @@ const uint8_t Burningseries::get_episode_pages(std::vector<Global::episodepair> 
 		}
 
 		std::regex reEpisodePage("href=\"(serie/.*/[[:digit:]]+/([[:digit:]]+)-.*/(" +
-			provider_re + ")-[0-9])\">(" + provider_re + ")?</a>");
+			provider_re + "))\">(" + provider_re + ")?</a>");
 		std::sregex_iterator it_re(content.begin(), content.end(), reEpisodePage);
 		std::sregex_iterator it_re_end;
 

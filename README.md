@@ -2,7 +2,7 @@
 
 # Install
 ## Dependencies
- * Linux or macOS (These are tested, other should work, too)
+ * Tested OS: Linux, macOS
  * C++ compiler (tested: gcc 4.9 and clang 3.5.0)
  * make
  * [curl](https://curl.haxx.se/) (libcurl in some package managers)
@@ -48,7 +48,7 @@ Working hosting providers:
  * VoDLocker (no ssl)
 
 ## Overview
-    usage: bin/seriespl [-h] [-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
+    usage: bin/seriespl [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
     
       -h                   Show this help and exit
       -p hosting providers Comma delimited list. Available:
