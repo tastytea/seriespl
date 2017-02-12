@@ -28,6 +28,7 @@
 #include <iostream>
 #include <regex>
 #include <limits>	// std::numeric_limits
+#include <algorithm>
 
 Config::Config(const int &argc, const char *argv[])
 :	_providers_ssl({ Streamcloud, Vivo, Shared, YouTube, OpenLoad, OpenLoadHD }),
@@ -189,10 +190,10 @@ void Config::handle_args(const int &argc, const char *argv[])
 			case 'h':	// Help
 				std::cout << usage << "\n\n"
 				"  -h                   Show this help and exit\n"
-				"  -p stream providers  Comma delimited list. Available:\n"
+				"  -p hosting providers  Comma delimited list. Available:\n"
 				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,"
 				                        "PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker\n"
-				"  -i                   Use stream providers without SSL support too\n"
+				"  -i                   Use hosting providers without SSL support too\n"
 				"  -e episodes          Episode range, e.g. 2-5 or 7 or 9-, use c for current\n"
 				"  -s episodes          Season range, e.g. 1-2 or 4\n"
 				"  -f format            Playlist format. Available: raw, m3u, pls\n"
@@ -364,25 +365,31 @@ void Config::handle_args(const int &argc, const char *argv[])
 }
 
 void Config::populate_providers(const std::string &providerlist)
-{
+{ // providerlist is a comma separated list
 	std::regex reConfig("([[:alnum:]]+)");
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
 	std::sregex_iterator it_re_end;
 
 	_providers.clear();
 	while (it_re != it_re_end)
-	{ // Slice providerlist into alphanumeric chunks, iterate through slices
+	{ // Slice providerlist into providers, iterate through them
 		std::map<const HostingProviders, const providerpair>::const_iterator it;
 		for (it = _providermap.begin(); it != _providermap.end(); ++it)
-		{ // Lookup slice in _providermap, add to _providers if found
-			if (it->second.first == (*it_re)[1])	// First field of value (Name)
+		{ // Lookup suggested provider in list of supported providers, add to _providers if found
+			std::string supported = it->second.first;	// Name of supported provider
+			std::string suggested = (*it_re)[1];		// Name of suggested provider
+			// Transform providers to lowercase, for comparing
+			// FIXME: Works only with ASCII
+			std::transform(supported.begin(), supported.end(), supported.begin(), ::tolower);
+			std::transform(suggested.begin(), suggested.end(), suggested.begin(), ::tolower);
+			if (supported == suggested)
 				_providers.push_back(it->first);
 		}
 		++it_re;
 	}
 	if (_providers.empty())
 	{
-		std::cerr << "Error: List of streaming providers is empty." << std::endl;
+		std::cerr << "Error: List of hosting providers is empty." << std::endl;
 		exit(2);
 	}
 }

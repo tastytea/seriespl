@@ -13,7 +13,7 @@ seriespl [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL
 \fB-h\fR
 Show help and exit
 
-\fB-p\fR  \fISTREAM PROVIDERS\fR
+\fB-p\fR  \fIHOSTING PROVIDERS\fR
 Comma delimited list. Available:
 .br
 With SSL: Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD
