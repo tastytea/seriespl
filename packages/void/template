@@ -9,4 +9,4 @@ maintainer="tastytea <tastytea@tastytea.de>"
 license="GPL-2"
 homepage="https://github.com/tastytea/seriespl"
 distfiles="${homepage}/archive/${version}.tar.gz"
-checksum=
+checksum=bf20de22587381cee2c50575cfc2192d18bbcb717fbfc3ba940230128d271aa5
