@@ -8,3 +8,4 @@ Inside [void/](https://github.com/tastytea/seriespl/tree/master/packages/void/) 
 
 ## Debian
 Inside [debian/](https://github.com/tastytea/seriespl/tree/master/packages/debian/) you find the files needed to [build a Debian package](https://wiki.debian.org/Packaging/Intro?action=show&redirect=IntroDebianPackaging).
+You can also use [build_deb.sh](https://github.com/tastytea/seriespl/blob/master/packages/build_deb.sh) in this directory.

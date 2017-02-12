@@ -31,7 +31,7 @@ man: man/$(NAME).1
 
 .PHONY: debug
 debug: CXXFLAGS += -DDEBUG -g -ggdb
-debug: $(NAME)
+debug: $(NAME) man
 
 .PHONY: dirs
 dirs: obj bin

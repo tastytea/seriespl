@@ -1,3 +1,13 @@
+seriespl (2.2.5-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Adapted to changes on bs.to
+    - Bugfixes
+    - Made hosting providers case insensitive
+    - Fixed/Enhanced documentation
+
+ -- tastytea <tastytea@tastytea.de>  Sun, 12 Feb 2017 18:32:00 +0100
+
 seriespl (2.2.2-1) UNRELEASED; urgency=medium
 
   * New upstream release
