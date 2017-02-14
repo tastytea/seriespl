@@ -124,6 +124,10 @@ const uint8_t Website::resolve_redirect(std::string &url)
 		}
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);	// Do not output body
+		if (_cfg.get_useragent() != "")
+		{
+			curl_easy_setopt(curl, CURLOPT_USERAGENT, _cfg.get_useragent().c_str());
+		}
 		res = curl_easy_perform(curl);
 		if (res == CURLE_OK)
 		{
@@ -164,7 +168,7 @@ const uint8_t Website::tor_newip()
 	// Fill in required details in the socket structure
 	remote.sin_family = AF_INET;
 	remote.sin_port = htons(port);
-	remote.sin_addr.s_addr = inet_addr(host.c_str());	// FIXME: Should be configurable
+	remote.sin_addr.s_addr = inet_addr(host.c_str());
 	const std::array<const std::string, 2> commands =
 		{{ "authenticate \"" + password + "\"\n", "SIGNAL NEWNYM\n" }};
 

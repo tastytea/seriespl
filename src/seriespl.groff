@@ -39,10 +39,10 @@ Use youtube-dl to print the direct URL of the video file
 Set User-Agent
 
 \fB-r\fR
-Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, URLs will be redirected to an error page.
+Resolve redirections. On bs.to, redirections are used to prevent crawling. If you hit a certain limit, you have to solve a captcha.
 
 \fB-t\fR
-Use Tor, change IP every 4 URLs if -r is set. Consult \fBCONFIGURATION\fR for more information.
+Use Tor, change IP every 4 URLs if -r is set. Consult \fBCONFIGURATION\fR for more information. Will not work with bs.to.
 
 \fB-V\fR
 Output version and copyright information and exit
@@ -86,7 +86,7 @@ Address of Tor daemon. Default: "127.0.0.1:9050"
 Tor control port. Same as ControlPort in your torrc. Default: "9051"
 
 .SS tor_password
-Password for controlling Tor. Same as HashedControlPassword in your torrc. Default: unset
+Password for controlling Tor, in cleartext. Same as HashedControlPassword in your torrc. Default: unset
 
 .SH ENVIRONMENT VARIABLES
 seriespl is built using libcurl. Unless -t is set, libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
@@ -97,7 +97,7 @@ seriespl is built using libcurl. Unless -t is set, libcurl respects the environm
 If the season range contains numbers that are higher than the available seasons,
 season 1 is returned.
 
-bs.to started to use redirects to prevent crawling. If you hit a limit, URLs will not resolve anymore.
+bs.to uses redirects to prevent crawling. If you hit a limit, URLs will not resolve anymore until you solve a captcha. If you use Tor, you have to solve a captcha from the start.
 
 .SH COPYRIGHT
 Copyright © 2016 tastytea <tastytea@tastytea.de>. License GPLv2: GNU GPL version 2
