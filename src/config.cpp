@@ -63,9 +63,11 @@ Config::Config(const int &argc, const char *argv[])
 	_tor_controlport(9051),
 	_tor_password("")
 {
+	Global::debug("config.cpp");
 	ConfigFile configfile("seriespl");
 	if (configfile.read())
 	{
+		Global::debug("Reading config file...");
 		try
 		{
 			if (configfile.get_value("streamproviders") != "")	// Before 2.0.0
@@ -202,7 +204,8 @@ void Config::handle_args(const int &argc, const char *argv[])
 	int opt;
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
-	
+
+	Global::debug("Parsing arguments...");
 	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rtd:")) != -1)
 	{
 		std::string episodes, seasons;
@@ -412,6 +415,8 @@ void Config::handle_args(const int &argc, const char *argv[])
 
 void Config::populate_providers(const std::string &providerlist)
 { // providerlist is a comma separated list
+	Global::debug("Compiling list of hosting providers...");
+
 	std::regex reConfig("([[:alnum:]]+)");
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
 	std::sregex_iterator it_re_end;

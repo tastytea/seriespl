@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 #include "configfile.hpp"
+#include "global.hpp"
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -28,6 +29,7 @@ ConfigFile::ConfigFile(const std::string &name)
 	_name(name),
 	_filepath("")
 {
+	Global::debug("configfile.cpp");
 }
 
 ConfigFile::~ConfigFile() {}

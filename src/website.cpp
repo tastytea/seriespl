@@ -19,6 +19,7 @@
 
 #include "website.hpp"
 #include "config.hpp"
+#include "global.hpp"
 #include <sys/types.h>
 #include <string>
 #include <vector>
@@ -37,6 +38,7 @@
 Website::Website(const Config &cfg)
 :	_cfg(cfg)
 {
+	Global::debug("website.cpp");
 	curl_global_init(CURL_GLOBAL_ALL);
 }
 
@@ -59,6 +61,8 @@ const size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std
 }
 const std::string Website::getpage(const std::string &url)
 {
+	Global::debug("Fetching page...");
+
 	CURL *curl;
 	CURLcode res;
 	std::string data;
@@ -92,6 +96,8 @@ const std::string Website::getpage(const std::string &url)
 
 const uint8_t Website::resolve_redirect(std::string &url)
 {
+	Global::debug("Resolving redirect...");
+
 	CURL *curl;
 	CURLcode res;
 	char *location;
@@ -115,6 +121,7 @@ const uint8_t Website::resolve_redirect(std::string &url)
 		}
 	}
 	// Wait n seconds between resolve attempts
+	Global::debug("Sleeping " + std::to_string(_cfg.get_resolve_delay()) + " seconds...");
 	sleep(_cfg.get_resolve_delay());
 
 	curl = curl_easy_init();
@@ -157,6 +164,8 @@ const uint8_t Website::resolve_redirect(std::string &url)
 
 const uint8_t Website::tor_newip()
 {
+	Global::debug("Change Tor identity...");
+
 	const std::string host = _cfg.get_tor_address().substr(0, _cfg.get_tor_address().find(':'));
 	const uint16_t port = _cfg.get_tor_controlport();
 	const std::string password = _cfg.get_tor_password();
@@ -241,6 +250,7 @@ const std::string Website::to_https(const std::string &url)
 
 	if (url[4] != 's')
 	{
+		Global::debug("Change http to https...");
 		return "https" + url.substr(4, std::string::npos);
 	}
 	else

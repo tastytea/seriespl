@@ -32,6 +32,7 @@
 
 const uint8_t Geektv::getlinks(std::vector<Global::episodepair> &episodes)
 {
+	Global::debug("geektv.cpp");
 	std::vector<std::string> pages;
 	uint8_t ret = 0;
 	const std::vector<Config::HostingProviders> &providers = _cfg.get_providers();

@@ -31,6 +31,7 @@
 
 int main(int argc, char const *argv[])
 {
+	Global::debug("main.cpp");
 	uint8_t ret = 0;
 	Config cfg(argc, argv);
 	std::vector<Global::episodepair> episodes;

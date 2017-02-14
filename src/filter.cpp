@@ -29,10 +29,13 @@
 
 Filter::Filter(const Config &cfg)
 :	_cfg(cfg)
-{}
+{
+	Global::debug("filter.cpp");
+}
 
 const uint8_t Filter::youtube_dl(std::vector<Global::episodepair> &episodes)
 {
+	Global::debug("Calling youtube-dl...");
 	for (Global::episodepair &epair : episodes)
 	{
 		FILE *ytdl;

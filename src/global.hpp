@@ -27,9 +27,15 @@
 
 namespace Global
 {
-	static constexpr char version[] = "2.3.0";
+	static constexpr char version[] = "2.3.1";
 	// URL, provider|title
 	typedef std::pair<std::string, const std::string> episodepair;
+	inline const void debug(const std::string &message)
+	{
+		#ifdef DEBUG
+			std::cerr << "DEBUG: " << message << '\n';
+		#endif
+	}
 }
 
 #endif

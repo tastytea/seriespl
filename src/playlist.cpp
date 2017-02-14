@@ -26,10 +26,13 @@
 
 Playlist::Playlist(const Config &cfg)
 :	_cfg(cfg)
-{}
+{
+	Global::debug("playlist.cpp");
+}
 
 const uint8_t Playlist::print(const std::vector<Global::episodepair> &episodes) const
 {
+	Global::debug("Printing playlist...");
 	uint16_t counter = 1;
 
 	for (const Global::episodepair &epair : episodes)

@@ -31,6 +31,7 @@
 
 const uint8_t Burningseries::getlinks(std::vector<Global::episodepair> &episodes)
 {
+	Global::debug("burningseries.cpp");
 	std::vector<Global::episodepair> pages;
 	uint8_t ret;
 	const std::map<const Config::HostingProviders, const Config::providerpair>
