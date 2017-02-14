@@ -57,6 +57,7 @@ Config::Config(const int &argc, const char *argv[])
 	_direct_url(false),
 	_url(""),
 	_resolve(false),
+	_resolve_delay(0),
 	_use_tor(false),
 	_tor_address("127.0.0.1:9050"),
 	_tor_controlport(9051),
@@ -65,20 +66,37 @@ Config::Config(const int &argc, const char *argv[])
 	ConfigFile configfile("seriespl");
 	if (configfile.read())
 	{
-		if (configfile.get_value("streamproviders") != "")	// Before 2.0.0
-			populate_providers(configfile.get_value("streamproviders"));
-		if (configfile.get_value("hostingproviders") != "")
-			populate_providers(configfile.get_value("hostingproviders"));
-		if (configfile.get_value("youtube-dl") != "")
-			_yt_dl_path = configfile.get_value("youtube-dl");
-		if (configfile.get_value("user-agent") != "")
-			_useragent = configfile.get_value("user-agent");
-		if (configfile.get_value("tor_address") != "")
-			_tor_address = configfile.get_value("tor_address");
-		if (configfile.get_value("tor_controlport") != "")
-			_tor_controlport = std::stoi(configfile.get_value("tor_controlport"));
-		if (configfile.get_value("tor_password") != "")
-			_tor_password = configfile.get_value("tor_password");
+		try
+		{
+			if (configfile.get_value("streamproviders") != "")	// Before 2.0.0
+				populate_providers(configfile.get_value("streamproviders"));
+			if (configfile.get_value("hostingproviders") != "")
+				populate_providers(configfile.get_value("hostingproviders"));
+			if (configfile.get_value("youtube-dl") != "")
+				_yt_dl_path = configfile.get_value("youtube-dl");
+			if (configfile.get_value("user-agent") != "")
+				_useragent = configfile.get_value("user-agent");
+			if (configfile.get_value("resolve_delay") != "")
+			{
+				_resolve_delay = std::stoi(configfile.get_value("resolve_delay"));
+				if (_resolve_delay != std::stoi(configfile.get_value("resolve_delay")))
+				{
+					throw std::out_of_range("Delay out of range");
+				}
+			}
+			if (configfile.get_value("tor_address") != "")
+				_tor_address = configfile.get_value("tor_address");
+			if (configfile.get_value("tor_controlport") != "")
+				_tor_controlport = std::stoi(configfile.get_value("tor_controlport"));
+			if (configfile.get_value("tor_password") != "")
+				_tor_password = configfile.get_value("tor_password");
+		}
+		catch (const std::exception &e)
+		{
+			std::cerr << "Error in config file: " << e.what() << '\n'
+				<< "Consult the manpage for more information.\n";
+			exit(1);
+		}
 	}
 
 	handle_args(argc, argv);
@@ -155,6 +173,11 @@ const bool &Config::get_resolve() const
 	return _resolve;
 }
 
+const uint16_t &Config::get_resolve_delay() const
+{
+	return _resolve_delay;
+}
+
 const bool &Config::get_use_tor() const
 {
 	return _use_tor;
@@ -180,7 +203,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 	std::string usage = std::string("usage: ") + argv[0] +
 		" [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
 	
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rt")) != -1)
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rtd:")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -200,8 +223,10 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
+				"  -d                   Delay in seconds between resolve attempts\n"
 				"  -t                   Use Tor\n"
-				"  -V                   Output version and copyright information and exit" << std::endl;
+				"  -V                   Output version and copyright information and exit"
+				<< std::endl;
 				exit(0);
 				break;
 			case 'p':	// Provider
@@ -331,6 +356,27 @@ void Config::handle_args(const int &argc, const char *argv[])
 				break;
 			case 't':	// Tor
 				_use_tor = true;
+				break;
+			case 'd':	// Delay
+				try
+				{
+					_resolve_delay = std::stoi(optarg); //FIXME: error handling
+					if (_resolve_delay != std::stoi(optarg))
+					{ // If out of range
+						throw std::out_of_range("delay");
+					}
+				}
+				catch (const std::invalid_argument &e)
+				{
+					std::cerr << "Invalid argument: delay" << '\n';
+					exit(1);
+				}
+				catch (const std::out_of_range &e)
+				{
+					std::cerr << "Out of range: " << e.what() << '\n';
+					std::cerr << "Seconds have to be between 0 and 65535.\n";
+					exit(1);
+				}
 				break;
 			default:
 				std::cerr << usage << std::endl;

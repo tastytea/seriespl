@@ -27,6 +27,8 @@
 #include <vector>
 #include <sys/types.h>
 
+//TODO: check/fix and document exit codes
+
 int main(int argc, char const *argv[])
 {
 	uint8_t ret = 0;

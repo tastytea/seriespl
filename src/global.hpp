@@ -23,10 +23,11 @@
 
 #include <utility>		// std::pair
 #include <string>
+#include <iostream>
 
 namespace Global
 {
-	static constexpr char version[] = "2.2.5";
+	static constexpr char version[] = "2.3.0";
 	// URL, provider|title
 	typedef std::pair<std::string, const std::string> episodepair;
 }

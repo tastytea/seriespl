@@ -25,6 +25,7 @@
 #include <curl/curl.h>
 #include <iostream>
 #include <map>
+#include <unistd.h>		// sleep()
 
 #include <cstdio>
 #include <cstring>
@@ -113,6 +114,8 @@ const uint8_t Website::resolve_redirect(std::string &url)
 			++counter;
 		}
 	}
+	// Wait n seconds between resolve attempts
+	sleep(_cfg.get_resolve_delay());
 
 	curl = curl_easy_init();
 	if(curl)
