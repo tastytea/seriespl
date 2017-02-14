@@ -93,7 +93,7 @@ Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/s
 hostingproviders is separated by comma. The quotes are mandatory. For more info, look at the manpage.
 
 # Copyright
-    Copyright © 2016 tastytea <tastytea@tastytea.de>.
+    Copyright © 2016-2017 tastytea <tastytea@tastytea.de>.
     License GPLv2: GNU GPL version 2 <http://www.gnu.org/licenses/gpl-2.0.html>.
     This is free software: you are free to change and redistribute it.
     There is NO WARRANTY, to the extent permitted by law.

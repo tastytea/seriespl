@@ -1,5 +1,5 @@
 /*
- *  Copyright © 2016 tastytea <tastytea@tastytea.de>
+ *  Copyright © 2016-2017 tastytea <tastytea@tastytea.de>
  *
  *  This file is part of seriespl.
  *
@@ -317,7 +317,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				break;
 			case 'V':	// Version
 				std::cout << "seriespl " << Global::version << "\n"
-						  << "Copyright © 2016 tastytea <tastytea@tastytea.de>.\n"
+						  << "Copyright © 2016-2017 tastytea <tastytea@tastytea.de>.\n"
 						  << "License GPLv2: GNU GPL version 2 <https://www.gnu.org/licenses/gpl-2.0.html>.\n"
 						  << "This is free software: you are free to change and redistribute it.\n"
 						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;

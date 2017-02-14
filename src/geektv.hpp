@@ -1,6 +1,6 @@
 // Process watch-tvseries.net URLs
 /*
- *  Copyright © 2016 tastytea <tastytea@tastytea.de>
+ *  Copyright © 2016-2017 tastytea <tastytea@tastytea.de>
  *
  *  This file is part of seriespl.
  *

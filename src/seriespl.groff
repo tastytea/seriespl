@@ -100,7 +100,7 @@ season 1 is returned.
 bs.to uses redirects to prevent crawling. If you hit a limit, URLs will not resolve anymore until you solve a captcha. If you use Tor, you have to solve a captcha from the start.
 
 .SH COPYRIGHT
-Copyright © 2016 tastytea <tastytea@tastytea.de>. License GPLv2: GNU GPL version 2
+Copyright © 2016-2017 tastytea <tastytea@tastytea.de>. License GPLv2: GNU GPL version 2
 <http://www.gnu.org/licenses/gpl-2.0.html>.
 .br
 This is free software: you are free to change and redistribute it.
