@@ -65,9 +65,9 @@ Working hosting providers:
       -V                   Output version and copyright information and exit
 
 ## Examples
-Download all episodes of South Park Season 1-3, resolve redirections and use Tor:
+Download all episodes of South Park Season 1-3, resolve redirections first with a delay of 120 seconds:
 
-    seriespl -s 1-3 -r -t https://bs.to/serie/South-Park | youtube-dl -a -
+    seriespl -s 1-3 -r -d 120 https://bs.to/serie/South-Park | youtube-dl -a -
 
 Watch all episodes starting from 6 of The Simpsons Season 1:
 
@@ -77,7 +77,7 @@ Create an M3U playlist of Southpark Season 2 using only Streamcloud and Shared:
 
     seriespl -s 2 -f m3u -p Streamcloud,Shared https://bs.to/serie/South-Park > playlist.m3u
 
-Watch only current Episode in vlc, with correct title:
+Watch only current Episode in vlc, with the title from the website:
 
     seriespl -i -e c -y -f m3u https://bs.to/serie/South-Park/1/1-Cartman-und-die-Analsonde | vlc -
 
