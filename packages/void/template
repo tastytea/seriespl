@@ -1,6 +1,6 @@
 # Template file for 'seriespl'
 pkgname=seriespl
-version=2.2.5
+version=2.3.1
 revision=1
 build_style=gnu-makefile
 makedepends="libcurl-devel libconfig++-devel"
@@ -9,4 +9,4 @@ maintainer="tastytea <tastytea@tastytea.de>"
 license="GPL-2"
 homepage="https://github.com/tastytea/seriespl"
 distfiles="${homepage}/archive/${version}.tar.gz"
-checksum=bf20de22587381cee2c50575cfc2192d18bbcb717fbfc3ba940230128d271aa5
+checksum=[INSERT_SHA256_HASH_HERE]
