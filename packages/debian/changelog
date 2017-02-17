@@ -1,3 +1,13 @@
+seriespl (2.3.5-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Delay now before any connection attempt
+    - Deprecated inbuilt Tor support
+    - Added signal handling
+    - Fixed and documented exit codes
+
+ -- tastytea <tastytea@tastytea.de>  Fri, 17 Feb 2017 18:44:00 +0100
+
 seriespl (2.3.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
