@@ -248,7 +248,6 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
 				"  -d                   Delay in seconds between connection attempts\n"
-				"  -t                   Use Tor\n"
 				"  -V                   Output version and copyright information and exit"
 				<< std::endl;
 				exit(0);

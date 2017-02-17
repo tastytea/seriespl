@@ -61,7 +61,6 @@ Working hosting providers:
       -a user-agent        Set User-Agent
       -r                   Resolve redirections
       -d                   Delay in seconds between connection attempts
-      -t                   Use Tor
       -V                   Output version and copyright information and exit
 
 ## Examples
