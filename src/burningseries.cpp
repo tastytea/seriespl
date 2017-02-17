@@ -126,7 +126,7 @@ const uint8_t Burningseries::get_episode_pages(std::vector<Global::episodepair> 
 	{
 		if (season != 0)
 		{ // A season range was selected
-			//FIXME: If season is higher than available seasons, season 1 is returned
+			// NOTE: If season is higher than available seasons, season 1 is returned
 			std::regex reSeries("(https://bs.to/serie/[^/]*/).*");
 			std::smatch match;
 		
@@ -177,7 +177,7 @@ const uint8_t Burningseries::get_episode_pages(std::vector<Global::episodepair> 
 		if (it_re == it_re_end)
 		{ // No matches
 			std::cerr << "Error: No episodes found" << std::endl;
-			return 4;
+			return 3;
 		}
 		uint16_t episode = 1;
 		while (it_re != it_re_end)

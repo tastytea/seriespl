@@ -47,7 +47,7 @@ const uint8_t Filter::youtube_dl(std::vector<Global::episodepair> &episodes)
 		if (ytdl == NULL)
 		{
 			std::cerr << "Error: Can not spawn process for youtube-dl" << std::endl;
-			return 1;
+			return 4;
 		}
 
 		while(fgets(buffer, sizeof(buffer), ytdl) != NULL)

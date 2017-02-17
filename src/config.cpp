@@ -383,7 +383,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 			case 'd':	// Delay
 				try
 				{
-					_delay = std::stoi(optarg); //FIXME: error handling
+					_delay = std::stoi(optarg);
 					if (_delay != std::stoi(optarg))
 					{ // If out of range
 						throw std::out_of_range("delay");
@@ -450,7 +450,7 @@ void Config::populate_providers(const std::string &providerlist)
 			std::string supported = it->second.first;	// Name of supported provider
 			std::string suggested = (*it_re)[1];		// Name of suggested provider
 			// Transform providers to lowercase, for comparing
-			// FIXME: Works only with ASCII
+			// FIXME: Works only with ASCII (I think)
 			std::transform(supported.begin(), supported.end(), supported.begin(), ::tolower);
 			std::transform(suggested.begin(), suggested.end(), suggested.begin(), ::tolower);
 			if (supported == suggested)
@@ -461,6 +461,6 @@ void Config::populate_providers(const std::string &providerlist)
 	if (_providers.empty())
 	{
 		std::cerr << "Error: List of hosting providers is empty." << std::endl;
-		exit(2);
+		exit(1);
 	}
 }

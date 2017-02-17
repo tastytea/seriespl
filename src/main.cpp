@@ -28,7 +28,6 @@
 #include <sys/types.h>
 #include <csignal>
 
-//TODO: check/fix and document exit codes
 
 static std::vector<Global::episodepair> episodes;	// Necessary for signal handling
 
@@ -41,7 +40,7 @@ void handle_signal(const int signal)
 		{
 			std::cout << pair.first << "\n";
 		}
-		exit(1);
+		exit(2);
 	}
 }
 
@@ -67,15 +66,16 @@ int main(int argc, char const *argv[])
 		Geektv gtv(cfg);
 		ret = gtv.getlinks(episodes);
 	}
-
 	if (ret != 0)
 		return ret;
+
 	if (cfg.get_direct_url())
 	{
 		ret = filter.youtube_dl(episodes);
 		if (ret != 0)
 			return ret;
 	}
+
 	ret = playlist.print(episodes);
 	if (ret != 0)
 		return ret;

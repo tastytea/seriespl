@@ -97,6 +97,12 @@ Delay in seconds between connection attempts. Must be between 0 and 65535. Defau
 .SH ENVIRONMENT VARIABLES
 seriespl is built using libcurl. Unless -t is set, libcurl respects the environment variables http_proxy, ftp_proxy, all_proxy etc, if any of those are set.
 
+.SH EXIT STATUS
+    1  Error with user supplied information (arguments and/or config file)
+    2  Interrupted by signal
+    3  Problem with website
+    4  Error spawning process
+
 .SH BUGS & NOTES
 .SS Burning Series
 

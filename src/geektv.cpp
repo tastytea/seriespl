@@ -62,7 +62,6 @@ const uint8_t Geektv::getlinks(std::vector<Global::episodepair> &episodes)
 
 	for (const std::string &page : pages)
 	{
-		// TODO: Error handling
 		std::string content = getpage(page);
 		std::string title;
 		std::string url;
@@ -162,7 +161,7 @@ const uint8_t Geektv::get_episode_pages(std::vector<std::string> &pages)
 			{
 				std::cerr << "Error: Could not generate URL for season " <<
 					std::to_string(season) << ".\n";
-				return 1;
+				return 3;
 			}
 			content = getpage(url);
 		}
@@ -180,7 +179,7 @@ const uint8_t Geektv::get_episode_pages(std::vector<std::string> &pages)
 		if (it_re == it_re_end)
 		{ // No matches
 			std::cerr << "Error: No episodes found" << std::endl;
-			return 4;
+			return 3;
 		}
 		uint16_t episode = std::numeric_limits<uint16_t>::max();
 		while (it_re != it_re_end)
