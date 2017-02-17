@@ -94,6 +94,14 @@ Config::Config(const int &argc, const char *argv[])
 					throw std::out_of_range("Delay out of range");
 				}
 			}
+			if (configfile.get_value("resolve_tries") != "")
+			{
+				_resolve_tries = std::stoi(configfile.get_value("resolve_tries"));
+				if (_resolve_tries != std::stoi(configfile.get_value("resolve_tries")))
+				{
+					throw std::out_of_range("resolve_tries out of range");
+				}
+			}
 			if (configfile.get_value("tor_address") != "")
 				_tor_address = configfile.get_value("tor_address");
 			if (configfile.get_value("tor_controlport") != "")
@@ -181,6 +189,11 @@ const std::string &Config::get_url() const
 const bool &Config::get_resolve() const
 {
 	return _resolve;
+}
+
+const uint8_t &Config::get_resolve_tries() const
+{
+	return _resolve_tries;
 }
 
 const uint16_t &Config::get_delay() const

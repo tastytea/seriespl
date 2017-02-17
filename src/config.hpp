@@ -75,6 +75,7 @@ public:
 	const bool &get_direct_url() const;
 	const std::string &get_url() const;
 	const bool &get_resolve() const;
+	const uint8_t &get_resolve_tries() const;
 	const uint16_t &get_delay() const;
 	const bool &get_use_tor() const;
 	const std::string &get_tor_address() const;
@@ -97,6 +98,7 @@ private:
 	bool _direct_url;						// filter through youtube-dl
 	std::string _url;						// User supplied URL
 	bool _resolve;							// Resolve redirections
+	uint8_t _resolve_tries;					// How often to try resolving
 	uint16_t _delay;						// How much seconds to wait between connection attempts
 	bool _use_tor;							// Use Tor
 	std::string _tor_address;				// Tor host:port

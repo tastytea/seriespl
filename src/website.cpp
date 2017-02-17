@@ -149,15 +149,37 @@ const uint8_t Website::resolve_redirect(std::string &url)
 			if((res == CURLE_OK) && location)
 			{
 				url = location;
+				Global::debug("Resolved to: <" + url + ">.");
+			}
+			else
+			{ // Retry resolving
+				static const uint8_t max_tries = _cfg.get_resolve_tries();
+				static uint8_t tries = max_tries;
+
+				if (--tries > 0)
+				{
+					uint8_t cur_try = max_tries + 1 - tries;
+
+					Global::debug("Resolving failed, trying again... [" +
+						std::to_string(cur_try) + "/" + std::to_string(max_tries) + "]");
+					resolve_redirect(url);
+					tries = _cfg.get_resolve_tries();	// Reset counter
+				}
+				else
+				{
+					Global::debug("Resolving failed, giving up.");
+				}
 			}
 		}
 		else
 		{
+			std::cerr << "Error: Resolving failed: curl_easy_perform" << std::endl;
 			ret = 2;
 		}
 	}
 	else
 	{
+		std::cerr << "Error: Resolving failed: curl_easy_init" << std::endl;
 		ret = 1;
 	}
 
