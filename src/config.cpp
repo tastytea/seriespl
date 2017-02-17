@@ -57,7 +57,7 @@ Config::Config(const int &argc, const char *argv[])
 	_direct_url(false),
 	_url(""),
 	_resolve(false),
-	_resolve_delay(0),
+	_delay(0),
 	_use_tor(false),
 	_tor_address("127.0.0.1:9050"),
 	_tor_controlport(9051),
@@ -78,10 +78,18 @@ Config::Config(const int &argc, const char *argv[])
 				_yt_dl_path = configfile.get_value("youtube-dl");
 			if (configfile.get_value("user-agent") != "")
 				_useragent = configfile.get_value("user-agent");
-			if (configfile.get_value("resolve_delay") != "")
+			if (configfile.get_value("resolve_delay") != "")	// Before 2.3.2
 			{
-				_resolve_delay = std::stoi(configfile.get_value("resolve_delay"));
-				if (_resolve_delay != std::stoi(configfile.get_value("resolve_delay")))
+				_delay = std::stoi(configfile.get_value("resolve_delay"));
+				if (_delay != std::stoi(configfile.get_value("resolve_delay")))
+				{
+					throw std::out_of_range("Delay out of range");
+				}
+			}
+			if (configfile.get_value("delay") != "")
+			{
+				_delay = std::stoi(configfile.get_value("delay"));
+				if (_delay != std::stoi(configfile.get_value("delay")))
 				{
 					throw std::out_of_range("Delay out of range");
 				}
@@ -175,9 +183,9 @@ const bool &Config::get_resolve() const
 	return _resolve;
 }
 
-const uint16_t &Config::get_resolve_delay() const
+const uint16_t &Config::get_delay() const
 {
-	return _resolve_delay;
+	return _delay;
 }
 
 const bool &Config::get_use_tor() const
@@ -216,7 +224,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 			case 'h':	// Help
 				std::cout << usage << "\n\n"
 				"  -h                   Show this help and exit\n"
-				"  -p hosting providers  Comma delimited list. Available:\n"
+				"  -p hosting providers Comma delimited list. Available:\n"
 				"                       Streamcloud,Vivo,Shared,YouTube,OpenLoad,OpenLoadHD,"
 				                        "PowerWatch,CloudTime,AuroraVid,Vidto,VoDLocker\n"
 				"  -i                   Use hosting providers without SSL support too\n"
@@ -226,7 +234,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
-				"  -d                   Delay in seconds between resolve attempts\n"
+				"  -d                   Delay in seconds between connection attempts\n"
 				"  -t                   Use Tor\n"
 				"  -V                   Output version and copyright information and exit"
 				<< std::endl;
@@ -363,8 +371,8 @@ void Config::handle_args(const int &argc, const char *argv[])
 			case 'd':	// Delay
 				try
 				{
-					_resolve_delay = std::stoi(optarg); //FIXME: error handling
-					if (_resolve_delay != std::stoi(optarg))
+					_delay = std::stoi(optarg); //FIXME: error handling
+					if (_delay != std::stoi(optarg))
 					{ // If out of range
 						throw std::out_of_range("delay");
 					}
@@ -415,7 +423,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 
 void Config::populate_providers(const std::string &providerlist)
 { // providerlist is a comma separated list
-	Global::debug("Compiling list of hosting providers...");
+	Global::debug("Compiling list of hosting providers: <" + providerlist + ">...");
 
 	std::regex reConfig("([[:alnum:]]+)");
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);

@@ -61,11 +61,15 @@ const size_t Website::curl_write_data(char *data, size_t size, size_t nmemb, std
 }
 const std::string Website::getpage(const std::string &url)
 {
-	Global::debug("Fetching page...");
+	Global::debug("Fetching page: <" + url + ">...");
 
 	CURL *curl;
 	CURLcode res;
 	std::string data;
+
+	// Wait before connection attempt
+	Global::debug("Sleeping " + std::to_string(_cfg.get_delay()) + " seconds...");
+	sleep(_cfg.get_delay());
 
 	curl = curl_easy_init();
 	if (_cfg.get_use_tor())
@@ -96,7 +100,7 @@ const std::string Website::getpage(const std::string &url)
 
 const uint8_t Website::resolve_redirect(std::string &url)
 {
-	Global::debug("Resolving redirect...");
+	Global::debug("Resolving redirect: <" + url + ">...");
 
 	CURL *curl;
 	CURLcode res;
@@ -120,9 +124,9 @@ const uint8_t Website::resolve_redirect(std::string &url)
 			++counter;
 		}
 	}
-	// Wait n seconds between resolve attempts
-	Global::debug("Sleeping " + std::to_string(_cfg.get_resolve_delay()) + " seconds...");
-	sleep(_cfg.get_resolve_delay());
+	// Wait before resolve attempt
+	Global::debug("Sleeping " + std::to_string(_cfg.get_delay()) + " seconds...");
+	sleep(_cfg.get_delay());
 
 	curl = curl_easy_init();
 	if(curl)

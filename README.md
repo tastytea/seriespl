@@ -60,7 +60,7 @@ Working hosting providers:
       -y                   Use youtube-dl to print the direct URL of the video file
       -a user-agent        Set User-Agent
       -r                   Resolve redirections
-      -d                   Delay in seconds between resolve attempts
+      -d                   Delay in seconds between connection attempts
       -t                   Use Tor
       -V                   Output version and copyright information and exit
 
@@ -90,7 +90,7 @@ Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/s
     tor_address = "127.0.0.1:9050"
     tor_controlport = "9051"
     tor_password = "secure"
-    resolve_delay = "120"
+    delay = "120"
 
 hostingproviders is separated by comma. The quotes are mandatory. For more info, look at the manpage.
 
