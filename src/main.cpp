@@ -26,17 +26,36 @@
 #include <iostream>
 #include <vector>
 #include <sys/types.h>
+#include <csignal>
 
 //TODO: check/fix and document exit codes
+
+static std::vector<Global::episodepair> episodes;	// Necessary for signal handling
+
+void handle_signal(const int signal)
+{
+	if (signal == SIGINT || signal == SIGTERM)
+	{ // Print episode URLs if interrupted
+		std::cerr << "Received signal " << signal << ", dumping already harvested episode URLs.\n";
+		for (const Global::episodepair &pair : episodes)
+		{
+			std::cout << pair.first << "\n";
+		}
+		exit(1);
+	}
+}
 
 int main(int argc, char const *argv[])
 {
 	Global::debug("main.cpp");
+
 	uint8_t ret = 0;
 	Config cfg(argc, argv);
-	std::vector<Global::episodepair> episodes;
 	Filter filter(cfg);
 	Playlist playlist(cfg);
+
+	std::signal(SIGINT, handle_signal);
+	std::signal(SIGTERM, handle_signal);
 	
 	if (cfg.get_website() == Config::Websites::BurningSeries)
 	{
