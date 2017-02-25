@@ -86,9 +86,6 @@ Place the config file in `${XDG_CONFIG_HOME}/seriespl.cfg` or `${HOME}/.config/s
     hostingproviders = "Streamcloud,Vivo,Shared,YouTube,OpenLoad"
     youtube-dl = "/usr/bin/youtube-dl"
     user-agent = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
-    tor_address = "127.0.0.1:9050"
-    tor_controlport = "9051"
-    tor_password = "secure"
     delay = "120"
 
 hostingproviders is separated by comma. The quotes are mandatory. For more info, look at the manpage.

@@ -378,6 +378,8 @@ void Config::handle_args(const int &argc, const char *argv[])
 				_resolve = true;
 				break;
 			case 't':	// Tor
+				std::cerr << "WARNING: Inbuilt Tor support is deprecated and will be removed in the future. "
+					"Please use the socks_proxy environment variable instead.\n";
 				_use_tor = true;
 				break;
 			case 'd':	// Delay
