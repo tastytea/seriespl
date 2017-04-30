@@ -31,29 +31,42 @@
 #include <algorithm>
 
 Config::Config(const int &argc, const char *argv[])
-:	_providers_ssl({ Streamcloud, Vivo, Shared, YouTube, OpenLoad, OpenLoadHD }),
-	_providers_nossl({ PowerWatch, CloudTime, AuroraVid, Vidto, VoDLocker }),
+:	_providers_ssl({
+		HostingProviders::Streamcloud,
+		HostingProviders::Vivo,
+		HostingProviders::Shared,
+		HostingProviders::YouTube,
+		HostingProviders::OpenLoad,
+		HostingProviders::OpenLoadHD
+	}),
+	_providers_nossl({
+		HostingProviders::PowerWatch,
+		HostingProviders::CloudTime,
+		HostingProviders::AuroraVid,
+		HostingProviders::Vidto,
+		HostingProviders::VoDLocker
+	}),
 	_providers(_providers_ssl),
 	_providermap
 	({
-		{Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
-		{Vivo, providerpair("Vivo", "vivo.sx")},
-		{Shared, providerpair("Shared", "shared.sx")},
-		{YouTube, providerpair("YouTube", "youtube.com")},
-		{OpenLoad, providerpair("OpenLoad", "openload.co")},
-		{OpenLoadHD, providerpair("OpenLoadHD", "openload.co")},
-		{PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
-		{CloudTime, providerpair("CloudTime", "cloudtime.to")},
-		{AuroraVid, providerpair("AuroraVid", "auroravid.to")},
-		{Vidto, providerpair("Vidto", "vidto.me")},
-		{VoDLocker, providerpair("VoDLocker", "vodlocker.com")}
+		{HostingProviders::Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
+		{HostingProviders::Vivo, providerpair("Vivo", "vivo.sx")},
+		{HostingProviders::Shared, providerpair("Shared", "shared.sx")},
+		{HostingProviders::YouTube, providerpair("YouTube", "youtube.com")},
+		{HostingProviders::OpenLoad, providerpair("OpenLoad", "openload.co")},
+		{HostingProviders::OpenLoadHD, providerpair("OpenLoadHD", "openload.co")},
+		{HostingProviders::PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
+		{HostingProviders::CloudTime, providerpair("CloudTime", "cloudtime.to")},
+		{HostingProviders::AuroraVid, providerpair("AuroraVid", "auroravid.to")},
+		{HostingProviders::Vidto, providerpair("Vidto", "vidto.me")},
+		{HostingProviders::VoDLocker, providerpair("VoDLocker", "vodlocker.com")}
 	}),
 	_yt_dl_path("youtube-dl"),
 	_useragent(""),
 	_episode_range{{0, std::numeric_limits<uint16_t>::max()}},
 	_season_range{{0, 0}},
 	_use_current_episode(0b00),
-	_playlist(PL_RAW),
+	_playlist(PlaylistFormat::PL_RAW),
 	_direct_url(false),
 	_url(""),
 	_resolve(false),
@@ -352,11 +365,11 @@ void Config::handle_args(const int &argc, const char *argv[])
 				break;
 			case 'f':	// Format
 				if (strncmp(optarg, "raw", 3) == 0)
-					_playlist = PL_RAW;
+					_playlist = PlaylistFormat::PL_RAW;
 				else if (strncmp(optarg, "m3u", 3) == 0)
-					_playlist = PL_M3U;
+					_playlist = PlaylistFormat::PL_M3U;
 				else if (strncmp(optarg, "pls", 3) == 0)
-					_playlist = PL_PLS;
+					_playlist = PlaylistFormat::PL_PLS;
 				else
 					std::cerr << "Playlist format not recognized, defaulting to raw." << std::endl;
 				break;
@@ -430,7 +443,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 			std::cerr << "Error: Could not determine which website you supplied, " <<
 				"defaulting to Burning-Series." << std::endl;
 			sleep(2);
-			_website = BurningSeries;
+			_website = Websites::BurningSeries;
 		}
 	}
 }

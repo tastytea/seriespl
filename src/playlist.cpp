@@ -39,10 +39,10 @@ const uint8_t Playlist::print(const std::vector<Global::episodepair> &episodes) 
 	{
 		switch (_cfg.get_playlist())
 		{
-			case Config::PL_RAW:
+			case Config::PlaylistFormat::PL_RAW:
 				std::cout << epair.first << std::endl;
 				break;
-			case Config::PL_M3U:
+			case Config::PlaylistFormat::PL_M3U:
 				if (counter == 1) // Write header
 				{
 					std::cout << "#EXTM3U\n";
@@ -50,7 +50,7 @@ const uint8_t Playlist::print(const std::vector<Global::episodepair> &episodes) 
 				std::cout << "#EXTINF:-1," << replace_chars(epair.second) << std::endl;
 				std::cout << epair.first << std::endl;
 				break;
-			case Config::PL_PLS:
+			case Config::PlaylistFormat::PL_PLS:
 				if (counter == 1) // Write header
 				{
 					std::cout << "[playlist]\n";
@@ -64,7 +64,7 @@ const uint8_t Playlist::print(const std::vector<Global::episodepair> &episodes) 
 		++counter;
 	}
 	
-	if (_cfg.get_playlist() == Config::PL_PLS)
+	if (_cfg.get_playlist() == Config::PlaylistFormat::PL_PLS)
 	{
 		std::cout << "NumberOfEntries=" << episodes.size() << std::endl;
 	}

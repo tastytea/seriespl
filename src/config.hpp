@@ -31,18 +31,18 @@
 class Config
 {
 public:
-	enum PlaylistFormat
+	enum class PlaylistFormat
 	{
 		PL_RAW,
 		PL_M3U,
 		PL_PLS
 	};
-	enum Websites
+	enum class Websites
 	{ // Indexing services
 		BurningSeries,
 		GeekTV
 	};
-	enum HostingProviders
+	enum class HostingProviders
 	{ // Available hosting providers
 		Streamcloud,
 		Vivo,
