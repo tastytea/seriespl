@@ -82,15 +82,6 @@ Path to youtube-dl. Default: "youtube-dl"
 .SS user-agent
 User-Agent to send. Default: unset
 
-.SS tor_address (DEPRECATED)
-Address of Tor daemon. Default: "127.0.0.1:9050"
-
-.SS tor_controlport (DEPRECATED)
-Tor control port. Same as ControlPort in your torrc. Default: "9051"
-
-.SS tor_password (DEPRECATED)
-Password for controlling Tor, in cleartext. Same as HashedControlPassword in your torrc. Default: unset
-
 .SS delay
 Delay in seconds between connection attempts. Must be between 0 and 65535. Default: 0
 
@@ -119,4 +110,4 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 .SH SEE ALSO
-youtube-dl(1) libcurl(3) tor(1)
+youtube-dl(1) libcurl(3)

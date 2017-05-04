@@ -17,68 +17,17 @@
  *
  ******************************************************************************/
 
-#include "config.hpp"
-#include "global.hpp"
-#include "burningseries.hpp"
-#include "geektv.hpp"
-#include "filter.hpp"
-#include "playlist.hpp"
 #include <iostream>
-#include <vector>
-#include <sys/types.h>
-#include <csignal>
+#include <cstdint>
 
-
-static std::vector<Global::episodepair> episodes;	// Necessary for signal handling
-
-void handle_signal(const int signal)
-{
-	if (signal == SIGINT || signal == SIGTERM)
-	{ // Print episode URLs if interrupted
-		std::cerr << "Received signal " << signal << ", dumping already harvested episode URLs.\n";
-		for (const Global::episodepair &pair : episodes)
-		{
-			std::cout << pair.first << "\n";
-		}
-		exit(2);
-	}
-}
+#include "global.hpp"
 
 int main(int argc, char const *argv[])
 {
-	Global::debug("main.cpp");
+	ttdebug << "Moin, this is seriespl " << global::version << '\n';
+	ttdebug << "Git commit: " << global::git_commit << '\n';
 
-	uint8_t ret = 0;
-	Config cfg(argc, argv);
-	Filter filter(cfg);
-	Playlist playlist(cfg);
-
-	std::signal(SIGINT, handle_signal);
-	std::signal(SIGTERM, handle_signal);
-	
-	if (cfg.get_website() == Config::Websites::BurningSeries)
-	{
-			Burningseries bs(cfg);
-			ret = bs.getlinks(episodes);
-	}
-	else if (cfg.get_website() == Config::Websites::GeekTV)
-	{
-		Geektv gtv(cfg);
-		ret = gtv.getlinks(episodes);
-	}
-	if (ret != 0)
-		return ret;
-
-	if (cfg.get_direct_url())
-	{
-		ret = filter.youtube_dl(episodes);
-		if (ret != 0)
-			return ret;
-	}
-
-	ret = playlist.print(episodes);
-	if (ret != 0)
-		return ret;
+	global::config.handle_args(argc, argv);
 
 	return 0;
 }

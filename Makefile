@@ -1,13 +1,14 @@
 # Makefile for seriespl
 NAME     = seriespl
 VERSION  = $(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
-LDLIBS   = -lcurl -lconfig++
+LDLIBS   = #-lcurl -lconfig++
 
 ifndef CXX
 	CXX = c++
 endif
 ifndef CXXFLAGS
-	CXXFLAGS = -O2 -pipe -Wall -mtune=native
+	# -Wno-unused-value is only active for release builds (ttdebug in global.hpp)
+	CXXFLAGS = -O2 -pipe -Wall -mtune=native -Wno-unused-value
 endif
 # Make sure that c++14 is selected
 override CXXFLAGS += -std=c++14
@@ -31,6 +32,7 @@ man: man/$(NAME).1
 
 .PHONY: debug
 debug: CXXFLAGS += -DDEBUG -g -ggdb
+debug: CXXFLAGS := $(filter-out -Wno-unused-value,$(CXXFLAGS))
 debug: $(NAME) man
 
 .PHONY: dirs
@@ -42,8 +44,12 @@ obj:
 bin:
 	mkdir -p bin
 
+# write git commit into global.hpp
+src/global.hpp: .git/refs/heads
+	sed -i "s/\(git_commit\[\] = \)\"[0-9a-f]*\";/\1\"$(shell git rev-parse HEAD)\";/" src/global.hpp
+
 # $@ = left side of :, $< = first element right of : (%.cpp)
-obj/%.o: src/%.cpp $(wildcard src/*.hpp)
+obj/%.o: src/%.cpp $(wildcard src/*.hpp) src/global.hpp
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
 
 # $^ = right side of :

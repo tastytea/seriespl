@@ -17,230 +17,74 @@
  *
  ******************************************************************************/
 
-#include "config.hpp"
-#include "configfile.hpp"
-#include "global.hpp"
 #include <string>
-#include <getopt.h>
-#include <cstdlib>	// exit()
-#include <unistd.h>	// sleep()
-#include <cstring>	// strncmp()
 #include <iostream>
+#include <cstdlib>	// exit()
+#include <cstring>	// strncmp()
 #include <regex>
 #include <limits>	// std::numeric_limits
 #include <algorithm>
+#include <getopt.h>
+#include <unistd.h>	// sleep()
 
-Config::Config(const int &argc, const char *argv[])
-:	_providers_ssl({
-		HostingProviders::Streamcloud,
-		HostingProviders::Vivo,
-		HostingProviders::Shared,
-		HostingProviders::YouTube,
-		HostingProviders::OpenLoad,
-		HostingProviders::OpenLoadHD
-	}),
-	_providers_nossl({
-		HostingProviders::PowerWatch,
-		HostingProviders::CloudTime,
-		HostingProviders::AuroraVid,
-		HostingProviders::Vidto,
-		HostingProviders::VoDLocker
-	}),
-	_providers(_providers_ssl),
-	_providermap
-	({
-		{HostingProviders::Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
-		{HostingProviders::Vivo, providerpair("Vivo", "vivo.sx")},
-		{HostingProviders::Shared, providerpair("Shared", "shared.sx")},
-		{HostingProviders::YouTube, providerpair("YouTube", "youtube.com")},
-		{HostingProviders::OpenLoad, providerpair("OpenLoad", "openload.co")},
-		{HostingProviders::OpenLoadHD, providerpair("OpenLoadHD", "openload.co")},
-		{HostingProviders::PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
-		{HostingProviders::CloudTime, providerpair("CloudTime", "cloudtime.to")},
-		{HostingProviders::AuroraVid, providerpair("AuroraVid", "auroravid.to")},
-		{HostingProviders::Vidto, providerpair("Vidto", "vidto.me")},
-		{HostingProviders::VoDLocker, providerpair("VoDLocker", "vodlocker.com")}
-	}),
-	_yt_dl_path("youtube-dl"),
-	_useragent(""),
-	_episode_range{{0, std::numeric_limits<uint16_t>::max()}},
-	_season_range{{0, 0}},
-	_use_current_episode(0b00),
-	_playlist(PlaylistFormat::PL_RAW),
-	_direct_url(false),
-	_url(""),
-	_resolve(false),
-	_delay(0),
-	_use_tor(false),
-	_tor_address("127.0.0.1:9050"),
-	_tor_controlport(9051),
-	_tor_password("")
-{
-	Global::debug("config.cpp");
-	ConfigFile configfile("seriespl");
-	if (configfile.read())
-	{
-		Global::debug("Reading config file...");
-		try
-		{
-			if (configfile.get_value("streamproviders") != "")	// Before 2.0.0
-				populate_providers(configfile.get_value("streamproviders"));
-			if (configfile.get_value("hostingproviders") != "")
-				populate_providers(configfile.get_value("hostingproviders"));
-			if (configfile.get_value("youtube-dl") != "")
-				_yt_dl_path = configfile.get_value("youtube-dl");
-			if (configfile.get_value("user-agent") != "")
-				_useragent = configfile.get_value("user-agent");
-			if (configfile.get_value("resolve_delay") != "")	// Before 2.3.2
-			{
-				_delay = std::stoi(configfile.get_value("resolve_delay"));
-				if (_delay != std::stoi(configfile.get_value("resolve_delay")))
-				{
-					throw std::out_of_range("Delay out of range");
-				}
-			}
-			if (configfile.get_value("delay") != "")
-			{
-				_delay = std::stoi(configfile.get_value("delay"));
-				if (_delay != std::stoi(configfile.get_value("delay")))
-				{
-					throw std::out_of_range("Delay out of range");
-				}
-			}
-			if (configfile.get_value("resolve_tries") != "")
-			{
-				_resolve_tries = std::stoi(configfile.get_value("resolve_tries"));
-				if (_resolve_tries != std::stoi(configfile.get_value("resolve_tries")))
-				{
-					throw std::out_of_range("resolve_tries out of range");
-				}
-			}
-			if (configfile.get_value("tor_address") != "")
-				_tor_address = configfile.get_value("tor_address");
-			if (configfile.get_value("tor_controlport") != "")
-				_tor_controlport = std::stoi(configfile.get_value("tor_controlport"));
-			if (configfile.get_value("tor_password") != "")
-				_tor_password = configfile.get_value("tor_password");
-		}
-		catch (const std::exception &e)
-		{
-			std::cerr << "Error in config file: " << e.what() << '\n'
-				<< "Consult the manpage for more information.\n";
-			exit(1);
-		}
-	}
+#include "config.hpp"
+#include "global.hpp"
 
-	handle_args(argc, argv);
-}
-
-const Config::Websites &Config::get_website() const
+Config::Config()
+: _website(Websites::BurningSeries)
+, _providers_ssl({
+	HostingProviders::Streamcloud,
+	HostingProviders::Vivo,
+	HostingProviders::Shared,
+	HostingProviders::YouTube,
+	HostingProviders::OpenLoad,
+	HostingProviders::OpenLoadHD
+})
+, _providers_nossl({
+	HostingProviders::PowerWatch,
+	HostingProviders::CloudTime,
+	HostingProviders::AuroraVid,
+	HostingProviders::Vidto,
+	HostingProviders::VoDLocker
+})
+, _providers(_providers_ssl)
+, _providermap
+({
+	{HostingProviders::Streamcloud, providerpair("Streamcloud", "streamcloud.eu")},
+	{HostingProviders::Vivo, providerpair("Vivo", "vivo.sx")},
+	{HostingProviders::Shared, providerpair("Shared", "shared.sx")},
+	{HostingProviders::YouTube, providerpair("YouTube", "youtube.com")},
+	{HostingProviders::OpenLoad, providerpair("OpenLoad", "openload.co")},
+	{HostingProviders::OpenLoadHD, providerpair("OpenLoadHD", "openload.co")},
+	{HostingProviders::PowerWatch, providerpair("PowerWatch", "powerwatch.pw")},
+	{HostingProviders::CloudTime, providerpair("CloudTime", "cloudtime.to")},
+	{HostingProviders::AuroraVid, providerpair("AuroraVid", "auroravid.to")},
+	{HostingProviders::Vidto, providerpair("Vidto", "vidto.me")},
+	{HostingProviders::VoDLocker, providerpair("VoDLocker", "vodlocker.com")}
+})
+, _yt_dl_path("youtube-dl")
+, _useragent("")
+, _episode_range{{0, std::numeric_limits<uint16_t>::max()}}
+, _season_range{{0, 0}}
+, _use_current_episode(0b00)
+, _playlist(PlaylistFormat::PL_RAW)
+, _direct_url(false)
+, _url("")
+, _resolve(false)
+, _delay(0)
+, _errors_fatal(false)
 {
-	return _website;
-}
-
-const std::vector<Config::HostingProviders> &Config::get_providers_ssl() const
-{
-	return _providers_ssl;
-}
-
-const std::vector<Config::HostingProviders> &Config::get_providers_nossl() const
-{
-	return _providers_nossl;
-}
-
-const std::vector<Config::HostingProviders> &Config::get_providers() const
-{
-	return _providers;
-}
-
-const std::map<const Config::HostingProviders, const Config::providerpair>
-	&Config::get_providermap() const
-{
-	return _providermap;
-}
-
-const std::string &Config::get_yt_dl_path() const
-{
-	return _yt_dl_path;
-}
-
-const std::string &Config::get_useragent() const
-{
-	return _useragent;
-}
-
-const std::array<uint16_t, 2> &Config::get_episode_range() const
-{
-	return _episode_range;
-}
-
-const std::array<uint16_t, 2> &Config::get_season_range() const
-{
-	return _season_range;
-}
-
-const uint8_t &Config::get_use_current_episode() const
-{
-	return _use_current_episode;
-}
-
-const Config::PlaylistFormat &Config::get_playlist() const
-{
-	return _playlist;
-}
-
-const bool &Config::get_direct_url() const
-{
-	return _direct_url;
-}
-
-const std::string &Config::get_url() const
-{
-	return _url;
-}
-
-const bool &Config::get_resolve() const
-{
-	return _resolve;
-}
-
-const uint8_t &Config::get_resolve_tries() const
-{
-	return _resolve_tries;
-}
-
-const uint16_t &Config::get_delay() const
-{
-	return _delay;
-}
-
-const bool &Config::get_use_tor() const
-{
-	return _use_tor;
-}
-const std::string &Config::get_tor_address() const
-{
-	return _tor_address;
-}
-
-const uint16_t &Config::get_tor_controlport() const
-{
-	return _tor_controlport;
-}
-
-const std::string &Config::get_tor_password() const
-{
-	return _tor_password;
+	// Read config file
 }
 
 void Config::handle_args(const int &argc, const char *argv[])
 {
 	int opt;
-	std::string usage = std::string("usage: ") + argv[0] +
+	const std::string usage = std::string("usage: ") + argv[0] +
 		" [-h]|[-V] [-i]|[-p list] [-e episodes] [-s seasons] [-y] URL";
 
-	Global::debug("Parsing arguments...");
-	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rtd:")) != -1)
+	ttdebug << "Parsing arguments...\n";
+	while ((opt = getopt(argc, (char **)argv, "hp:ie:s:f:yVa:rtd:A")) != -1)
 	{
 		std::string episodes, seasons;
 		size_t pos;
@@ -260,7 +104,8 @@ void Config::handle_args(const int &argc, const char *argv[])
 				"  -y                   Use youtube-dl to print the direct URL of the video file\n"
 				"  -a user-agent        Set User-Agent\n"
 				"  -r                   Resolve redirections\n"
-				"  -d                   Delay in seconds between connection attempts\n"
+				"  -d delay             Delay in seconds between connection attempts\n"
+				"  -A                   Abort on error\n"
 				"  -V                   Output version and copyright information and exit"
 				<< std::endl;
 				exit(0);
@@ -281,29 +126,32 @@ void Config::handle_args(const int &argc, const char *argv[])
 					try
 					{
 						if (episodes.substr(0, pos) == "c")
-						{
-							_use_current_episode |= 1;
+						{ // if c-
+							_use_current_episode |= 0b01;
 						}
 						else
 						{
-							_episode_range[0] = std::stoi( episodes.substr(0, pos) );
+							_episode_range[0] = std::stoi(episodes.substr(0, pos));
 						}
 						if (episodes.length() > pos + 1)
 						{ // If episodes = 5-, output all episodes, beginning with 5
 							if (episodes.substr(pos + 1) == "c")
-							{
-								_use_current_episode |= 2;
+							{ // If -c
+								_use_current_episode |= 0b10;
 							}
 							else
 							{
-								_episode_range[1] = std::stoi( episodes.substr(pos + 1) );
+								_episode_range[1] = std::stoi(episodes.substr(pos + 1));
 							}
 						}
 					}
-					catch (std::exception &e)
+					catch (const std::exception &e)
 					{ // There is a '-' but no numbers around it
-						std::cerr << "Error: Can not decipher episode range, " <<
-							"defaulting to all." << std::endl;
+						ttdebug << "Error parsing -e: " << e.what() << '\n';
+						tterror << "Can not decipher episode range\n";
+						if (_errors_fatal)
+							exit(global::Error::ParseError);
+						tterror << "Defaulting to all\n";
 						sleep(2);
 					}
 				}
@@ -313,18 +161,21 @@ void Config::handle_args(const int &argc, const char *argv[])
 					{ 
 						if (episodes == "c")
 						{
-							_use_current_episode = 3;
+							_use_current_episode = 0b11;
 						}
 						else
-						{ // Is episodes a single number?
+						{ // episodes is a single number
 							_episode_range[0] = std::stoi(episodes);
 							_episode_range[1] = std::stoi(episodes);
 						}
 					}
-					catch (std::exception &e)
+					catch (const std::exception &e)
 					{
-						std::cerr << "Error: Can not decipher episode range, " <<
-							"defaulting to all." << std::endl;
+						ttdebug << "Error parsing -e: " << e.what() << '\n';
+						tterror << "Can not decipher episode range\n";
+						if (_errors_fatal)
+							exit(global::Error::ParseError);
+						tterror << "Defaulting to all\n";
 						sleep(2);
 					}
 				}
@@ -336,13 +187,16 @@ void Config::handle_args(const int &argc, const char *argv[])
 				{
 					try
 					{
-						_season_range[0] = std::stoi( seasons.substr(0, pos) );
-						_season_range[1] = std::stoi( seasons.substr(pos + 1) );
+						_season_range[0] = std::stoi(seasons.substr(0, pos));
+						_season_range[1] = std::stoi(seasons.substr(pos + 1));
 					}
-					catch (std::exception &e)
+					catch (const std::exception &e)
 					{ // There is a '-' but no numbers around it
-						std::cerr << "Error: Can not decipher season range, " <<
-							"defaulting to selected." << std::endl;
+						ttdebug << "Error parsing -s: " << e.what() << '\n';
+						tterror << "Can not decipher season range\n";
+						if (_errors_fatal)
+							exit(global::Error::ParseError);
+						tterror << "Defaulting to supplied\n";
 						_season_range[0] = 0;
 						_season_range[1] = 0;
 						sleep(2);
@@ -351,15 +205,17 @@ void Config::handle_args(const int &argc, const char *argv[])
 				else
 				{
 					try
-					{ // Is seasons a single number?
+					{ // seasons is a single number
 						_season_range[0] = std::stoi(seasons);
 						_season_range[1] = std::stoi(seasons);
 					}
-					catch (std::exception &e)
+					catch (const std::exception &e)
 					{
-						std::cerr << "Error: Can not decipher season range, " <<
-							"defaulting to selected." << std::endl;
-						sleep(2);
+						ttdebug << "Error parsing -s: " << e.what() << '\n';
+						tterror << "Can not decipher season range\n";
+						if (_errors_fatal)
+							exit(global::Error::ParseError);
+						tterror << "Defaulting to supplied\n";
 					}
 				}
 				break;
@@ -371,17 +227,22 @@ void Config::handle_args(const int &argc, const char *argv[])
 				else if (strncmp(optarg, "pls", 3) == 0)
 					_playlist = PlaylistFormat::PL_PLS;
 				else
-					std::cerr << "Playlist format not recognized, defaulting to raw." << std::endl;
+					tterror << "Playlist format not recognized\n";
+					if (_errors_fatal)
+						exit(global::Error::ParseError);
+					tterror << "Defaulting to raw\n";
+					sleep(2);
 				break;
 			case 'y':	// youtube-dl
 				_direct_url = true;
 				break;
 			case 'V':	// Version
-				std::cout << "seriespl " << Global::version << "\n"
-						  << "Copyright © 2016-2017 tastytea <tastytea@tastytea.de>.\n"
-						  << "License GPLv2: GNU GPL version 2 <https://www.gnu.org/licenses/gpl-2.0.html>.\n"
-						  << "This is free software: you are free to change and redistribute it.\n"
-						  << "There is NO WARRANTY, to the extent permitted by law." << std::endl;
+				std::cout <<
+					"seriespl " << global::version << " (git commit: " << global::git_commit << ")\n"
+					"Copyright © 2016-2017 tastytea <tastytea@tastytea.de>.\n"
+					"License GPLv2: GNU GPL version 2 <https://www.gnu.org/licenses/gpl-2.0.html>.\n"
+					"This is free software: you are free to change and redistribute it.\n"
+					"There is NO WARRANTY, to the extent permitted by law.\n";
 				exit(0);
 				break;
 			case 'a':	// User-Agent
@@ -391,9 +252,9 @@ void Config::handle_args(const int &argc, const char *argv[])
 				_resolve = true;
 				break;
 			case 't':	// Tor
-				std::cerr << "WARNING: Inbuilt Tor support is deprecated and will be removed in the future. "
+				tterror << "Inbuilt Tor support is no longer available."
 					"Please use the socks_proxy environment variable instead.\n";
-				_use_tor = true;
+				exit(global::Error::FeatureGone);
 				break;
 			case 'd':	// Delay
 				try
@@ -406,26 +267,29 @@ void Config::handle_args(const int &argc, const char *argv[])
 				}
 				catch (const std::invalid_argument &e)
 				{
-					std::cerr << "Invalid argument: delay" << '\n';
-					exit(1);
+					tterror << "-d: Invalid argument" << '\n';
+					exit(global::Error::InvalidArgument);
 				}
 				catch (const std::out_of_range &e)
 				{
-					std::cerr << "Out of range: " << e.what() << '\n';
-					std::cerr << "Seconds have to be between 0 and 65535.\n";
-					exit(1);
+					ttdebug << "Out of range: " << e.what() << '\n';
+					tterror << "-d: Seconds have to be between 0 and 65535\n";
+					exit(global::Error::InvalidArgument);
 				}
 				break;
+			case 'A':	// Abort
+				_errors_fatal = true;
+				break;
 			default:
-				std::cerr << usage << std::endl;
-				exit(1);
+				std::cerr << usage << '\n';
+				exit(global::Error::InvalidArgument);
 				break;
 		}
 	}
 	if (optind >= argc)
 	{
-		std::cerr << usage << std::endl;
-		exit(1);
+		std::cerr << usage << '\n';
+		exit(global::Error::InvalidArgument);
 	}
 	else
 	{ // Set user supplied URL
@@ -440,8 +304,10 @@ void Config::handle_args(const int &argc, const char *argv[])
 		}
 		else
 		{
-			std::cerr << "Error: Could not determine which website you supplied, " <<
-				"defaulting to Burning-Series." << std::endl;
+			tterror << "Could not determine which website you supplied\n";
+			if (_errors_fatal)
+				exit(global::Error::ParseError);
+			tterror << "Defaulting to Burning-Series.\n";
 			sleep(2);
 			_website = Websites::BurningSeries;
 		}
@@ -450,7 +316,7 @@ void Config::handle_args(const int &argc, const char *argv[])
 
 void Config::populate_providers(const std::string &providerlist)
 { // providerlist is a comma separated list
-	Global::debug("Compiling list of hosting providers: <" + providerlist + ">...");
+	ttdebug << "Compiling list of hosting providers: <" + providerlist + ">...\n";
 
 	std::regex reConfig("([[:alnum:]]+)");
 	std::sregex_iterator it_re(providerlist.begin(), providerlist.end(), reConfig);
@@ -476,6 +342,8 @@ void Config::populate_providers(const std::string &providerlist)
 	if (_providers.empty())
 	{
 		std::cerr << "Error: List of hosting providers is empty." << std::endl;
-		exit(1);
+		exit(global::Error::ConfigError);
 	}
 }
+
+Config global::config;		// Declared in global.hpp
