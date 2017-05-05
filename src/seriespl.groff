@@ -90,9 +90,12 @@ seriespl is built using libcurl. Unless -t is set, libcurl respects the environm
 
 .SH EXIT STATUS
     1  Error with user supplied information (arguments and/or config file)
-    2  Interrupted by signal
+    2  (deprecated)
     3  Problem with website
     4  Error spawning process
+    5  Feature is gone
+    6  Parse error
+    7  I/O error
 
 .SH BUGS & NOTES
 .SS Burning Series

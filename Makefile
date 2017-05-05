@@ -1,7 +1,7 @@
 # Makefile for seriespl
 NAME     = seriespl
 VERSION  = $(shell grep "version\[\] =" src/global.hpp | cut -d\" -f2)
-LDLIBS   = #-lcurl -lconfig++
+LDLIBS   = -lconfig++ #-lcurl
 
 ifndef CXX
 	CXX = c++
@@ -52,8 +52,12 @@ src/global.hpp: .git/refs/heads
 obj/%.o: src/%.cpp $(wildcard src/*.hpp) src/global.hpp
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
 
+obj/%.o: src/*/%.cpp $(wildcard src/*/*.hpp) src/global.hpp
+	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -c -o $@ $<
+
 # $^ = right side of :
-bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp)))
+bin/$(NAME): $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp))) \
+			 $(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*/*.cpp)))
 	$(CXX) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o bin/$(NAME) $^ $(LDFLAGS) $(EXTRA_LDFLAGS) $(LDLIBS)
 
 man/$(NAME).1: src/$(NAME).groff

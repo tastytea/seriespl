@@ -82,6 +82,7 @@ private:
 	bool _errors_fatal;
 
 	void populate_providers(const std::string &providerlist);
+	std::uint8_t read_configfile();
 };
 
 #endif

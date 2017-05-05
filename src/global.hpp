@@ -25,7 +25,7 @@
 #include <string>
 #include <iostream>
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 #ifdef DEBUG
 	#define ttdebug std::cerr << "[" << __FILE__ << ":" << __LINE__ << "] DEBUG: "
@@ -36,23 +36,18 @@
 
 namespace global
 {
-	static constexpr char version[] = "2.3.5";
-	static constexpr char git_commit[] = "86388bbd6e081ddd644a22fc1d99d75719033448";
+	static constexpr char version[] = "2.4.0";
+	static constexpr char git_commit[] = "8a582cbc1c7015229765058bf5855c3eb32fe238";
 
-	template <typename T>
-	constexpr auto toi(T e) noexcept
-		-> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
-	{
-		return static_cast<std::underlying_type_t<T>>(e);
-	}
 	// Error codes
 	enum Error
 	{
 		None = 0,
 		InvalidArgument = 1,
+		ConfigError = 1,
 		FeatureGone = 5,
 		ParseError = 6,
-		ConfigError = 1
+		IOError = 7
 	};
 	// URL, provider|title
 	typedef std::pair<std::string, const std::string> episodepair;
