@@ -1,5 +1,7 @@
 **seriespl** extracts stream-URLs for entire seasons of tv series from bs.to (Burning-Series) and geektv.ma. These URLs can then be further processed by e.g. [youtube-dl](https://rg3.github.com/youtube-dl/) or [mpv](https://mpv.io/).
 
+**seriespl does not work at the moment for bs.to due to non-trivial updates on the site. I will probably not be able to fix this anytime soon. Patches welcome.**
+
 This repository is available at [git.tastytea.de](https://git.tastytea.de/?p=seriespl.git;a=summary) and [github.com](https://github.com/tastytea/seriespl).
 
 # Install
